@@ -1,8 +1,16 @@
-"""Board.py."""
+"""board.py.
+
+A map that allows the system to a Location on the Board by either its
+coordinates on the grid, or by the room identifier.
+"""
 
 
 class Board:
-    """The gameboard."""
+    """The gameboard.
+
+    A map that allows the system to a Location on the Board by either its
+    coordinates on the grid, or by the room identifier.
+    """
 
     def __init__(self):
         """Initialize."""
