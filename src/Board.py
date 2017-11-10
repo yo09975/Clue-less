@@ -6,7 +6,7 @@ class Board:
 
     def __init__(self):
         """Initialize."""
-        self.__locations = {}
+        self._locations = {}
 
     def move(self, from_location, to_location):
         """Move a player from one location and to another."""

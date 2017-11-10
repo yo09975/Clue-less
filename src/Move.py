@@ -6,13 +6,13 @@ class Move:
 
     def __init__(self, character, destination):
         """Initialize."""
-        self.__character = character
-        self.__destination = destination
+        self._character = character
+        self._destination = destination
 
     def get_charcter_id(self):
         """Return character_id of character to be moved."""
-        return self.__character
+        return self._character
 
     def get_destionation(self):
         """Return destination id."""
-        return self.__destination
+        return self._destination
