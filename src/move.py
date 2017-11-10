@@ -1,8 +1,11 @@
-"""Move.py."""
+"""move.py.
+
+Contains the piece to move, and the destination for it to be moved to.
+"""
 
 
 class Move:
-    """Move to be executed."""
+    """The piece to move, and the destination for it to be moved to."""
 
     def __init__(self, character, destination):
         """Initialize."""
