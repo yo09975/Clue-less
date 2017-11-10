@@ -1,4 +1,5 @@
 """BoardStub.py."""
+import Board
 
 
 class BoardStub(Board):

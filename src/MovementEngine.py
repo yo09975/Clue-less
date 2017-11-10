@@ -7,7 +7,7 @@ class MovementEngine:
 
     def __init__(self):
         """Initialize."""
-        self.__board = Board()
+        self._board = Board()
 
     def is_valid_move(self, move):
         """Return whether move is valid."""
