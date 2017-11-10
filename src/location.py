@@ -1,17 +1,20 @@
+"""location.py."""
+
+
 class Location(object):
     """Represents a space on the game board
 
     Location class in the Game Management Subsystem. Location class will be
     used to store information on game board spaces.
-    """
 
-    _name = None
-    """String representing the name of the Location"""
-    _neighbors = None
-    """List of Locations that are adjacent to the self Location representing
-    possible valid moves"""
-    _occupants = None
-    """Integer representing the Location's current number of occupants"""
+    Attributes:
+    _name - String representing the name of the Location
+    _neighbors - List of Locations that are adjacent to the self Location
+                 representing possible valid moves
+    _occupants - Integer representing the Location's current number of
+                 occupants
+
+    """
 
     def __init__(self, name: str):
         """Constructor"""

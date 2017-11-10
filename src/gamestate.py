@@ -1,3 +1,5 @@
+"""gamestate.py."""
+
 from player import Player
 from card import Card
 from cardtype import CardType
@@ -11,18 +13,19 @@ class GameState(object):
     be used to contain everything that is needed in a game. A loop will
     iterate through players in the game and allow them to perform turns
     until some sort of game over flag is flipped.
-    """
 
-    solution = None
-    """Instance of Suggestion object containing winning game solution"""
-    state = None
-    """Enum value representing the current state of the game"""
-    current_player = None
-    """Index of player in PlayerList whose turn it is"""
+    solution - Instance of Suggestion object containing winning game solution
+    state - Enum value representing the current state of the game
+    current_player - Index of player in PlayerList whose turn it is
+
+    """
 
     def __init__(self):
         """Constructor"""
         print('Constructor in GameState class')
+        self.solution = None
+        self.state = None
+        self.current_player = None
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""

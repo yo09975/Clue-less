@@ -1,3 +1,4 @@
+"""hand.py."""
 from card import Card
 
 
@@ -6,10 +7,11 @@ class Hand(object):
 
     Hand class in the Game Management Subsystem. The object containing
     all cards that make up a Player's hand at the start of a game.
-    """
 
-    _cards = None
-    """List of Card objects"""
+    Attributes:
+    _cards - List of Card objects
+
+    """
 
     def __init__(self, cards: list):
         """Constructor"""

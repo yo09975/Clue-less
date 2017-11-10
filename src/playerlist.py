@@ -1,3 +1,5 @@
+"""playerlist.py."""
+
 from card import Card
 from player import Player
 from cardtype import CardType
@@ -20,17 +22,21 @@ class PlayerList(object):
     objects in a list that is stored globally to allow for tracjing of game
     information such as turn sqeuencing, player location, etc. This class
     is a Singleton.
+
+    Arrtibutes:
+    __instance - Instance of the Singleton class
+    _player_list - List of Player objects representing the Player order
+
     """
 
     __metaclass__ = SingletonType
 
     __instance = None
-    """Instance of the Singleton class"""
-    _player_list = None
-    """List of PLayer objects representing the Player order"""
 
     def __init__(self):
         """Constructor"""
+        __instance = SingletonType(self)
+        self._player_list = []
 
     def get_instance(self):
         """Returns the instance of PlayerList"""

@@ -1,3 +1,4 @@
+"""deck.py."""
 from hand import Hand
 from random import shuffle
 from card import Card
@@ -8,6 +9,7 @@ class Deck(Hand):
 
     Deck class in the Game Management Subsystem. This class is a subclass
     of the Hand class.
+
     """
 
     def __init__(self, cards: list):

@@ -1,3 +1,4 @@
+"""card.py."""
 from enum import Enum
 
 
@@ -6,14 +7,12 @@ class Card(object):
 
     Card class in the Game Management Subsystem. Each object is a
     representation of a suspect, room, or weapon in the game.
-    """
 
-    _name = None
-    """String that is the name of the Card"""
-    _card_type = None
-    """Enum representing the type of Card (Suspect, Room, or Weapon)"""
-    _card_id = None
-    """String representing an unique Card ID"""
+    _name - String that is the name of the Card
+    _card_type - Enum representing the type of Card (Suspect, Room, or Weapon)
+    _card_id - String representing an unique Card ID
+
+    """
 
     def __init__(self, name: str, card_type: Enum, card_id: str):
         """Constructor"""

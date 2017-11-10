@@ -1,3 +1,4 @@
+"""hall.py."""
 from location import Location
 
 
@@ -5,6 +6,7 @@ class Hall(Location):
     """Represents a Hall space on the game board
 
     Hall class in the Game Management Subsystem. Hall extends Location.
+
     """
 
     def __init__(self, name: str):
