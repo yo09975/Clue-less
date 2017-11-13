@@ -21,8 +21,6 @@ class SuggestionEngine:
 
 	 def make_suggestion(self, suggestion: Suggestion):
 	 	"""make a suggestion"""
-	 	suggested_move = Move(suggestion.get_character(), suggestion.get_room)
-	 	game_state.move_engine.do_move(suggested_move)
 
 	 def answer_suggestion(self, suggestion: Suggestion):
 	 	"""answer a suggestion"""
