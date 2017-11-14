@@ -10,5 +10,5 @@ class NoteCardControllerStub:
 
 	  	self._note_card = {}
 
-	 def mark(self, x: int, y: int, symbol: str):
-	  	notecard.mark(x, y, symbol)
+	 def mark(self, x: int, y: int):
+	  	notecard.mark(x, y)

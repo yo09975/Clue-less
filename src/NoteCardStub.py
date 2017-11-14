@@ -13,5 +13,5 @@ class NoteCardStub:
 	 	self._note_state = [[]]
 
 	 def mark(self, x: int, y: int, symbol: str):
-	 	self._note_state[x][y] = str
+	 	note_state[x][y] = (note_state[x][y] + 1) % NUMBER_OF_MARKS
 	 	
