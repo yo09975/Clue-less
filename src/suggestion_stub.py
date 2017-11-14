@@ -1,10 +1,11 @@
-class Suggestion:
+from suggestion import Suggestion
+
+class SuggestionStub:
 	"""The object containing all Cards that make up a Player’s suggestion for the turn."""
 
-	_suggestion_set = None
 
-	def __init__(self, name: str, room: Card, weapon: Card, character: Card):
-		self._name = name
+	def __init__(self, room: Card, weapon: Card, character: Card):
+
 		self._suggestion_set = (room, weapon, character)
 
 	def get_suggestion_set(self):
