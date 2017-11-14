@@ -5,10 +5,7 @@ class NoteCard:
 	 shown (or deduced)	which only requires changing the symbol in the associated
 	 list."""
 
-		 _note_state = None
-
-	 def __init__(self, name: str, ):
-	 	self._name = name
+	 def __init__(self):
 	 	self._note_state = [[]]
 
 	 def mark(self, x: int, y: int, symbol: str):
