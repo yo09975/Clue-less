@@ -1,3 +1,4 @@
+"""player.py."""
 from enum import Enum
 from hand import Hand
 from card import Card
@@ -9,28 +10,30 @@ class Player(object):
 
     Player class in the Game Management Subsystem. The object that represents
     each Player that is stored in teh active game's PlayerList.
-    """
 
-    _player_hand = None
-    """Hand object that contains teh initial Cards dealt to the Player"""
-    _character = None
-    """A Card object representing the Player's character"""
-    _status = None
-    """A flag representing the status of the Player"""
-    _token = None
-    """String representing a unique Player identifier"""
-    _current_location = None
-    """Player's current location on the gameboard"""
-    _previous_location = None
-    """Player's previous location on the gameboard"""
-    _was_transferred = None
-    """Boolean representing if the Player was moved to current Location
-    via a suggestion"""
+    Attributes:
+    _player_hand - Hand object that contains teh initial Cards dealt to the
+                   Player
+    _character - A Card object representing the Player's character
+    _status - A flag representing the status of the Player
+    _token - String representing a unique Player identifier
+    _current_location - Player's current location on the gameboard
+    _previous_location - Player's previous location on the gameboard
+    _was_transferred - Boolean representing if the Player was moved to current
+                       Location via a suggestion
+
+    """
 
     def __init__(self, card: Card):
         """Constructor"""
         # print('Constructor in Player class')
+        self._player_hand = None
         self._character = card
+        self._status = None
+        self._token = None
+        self._current_location = None
+        self._previous_location = None
+        self._was_transferred = None
 
     def set_hand(self, hand: Hand):
         """Creates the Player's initial Hand of Cards"""
