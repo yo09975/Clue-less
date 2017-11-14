@@ -1,4 +1,6 @@
-class SuggestionEngine:
+from suggestionengine import SuggestionEngine
+
+class SuggestionEngineStub:
 	"""Make Suggestion is responsible for taking Player input of character,
 	weapon, and room. Error Checking ensures an invalid suggestion cannot 
 	be made. Make Suggestion also provides input to the Movement Engine to
@@ -12,10 +14,8 @@ class SuggestionEngine:
 	 n the case where the suggestion is correct, the Suggestion Engine 
 	 notifies all Players that a correct suggestion has been made. """
 
-	 _game_state = None
 
-	 def __init__(self, name: str, gamestate: GameState):
-	 	self._name = name
+	 def __init__(self, gamestate: GameState):
 
 	 	self._game_state = gamestate
 

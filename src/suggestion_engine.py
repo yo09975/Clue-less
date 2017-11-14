@@ -12,10 +12,7 @@ class SuggestionEngine:
 	 n the case where the suggestion is correct, the Suggestion Engine 
 	 notifies all Players that a correct suggestion has been made. """
 
-	 _game_state = None
-
-	 def __init__(self, name: str, gamestate: GameState):
-	 	self._name = name
+	 def __init__(self, gamestate: GameState):
 
 	 	self._game_state = gamestate
 
