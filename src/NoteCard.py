@@ -9,5 +9,5 @@ class NoteCard:
 	 	self._note_state = [[]]
 
 	 def mark(self, x: int, y: int):
-	 	note_state[x][y] = (note_state[x][y] + 1) % NUMBER_OF_MARKS
+	 	"""note_state[x][y] = (note_state[x][y] + 1) % NUMBER_OF_MARKS"""
 	 	
