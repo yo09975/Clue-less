@@ -1,0 +1,166 @@
+{
+    "locations": [
+        {
+            "key": "0x4",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["4x1"]
+        },
+        {
+            "key": "1x1",
+            "type": "room",
+            "name": "Study",
+            "neighbors":["2x1","1x2","5x5"]
+        },
+        {
+            "key": "2x1",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x1","3x1"]
+        },
+        {
+            "key": "3x1",
+            "type": "room",
+            "name": "Hall",
+            "neighbors":["2x1","4x1"]
+        },
+        {
+            "key": "4x1",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["3x1","5x1"]
+        },
+        {
+            "key": "5x1",
+            "type": "room",
+            "name": "Lounge",
+            "neighbors":["4x1","5x2","1x5"]
+        },
+        {
+            "key": "0x2",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x2"]
+        },
+        {
+            "key": "1x2",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x1","1x3"]
+        },
+        {
+            "key": "3x2",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["3x1","3x3"]
+        },
+        {
+            "key": "5x2",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["5x1","5x3"]
+        },
+        {
+            "key": "6x2",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["5x2"]
+        },
+        {
+            "key": "1x3",
+            "type": "room",
+            "name": "Library",
+            "neighbors":["1x2","2x3","1x4"]
+        },
+        {
+            "key": "2x3",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x3","3x3"]
+        },
+        {
+            "key": "3x3",
+            "type": "room",
+            "name": "Billiard Room",
+            "neighbors":["3x2","2x3","4x3","3x4"]
+        },
+        {
+            "key": "4x3",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["3x3","5x3"]
+        },
+        {
+            "key": "5x3",
+            "type": "room",
+            "name": "Dining Room",
+            "neighbors":["5x2","4x3","5x4"]
+        },
+        {
+            "key": "0x4",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x4"]
+        },
+        {
+            "key": "1x4",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x3","1x5"]
+        },
+        {
+            "key": "3x4",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["3x3","3x5"]
+        },
+        {
+            "key": "5x4",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["5x3","5x5"]
+        },
+        {
+            "key": "1x5",
+            "type": "room",
+            "name": "Conservatory",
+            "neighbors":["1x4","2x5","5x1"]
+        },
+        {
+            "key": "2x5",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["1x5","3x5"]
+        },
+        {
+            "key": "3x5",
+            "type": "room",
+            "name": "Ballroom",
+            "neighbors":["2x5","4x5"]
+        },
+        {
+            "key": "4x5",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["3x5","5x5"]
+        },
+        {
+            "key": "5x5",
+            "type": "room",
+            "name": "Kitchen",
+            "neighbors":["5x4","4x5","1x1"]
+        },
+        {
+            "key": "2x6",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["2x5"]
+        },
+        {
+            "key": "4x6",
+            "type": "passage",
+            "name": "Passage",
+            "neighbors":["4x5"]
+        }
+    ]
+}

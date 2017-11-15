@@ -1,5 +1,5 @@
 """hall.py."""
-from location import Location
+from src.location import Location
 
 
 class Hall(Location):
