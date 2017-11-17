@@ -78,13 +78,7 @@ def test_set_and_get_token():
 
 
 def test_set_and_get_was_transferred():
-    if test_player.get_was_transferred() is False:
-        assert True
-    else:
-        assert False
+    assert not test_player.get_was_transferred()
     assert type(test_player.get_was_transferred()) is bool
     test_player.set_was_transferred(True)
-    if test_player.get_was_transferred() is True:
-        assert True
-    else:
-        assert False
+    assert test_player.get_was_transferred()
