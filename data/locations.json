@@ -22,7 +22,7 @@
             "key": "3x1",
             "type": "room",
             "name": "Hall",
-            "neighbors":["2x1","4x1"]
+            "neighbors":["2x1","4x1","3x2"]
         },
         {
             "key": "4x1",
@@ -136,7 +136,7 @@
             "key": "3x5",
             "type": "room",
             "name": "Ballroom",
-            "neighbors":["2x5","4x5"]
+            "neighbors":["2x5","4x5","3x4"]
         },
         {
             "key": "4x5",
