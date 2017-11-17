@@ -1,5 +1,6 @@
 """playerlist.py"""
 from src.player import Player
+from src.playerstatus import PlayerStatus
 
 
 class PlayerList:
@@ -31,19 +32,35 @@ class PlayerList:
     def get_next_turn(self, current: int) -> Player:
         """Returns the next active Player in the list"""
         if (current < len(self._player_list)) and (current > -1):
-            next_player = (current + 1) % len(self._player_list)
-            return self._player_list[next_player]
-        else:
+            i = 1
+            while i < len(self._player_list):
+                """Creating index and adjusting to remain in bounds"""
+                search_index = (current + i) % len(self._player_list)
+                if self._player_list[search_index].get_status(
+                        ) == PlayerStatus.ACTIVE:
+                    return self._player_list[search_index]
+                i += 1
             return None
+        else:
+            raise IndexError()
 
     def get_next_player(self, after_player: Player) -> Player:
         """Accepts a Player object and returns Player that is next"""
         if after_player in self._player_list:
             current_index = self._player_list.index(after_player)
-            next_player = (current_index + 1) % len(self._player_list)
-            return self._player_list[next_player]
-        else:
+            i = 1
+            while i < len(self._player_list):
+                """Creating index and adjusting to remain in bounds"""
+                search_index = (current_index + i) % len(self._player_list)
+                if (self._player_list[search_index].get_status(
+                        ) == PlayerStatus.ACTIVE) or (
+                    self._player_list[search_index].get_status(
+                        ) == PlayerStatus.LOST):
+                    return self._player_list[search_index]
+                i += 1
             return None
+        else:
+            raise ValueError()
 
     def get_players(self) -> list:
         """Returns a List of all Players"""
