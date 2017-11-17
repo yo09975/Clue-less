@@ -40,6 +40,7 @@ class Board:
 
             # Initialize starting locations
             if l.get('init', False):
+                print("init ", l['key'])
                 loc.add_occupant()
 
             # Store location with coordinates as key
@@ -59,8 +60,15 @@ class Board:
 
     def move(self, from_location, to_location):
         """Move a player from one location and to another."""
-        self._locations[from_location._key].remove_occupant()
-        self._locations[to_location._key].add_occupant()
+
+        if not self._locations[from_location._key].remove_occupant():
+            raise ValueError()
+            return
+
+        if not self._locations[to_location._key].add_occupant():
+            # If you can't add occupant to the location, reverse the removal
+            self._locations[from_location._key].add_occupant()
+            raise ValueError()
 
         return
 
