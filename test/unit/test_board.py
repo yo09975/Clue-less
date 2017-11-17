@@ -8,6 +8,15 @@ from src.board import Board
 import json
 import os
 
+b = Board()
+
+dir = os.path.dirname(__file__)
+filename = os.path.join(dir, '../../data/locations.json')
+
+# Load all locations
+with open(filename) as data_file:
+    location_data = json.load(data_file)
+
 
 def test_init_fetch_by_name():
     """Fetch by name.
@@ -15,16 +24,6 @@ def test_init_fetch_by_name():
     Request all rooms from Board by name, and verify that the object
     returned has the same name.
     """
-
-    b = Board()
-
-    dir = os.path.dirname(__file__)
-    filename = os.path.join(dir, '../../data/locations.json')
-
-    # Load all locations
-    with open(filename) as data_file:
-        location_data = json.load(data_file)
-
     # Iterate through all locations and only request Rooms by name
     for l in location_data['locations']:
         if l['type'] == 'room':
@@ -38,16 +37,29 @@ def test_init_fetch_by_coordinates():
     Request all locations by coordinates on the game board, and verify that
     the returned object has a name that corresponds to the location.
     """
-    b = Board()
-
-    dir = os.path.dirname(__file__)
-    filename = os.path.join(dir, '../../data/locations.json')
-
-    # Load all locations
-    with open(filename) as data_file:
-        location_data = json.load(data_file)
-
     # Iterate through all locations
     for l in location_data['locations']:
         loc = b.get_location(l['key'])
-        assert loc._name == l['name']
+        assert loc._key == l['key']
+
+
+def test_manage_occupancy():
+    """Test that the board is properly managing occupancy after moves."""
+    # Add player to Hall
+    hall = b.get_location("Hall")
+    hall.add_occupant()
+
+    _2x1 = b.get_location("2x1")
+    _1x1 = b.get_location("1x1")
+    _1x2 = b.get_location("1x2")
+
+    # Move person from
+    b.move(hall, _2x1)
+    b.move(_2x1, _1x1)
+    b.move(_1x1, _1x2)
+
+    # Check occupancy is correct
+    assert hall.get_occupant_count() == 0
+    assert _2x1.get_occupant_count() == 0
+    assert _1x1.get_occupant_count() == 0
+    assert _1x2.get_occupant_count() == 1

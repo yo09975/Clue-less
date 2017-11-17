@@ -30,13 +30,13 @@ class Board:
         # Initialize all locations without neighbors
         for l in location_data['locations']:
             if l['type'] == 'room':
-                loc = Location(l['name'])
+                loc = Location(l['name'], l['key'])
 
                 # Store the location with its room name as key
                 self._locations[l['name']] = loc
             else:
                 # Create a Hall
-                loc = Hall(l['name'])
+                loc = Hall(l['name'], l['key'])
 
             # Store location with coordinates as key
             self._locations[l['key']] = loc
@@ -55,8 +55,8 @@ class Board:
 
     def move(self, from_location, to_location):
         """Move a player from one location and to another."""
-        self._locations[from_location].remove_occupant()
-        self._locations[to_location].add_occupant()
+        self._locations[from_location._key].remove_occupant()
+        self._locations[to_location._key].add_occupant()
 
         return
 
