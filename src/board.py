@@ -53,9 +53,11 @@ class Board:
             # Add neighbors to location
             self._locations[l['key']].create_neighbors(neighbors)
 
-
     def move(self, from_location, to_location):
         """Move a player from one location and to another."""
+        self._locations[from_location].remove_occupant()
+        self._locations[to_location].add_occupant()
+
         return
 
     def get_location(self, location_id):
