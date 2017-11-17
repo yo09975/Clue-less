@@ -38,6 +38,10 @@ class Board:
                 # Create a Hall
                 loc = Hall(l['name'], l['key'])
 
+            # Initialize starting locations
+            if l.get('init', False):
+                loc.add_occupant()
+
             # Store location with coordinates as key
             self._locations[l['key']] = loc
 

@@ -45,20 +45,23 @@ def test_init_fetch_by_coordinates():
 
 def test_manage_occupancy():
     """Test that the board is properly managing occupancy after moves."""
-    # Add player to Hall
-    hall = b.get_location("Hall")
-    hall.add_occupant()
-
+    _4x0 = b.get_location("4x0")
+    _4x1 = b.get_location("4x1")
+    hall = b.get_location("2x1")
     _2x1 = b.get_location("2x1")
     _1x1 = b.get_location("1x1")
     _1x2 = b.get_location("1x2")
 
     # Move person from
+    b.move(_4x0, _4x1)
+    b.move(_4x1, hall)
     b.move(hall, _2x1)
     b.move(_2x1, _1x1)
     b.move(_1x1, _1x2)
 
     # Check occupancy is correct
+    assert _4x0.get_occupant_count() == 0
+    assert _4x1.get_occupant_count() == 0
     assert hall.get_occupant_count() == 0
     assert _2x1.get_occupant_count() == 0
     assert _1x1.get_occupant_count() == 0

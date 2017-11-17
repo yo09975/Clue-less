@@ -1,10 +1,11 @@
 {
     "locations": [
         {
-            "key": "0x4",
+            "key": "4x0",
             "type": "passage",
             "name": "Passage",
-            "neighbors":["4x1"]
+            "neighbors":["4x1"],
+            "init": true
         },
         {
             "key": "1x1",
@@ -40,7 +41,8 @@
             "key": "0x2",
             "type": "passage",
             "name": "Passage",
-            "neighbors":["1x2"]
+            "neighbors":["1x2"],
+            "init": true
         },
         {
             "key": "1x2",
@@ -64,7 +66,8 @@
             "key": "6x2",
             "type": "passage",
             "name": "Passage",
-            "neighbors":["5x2"]
+            "neighbors":["5x2"],
+            "init": true
         },
         {
             "key": "1x3",
@@ -100,7 +103,8 @@
             "key": "0x4",
             "type": "passage",
             "name": "Passage",
-            "neighbors":["1x4"]
+            "neighbors":["1x4"],
+            "init": true
         },
         {
             "key": "1x4",
@@ -154,13 +158,15 @@
             "key": "2x6",
             "type": "passage",
             "name": "Passage",
-            "neighbors":["2x5"]
+            "neighbors":["2x5"],
+            "init": true
         },
         {
             "key": "4x6",
             "type": "passage",
             "name": "Passage",
-            "neighbors":["4x5"]
+            "neighbors":["4x5"],
+            "init": true
         }
     ]
 }
