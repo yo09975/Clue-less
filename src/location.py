@@ -35,25 +35,30 @@ class Location(object):
         # print('is_neighbor method in Location class')
         return (destination in self._neighbors)
 
-    def add_occupant(self):
-        """Increments the number of occupants in the Location"""
+    def add_occupant(self) -> bool:
+        """Increments the number of occupants in the Location. Returns a boolean
+        if adding the occupant was successful of not."""
         # print('add_occupant method in Location class')
         if self._occupants > 5:
             print('!!! ERROR MORE OCCUPANTS THAN TOTAL SUSPECTS IN GAME !!!')
+            return False
         else:
             self._occupants += 1
+            return True
 
     def get_occupant_count(self) -> int:
         """Returns an Integer representing the current number of occupants"""
         return self._occupants
 
-    def remove_occupant(self):
+    def remove_occupant(self) -> bool:
         """Decrements the number of occupants in the Location"""
         # print('remove_occupant method in Location class')
         if self._occupants == 0:
             print('!!! ERROR LOCATION EMPTY CANNOT REMOVE AN OCCUPANT !!!')
+            return False
         else:
             self._occupants -= 1
+            return True
 
     def is_available(self) -> bool:
         """Returns a Boolean on whether the referenced Location is available

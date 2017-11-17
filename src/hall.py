@@ -1,5 +1,5 @@
 """hall.py."""
-from location import Location
+from src.location import Location
 
 
 class Hall(Location):
@@ -14,13 +14,15 @@ class Hall(Location):
         # print('Constructor in Hall class')
         super(Hall, self).__init__(name)
 
-    def add_occupant(self):
+    def add_occupant(self) -> bool:
         """Increments the number of occupants in the Hall"""
         # print('add_occupant method in Hall class')
         if self.get_occupant_count() > 0:
             print('!!! ERROR CANNOT HAVE MORE THAN ONE IN HALL !!!')
+            return False
         else:
             self._occupants += 1
+            return True
 
     def is_available(self) -> bool:
         """Returns a Boolean on whether the Hall is available for an
