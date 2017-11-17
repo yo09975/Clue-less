@@ -1,5 +1,5 @@
 """card.py."""
-from enum import Enum
+from src.cardtype import CardType
 
 
 class Card(object):
@@ -14,7 +14,7 @@ class Card(object):
 
     """
 
-    def __init__(self, name: str, card_type: Enum, card_id: str):
+    def __init__(self, name: str, card_type: CardType, card_id: str):
         """Constructor"""
         # print('Constructor in Card class')
         self._name = name
@@ -38,7 +38,7 @@ class Card(object):
         # print('get_id method in Card class')
         return self._card_id
 
-    def get_type(self) -> Enum:
+    def get_type(self) -> CardType:
         """Returns an Enum that represents the type of the Card"""
         # print('get_type method in Card class')
         return self._card_type

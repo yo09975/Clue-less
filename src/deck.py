@@ -1,7 +1,7 @@
 """deck.py."""
-from hand import Hand
+from src.hand import Hand
 from random import shuffle
-from card import Card
+from src.card import Card
 
 
 class Deck(Hand):
