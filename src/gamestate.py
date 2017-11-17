@@ -1,9 +1,11 @@
 """gamestate.py."""
 
-from player import Player
-from card import Card
-from cardtype import CardType
-from enum import Enum
+from src.player import Player
+from src.playerlist import PlayerList
+from src.card import Card
+from src.cardtype import CardType
+from src.gamestatus import GameStatus
+from src.suggestion import Suggestion
 
 
 class GameState(object):
@@ -14,43 +16,54 @@ class GameState(object):
     iterate through players in the game and allow them to perform turns
     until some sort of game over flag is flipped.
 
-    solution - Instance of Suggestion object containing winning game solution
-    state - Enum value representing the current state of the game
-    current_player - Index of player in PlayerList whose turn it is
+    _solution - Instance of Suggestion object containing winning game solution
+    _state - Enum value representing the current state of the game
+    _current_player - Index of player in PlayerList whose turn it is
 
     """
 
     def __init__(self):
         """Constructor"""
-        print('Constructor in GameState class')
-        self.solution = None
-        self.state = None
-        self.current_player = None
+        # print('Constructor in GameState class')
+        self._solution = None
+        self._state = GameStatus.LOBBY
+        self._current_player = 0
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""
-        print('next_turn method in GameState class')
-        return Player(Card(
-            'next_turn Player', CardType.SUSPECT, 'Player123'))
+        # print('next_turn method in GameState class')
+        p_list = PlayerList()
+        next_player = p_list.get_next_turn(self._current_player)
+        self._current_player = (self._current_player + 1) % len(
+            p_list.get_players())
+        return p_list.get_next_turn(self._current_player)
 
-    def get_state(self) -> Enum:
-        """Returns the current state of teh game"""
-        print('get_state method in GameState class')
-        return Enum('get_state')
+    def get_state(self) -> GameStatus:
+        """Returns the current state of the game"""
+        # print('get_state method in GameState class')
+        return self._state
 
-    def set_state(self, state: Enum):
+    def set_state(self, state: GameStatus):
         """Accepts an Enum to set the state of the game"""
-        print('set_state method in GameState class')
+        # print('set_state method in GameState class')
+        self._state = state
 
-    def get_solution(self):
+    def get_solution(self) -> Suggestion:
         """Returns a Suggestion object representing the game's solution"""
-        print('get_solution method in GameState class')
-        return 'SUGGESTION OBJECT'
+        # print('get_solution method in GameState class')
+        return self._solution
 
-    def set_solution(self, solution):
+    def set_solution(self, solution: Suggestion):
         """Accepts a Suggestion object to set the game's solution"""
-        print('set_solution method in GameState class')
+        # print('set_solution method in GameState class')
+        self._solution = solution
 
-    def get_current_player(self):
+    def get_current_player(self) -> int:
         """Returns an Integer representing the player whose turn it is"""
-        return 999
+        # print('get_current_player method in GameState class')
+        return self._current_player
+
+    def set_current_player(self, player_index: int):
+        """Accepts an integer to set the current player"""
+        # print('set_current_player method in GameState class')
+        self._current_player = player_index
