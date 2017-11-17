@@ -14,33 +14,18 @@ def test_init():
 
 
 def test_create_neighbors():
-    if test_hall1.is_neighbor(test_hall2) is False:
-        assert True
-    else:
-        assert False
+    assert not test_hall1.is_neighbor(test_hall2)
     test_hall1.create_neighbors([test_hall2, test_hall3])
-    if test_hall1.is_neighbor(test_hall2) is True:
-        assert True
-    else:
-        assert False
-    if test_hall1.is_neighbor(test_hall3) is True:
-        assert True
-    else:
-        assert False
-    if test_hall1.is_neighbor(test_hall4) is False:
-        assert True
-    else:
-        assert False
+    assert test_hall1.is_neighbor(test_hall2)
+    assert test_hall1.is_neighbor(test_hall3)
+    assert not test_hall1.is_neighbor(test_hall4)
 
 
 def test_add_occupant():
     assert test_hall1.get_occupant_count() == 0
     assert type(test_hall1.add_occupant()) is bool
     assert test_hall1.get_occupant_count() == 1
-    if test_hall1.add_occupant() is False:
-        assert True
-    else:
-        assert False
+    assert not test_hall1.add_occupant()
     assert test_hall1.get_occupant_count() == 1
 
 
@@ -51,27 +36,15 @@ def test_get_occupant_count():
 
 def test_remove_occupant():
     assert test_hall1.get_occupant_count() == 1
-    if test_hall1.remove_occupant() is True:
-        assert True
-    else:
-        assert False
+    assert test_hall1.remove_occupant()
     assert test_hall1.get_occupant_count() == 0
     assert type(test_hall1.remove_occupant()) is bool
-    if test_hall1.remove_occupant() is False:
-        assert True
-    else:
-        assert False
+    assert not test_hall1.remove_occupant()
     assert test_hall1.get_occupant_count() == 0
 
 
 def test_is_available():
-    if test_hall1.is_available() is True:
-        assert True
-    else:
-        assert False
+    assert test_hall1.is_available()
     assert type(test_hall1.is_available()) is bool
     test_hall1.add_occupant()
-    if test_hall1.is_available() is False:
-        assert True
-    else:
-        assert False
+    assert not test_hall1.is_available()

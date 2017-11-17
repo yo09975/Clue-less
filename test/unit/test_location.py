@@ -13,23 +13,11 @@ def test_init():
 
 
 def test_create_neighbors():
-    if test_loc1.is_neighbor(test_loc2) is False:
-        assert True
-    else:
-        assert False
+    assert not test_loc1.is_neighbor(test_loc2)
     test_loc1.create_neighbors([test_loc2, test_loc3])
-    if test_loc1.is_neighbor(test_loc2) is True:
-        assert True
-    else:
-        assert False
-    if test_loc1.is_neighbor(test_loc3) is True:
-        assert True
-    else:
-        assert False
-    if test_loc1.is_neighbor(test_loc4) is False:
-        assert True
-    else:
-        assert False
+    assert test_loc1.is_neighbor(test_loc2)
+    assert test_loc1.is_neighbor(test_loc3)
+    assert not test_loc1.is_neighbor(test_loc4)
 
 
 def test_add_occupant():
@@ -37,18 +25,12 @@ def test_add_occupant():
     test_loc1.add_occupant()
     assert test_loc1.get_occupant_count() == 1
     assert type(test_loc1.add_occupant()) is bool
-    if test_loc1.add_occupant() is True:
-        assert True
-    else:
-        assert False
+    assert test_loc1.add_occupant()
     test_loc1.add_occupant()
     test_loc1.add_occupant()
     test_loc1.add_occupant()
     assert test_loc1.get_occupant_count() == 6
-    if test_loc1.add_occupant() is False:
-        assert True
-    else:
-        assert False
+    assert not test_loc1.add_occupant()
     assert test_loc1.get_occupant_count() == 6
 
 
@@ -67,15 +49,9 @@ def test_remove_occupant():
     test_loc1.remove_occupant()
     test_loc1.remove_occupant()
     assert test_loc1.get_occupant_count() == 0
-    if test_loc1.remove_occupant() is False:
-        assert True
-    else:
-        assert False
+    assert not test_loc1.remove_occupant()
 
 
 def test_is_available():
-    if test_loc1.is_available() is True:
-        assert True
-    else:
-        assert False
+    assert test_loc1.is_available()
     assert type(test_loc1.is_available()) is bool
