@@ -28,19 +28,10 @@ def test_add_card():
 
 
 def test_contains_card():
-    if test_hand.contains_card(test_card2) is True:
-        assert True
-    else:
-        assert False
-    if test_hand.contains_card(test_card4) is False:
-        assert True
-    else:
-        assert False
+    assert test_hand.contains_card(test_card2)
+    assert not test_hand.contains_card(test_card4)
 
 
 def test_get_cards():
     for list_card in test_hand.get_cards():
-        if test_hand.contains_card(list_card) is True:
-            assert True
-        else:
-            assert False
+        assert test_hand.contains_card(list_card)

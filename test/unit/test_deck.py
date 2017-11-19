@@ -35,14 +35,8 @@ def test_deal():
 
 
 def test_contains_card():
-    if test_deck1.contains_card(test_card1) is True:
-        assert True
-    else:
-        assert False
-    if test_deck1.contains_card(test_card3) is False:
-        assert True
-    else:
-        assert False
+    assert test_deck1.contains_card(test_card1)
+    assert not test_deck1.contains_card(test_card3)
 
 
 def test_add():
@@ -51,15 +45,9 @@ def test_add():
     test_deck3 = test_deck1 + test_deck2
     assert len(test_deck3.get_cards()) == 4
     for list_card in test_deck1.get_cards():
-        if test_deck3.contains_card(list_card) is True:
-            assert True
-        else:
-            assert False
+        assert test_deck3.contains_card(list_card)
     for list_card in test_deck2.get_cards():
-        if test_deck3.contains_card(list_card) is True:
-            assert True
-        else:
-            assert False
+        assert test_deck3.contains_card(list_card)
 
 
 def test_shuffle():
@@ -74,7 +62,4 @@ def test_shuffle():
 def test_get_cards():
     new_hand = test_deck1.get_cards()
     for list_card in new_hand:
-        if test_deck1.contains_card(list_card) is True:
-            assert True
-        else:
-            assert False
+        assert test_deck1.contains_card(list_card)
