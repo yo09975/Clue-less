@@ -34,9 +34,8 @@ class GameState(object):
         # print('next_turn method in GameState class')
         p_list = PlayerList()
         next_player = p_list.get_next_turn(self._current_player)
-        self._current_player = (self._current_player + 1) % len(
-            p_list.get_players())
-        return p_list.get_next_turn(self._current_player)
+        self._current_player = p_list.get_players().index(next_player)
+        return next_player
 
     def get_state(self) -> GameStatus:
         """Returns the current state of the game"""

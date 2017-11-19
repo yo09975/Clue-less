@@ -45,9 +45,9 @@ def test_init():
 def test_next_turn():
     assert test_gamestate.get_current_player() == 0
     assert test_gamestate.next_turn() == test_player3
-    assert test_gamestate.get_current_player() == 1
-    assert type(test_gamestate.next_turn()) is Player
     assert test_gamestate.get_current_player() == 2
+    assert type(test_gamestate.next_turn()) is Player
+    assert test_gamestate.get_current_player() == 0
 
 
 def test_get_and_set_state():
@@ -58,17 +58,15 @@ def test_get_and_set_state():
 
 
 def test_get_and_set_solution():
-    if test_gamestate.get_solution() is None:
-        assert True
-    else:
-        assert False
+    assert test_gamestate.get_solution() is None
     test_gamestate.set_solution(test_solution)
     assert test_gamestate.get_solution() == test_solution
     assert type(test_gamestate.get_solution()) is Suggestion
 
 
 def test_get_and_set_current_player():
-    assert test_gamestate.get_current_player() == 2
-    assert type(test_gamestate.get_current_player()) is int
     test_gamestate.set_current_player(1)
     assert test_gamestate.get_current_player() == 1
+    assert type(test_gamestate.get_current_player()) is int
+    test_gamestate.set_current_player(0)
+    assert test_gamestate.get_current_player() == 0
