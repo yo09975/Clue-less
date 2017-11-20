@@ -61,14 +61,14 @@ class Board:
     def move(self, from_location, to_location):
         """Move a player from one location and to another."""
 
-        if not self._locations[from_location._key].remove_occupant():
-            raise ValueError()
+        if not self._locations[from_location].remove_occupant():
+            #raise ValueError()
             return
 
-        if not self._locations[to_location._key].add_occupant():
+        if not self._locations[to_location].add_occupant():
             # If you can't add occupant to the location, reverse the removal
-            self._locations[from_location._key].add_occupant()
-            raise ValueError()
+            self._locations[from_location].add_occupant()
+            #raise ValueError()
 
         return
 

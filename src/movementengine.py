@@ -35,7 +35,11 @@ class MovementEngine:
         from_location = player.get_current_location()
 
         # Get destination location from board
-        destination = self._board.get_location(move.get_destination)
+        destination = self._board.get_location(move.get_destination())
+
+        # Check to see if destination has occupancy
+        if not destination.is_available():
+            return False
 
         # Check to see if destination is a neighbor of location
         return from_location.is_neighbor(destination)
@@ -49,7 +53,8 @@ class MovementEngine:
         from_location = player.get_current_location()
 
         # Execute move on board and update player location
-        self._board.move(from_location, move.get_destination())
-        player.set_location(move.get_destination())
+        self._board.move(from_location._key, move.get_destination())
+        dest_location = self._board.get_location(move.get_destination())
+        player.set_location(dest_location)
 
         return
