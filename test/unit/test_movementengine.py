@@ -34,9 +34,9 @@ _5x1 = me._board.get_location("5x1")
 _3x1 = me._board.get_location("3x1")
 _6x2 = me._board.get_location("6x2")
 
+
 def test_detect_illegal_move():
     """Ask the Movement Engine to check move to non-neighbor."""
-
     MIS_SCA.set_location(_4x0)
     COL_MUS.set_location(_6x2)
 
@@ -107,6 +107,7 @@ def test_detect_move_to_unoccupied_room():
     # Check validity of moving Miss Scarlet to Lounge
     move2 = Move(MIS_SCA.get_token(), _5x1._key)
     assert me.is_valid_move(move2)
+    me.do_move(move2)
 
 
 def test_execute_non_neighbor_move():
@@ -114,7 +115,7 @@ def test_execute_non_neighbor_move():
     hall_occ = me._board.get_location("3x1").get_occupant_count()
     move = Move(MIS_SCA.get_token(), _3x1._key)
 
-    assert me.is_valid_move(move)
+    assert not me.is_valid_move(move)
 
     me.do_move(move)
     new_hall_occ = me._board.get_location("3x1").get_occupant_count()
