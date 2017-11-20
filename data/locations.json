@@ -1,172 +1,419 @@
 {
     "locations": [
         {
+            "dims": {
+                "height": "62",
+                "width": "75",
+                "x": "676",
+                "y": "1"
+            },
+            "init": true,
             "key": "4x0",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["4x1"],
-            "init": true
+            "neighbors": [
+                "4x1"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "1",
+                "y": "1"
+            },
             "key": "1x1",
-            "type": "room",
             "name": "Study",
-            "neighbors":["2x1","1x2","5x5"]
+            "neighbors": [
+                "2x1",
+                "1x2",
+                "5x5"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "301",
+                "y": "63"
+            },
             "key": "2x1",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x1","3x1"]
+            "neighbors": [
+                "1x1",
+                "3x1"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "376",
+                "y": "1"
+            },
             "key": "3x1",
-            "type": "room",
             "name": "Hall",
-            "neighbors":["2x1","4x1","3x2"]
+            "neighbors": [
+                "2x1",
+                "4x1",
+                "3x2"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "676",
+                "y": "63"
+            },
             "key": "4x1",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["3x1","5x1"]
+            "neighbors": [
+                "3x1",
+                "5x1"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "751",
+                "y": "1"
+            },
             "key": "5x1",
-            "type": "room",
             "name": "Lounge",
-            "neighbors":["4x1","5x2","1x5"]
+            "neighbors": [
+                "4x1",
+                "5x2",
+                "1x5"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "62",
+                "width": "75",
+                "x": "37",
+                "y": "207"
+            },
+            "init": true,
             "key": "0x2",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x2"],
-            "init": true
+            "neighbors": [
+                "1x2"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "112",
+                "y": "201"
+            },
             "key": "1x2",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x1","1x3"]
+            "neighbors": [
+                "1x1",
+                "1x3"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "487",
+                "y": "201"
+            },
             "key": "3x2",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["3x1","3x3"]
+            "neighbors": [
+                "3x1",
+                "3x3"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "862",
+                "y": "201"
+            },
             "key": "5x2",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["5x1","5x3"]
+            "neighbors": [
+                "5x1",
+                "5x3"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "62",
+                "width": "75",
+                "x": "937",
+                "y": "207"
+            },
+            "init": true,
             "key": "6x2",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["5x2"],
-            "init": true
+            "neighbors": [
+                "5x2"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "1",
+                "y": "276"
+            },
             "key": "1x3",
-            "type": "room",
             "name": "Library",
-            "neighbors":["1x2","2x3","1x4"]
+            "neighbors": [
+                "1x2",
+                "2x3",
+                "1x4"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "301",
+                "y": "337"
+            },
             "key": "2x3",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x3","3x3"]
+            "neighbors": [
+                "1x3",
+                "3x3"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "376",
+                "y": "276"
+            },
             "key": "3x3",
-            "type": "room",
             "name": "Billiard Room",
-            "neighbors":["3x2","2x3","4x3","3x4"]
+            "neighbors": [
+                "3x2",
+                "2x3",
+                "4x3",
+                "3x4"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "676",
+                "y": "337"
+            },
             "key": "4x3",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["3x3","5x3"]
+            "neighbors": [
+                "3x3",
+                "5x3"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "751",
+                "y": "276"
+            },
             "key": "5x3",
-            "type": "room",
             "name": "Dining Room",
-            "neighbors":["5x2","4x3","5x4"]
+            "neighbors": [
+                "5x2",
+                "4x3",
+                "5x4"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "62",
+                "width": "75",
+                "x": "37",
+                "y": "482"
+            },
+            "init": true,
             "key": "0x4",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x4"],
-            "init": true
+            "neighbors": [
+                "1x4"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "112",
+                "y": "476"
+            },
             "key": "1x4",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x3","1x5"]
+            "neighbors": [
+                "1x3",
+                "1x5"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "487",
+                "y": "476"
+            },
             "key": "3x4",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["3x3","3x5"]
+            "neighbors": [
+                "3x3",
+                "3x5"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "862",
+                "y": "476"
+            },
             "key": "5x4",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["5x3","5x5"]
+            "neighbors": [
+                "5x3",
+                "5x5"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "1",
+                "y": "551"
+            },
             "key": "1x5",
-            "type": "room",
             "name": "Conservatory",
-            "neighbors":["1x4","2x5","5x1"]
+            "neighbors": [
+                "1x4",
+                "2x5",
+                "5x1"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "301",
+                "y": "612"
+            },
             "key": "2x5",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["1x5","3x5"]
+            "neighbors": [
+                "1x5",
+                "3x5"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "376",
+                "y": "551"
+            },
             "key": "3x5",
-            "type": "room",
             "name": "Ballroom",
-            "neighbors":["2x5","4x5","3x4"]
+            "neighbors": [
+                "2x5",
+                "4x5",
+                "3x4"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "75",
+                "width": "75",
+                "x": "676",
+                "y": "612"
+            },
             "key": "4x5",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["3x5","5x5"]
+            "neighbors": [
+                "3x5",
+                "5x5"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "200",
+                "width": "300",
+                "x": "751",
+                "y": "551"
+            },
             "key": "5x5",
-            "type": "room",
             "name": "Kitchen",
-            "neighbors":["5x4","4x5","1x1"]
+            "neighbors": [
+                "5x4",
+                "4x5",
+                "1x1"
+            ],
+            "type": "room"
         },
         {
+            "dims": {
+                "height": "62",
+                "width": "75",
+                "x": "301",
+                "y": "687"
+            },
+            "init": true,
             "key": "2x6",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["2x5"],
-            "init": true
+            "neighbors": [
+                "2x5"
+            ],
+            "type": "passage"
         },
         {
+            "dims": {
+                "height": "62",
+                "width": "75",
+                "x": "676",
+                "y": "687"
+            },
+            "init": true,
             "key": "4x6",
-            "type": "passage",
             "name": "Passage",
-            "neighbors":["4x5"],
-            "init": true
+            "neighbors": [
+                "4x5"
+            ],
+            "type": "passage"
         }
     ]
 }
