@@ -2,11 +2,11 @@
 from src.hall import Hall
 
 
-test_hall1 = Hall('Test Location 1')
-test_hall2 = Hall('Test Location 2')
-test_hall3 = Hall('Test Location 3')
-test_hall4 = Hall('Test Location 4')
-test_hall5 = Hall('Test Location 5')
+test_hall1 = Hall('Test Location 1', "1x1")
+test_hall2 = Hall('Test Location 2', "1x2")
+test_hall3 = Hall('Test Location 3', "2x1")
+test_hall4 = Hall('Test Location 4', "2x2")
+test_hall5 = Hall('Test Location 5', "4x3")
 
 
 def test_init():

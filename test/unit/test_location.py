@@ -1,11 +1,11 @@
 """test_location.py"""
 from src.location import Location
 
-test_loc1 = Location('Test Location 1')
-test_loc2 = Location('Test Location 2')
-test_loc3 = Location('Test Location 3')
-test_loc4 = Location('Test Location 4')
-test_loc5 = Location('Test Location 5')
+test_loc1 = Location('Test Location 1', "1x1")
+test_loc2 = Location('Test Location 2', "1x2")
+test_loc3 = Location('Test Location 3', "2x1")
+test_loc4 = Location('Test Location 4', "2x2")
+test_loc5 = Location('Test Location 5', "3x3")
 
 
 def test_init():

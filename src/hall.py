@@ -9,10 +9,10 @@ class Hall(Location):
 
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, key: str):
         """Constructor"""
         # print('Constructor in Hall class')
-        super(Hall, self).__init__(name)
+        super(Hall, self).__init__(name, key)
 
     def add_occupant(self) -> bool:
         """Increments the number of occupants in the Hall"""
