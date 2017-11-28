@@ -5,8 +5,10 @@ from src.playerlist import PlayerList
 from src.card import Card
 from src.cardtype import CardType
 from src.gamestatus import GameStatus
-from src.suggestion import Suggestion
-
+from src.Suggestion import Suggestion
+from src.deck import Deck
+import os
+import json
 
 class GameState(object):
     """Contains all required information about a game.
