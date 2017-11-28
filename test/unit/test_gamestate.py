@@ -5,7 +5,7 @@ from src.card import Card
 from src.cardtype import CardType
 from src.playerstatus import PlayerStatus
 from src.gamestate import GameState
-from src.Suggestion import Suggestion
+from src.suggestion import Suggestion
 from src.gamestatus import GameStatus
 
 
