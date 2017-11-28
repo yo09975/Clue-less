@@ -1,3 +1,5 @@
+from src.card import Card
+
 class Suggestion:
 	"""The object containing all Cards that make up a Player’s suggestion for the turn."""
 
@@ -17,4 +19,3 @@ class Suggestion:
 
 	def get_character(self):
 		return self._suggestion_set[2]
-			
