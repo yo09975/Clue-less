@@ -1,5 +1,5 @@
 import uuid
-
+import socket
 
 class GameSocket:
     """
@@ -7,9 +7,9 @@ class GameSocket:
     """
 
     """ Constructor """
-    def __init__(self, uuid, connection):
-        self._uuid = uuid
-        self._connection = connection
+    def __init__(self, socket):
+        self._uuid = uuid.uuid4()
+        self._socket = socket
 
     """ Used to send messages
         @param message The Message to send
@@ -17,14 +17,17 @@ class GameSocket:
     def send_message(self, message):
         raise NotImplementedError
 
-    """ Used to read Messages from the connection """
+    """ Used to read Messages from the socket """
     def read_message(self):
-        raise NotImplementedError
+        return self._socket.recv(10000)
 
     """ Getter for uuid """
     def get_uuid(self):
         return self._uuid
 
-    """ Getter for connection"""
-    def get_connection(self):
-        return self._connection
+    """ Getter for socket"""
+    def get_socket(self):
+        return self._socket
+
+    def close(self):
+        return self._socket.close()
