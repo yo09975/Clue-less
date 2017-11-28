@@ -37,16 +37,20 @@ def test_init():
 
 
 def test_add_player():
+
+    # Create a baseline off of which to test player counts
+    tare = len(test_plist1.get_players())
+
     test_plist1.add_player(test_player1)
-    assert len(test_plist1.get_players()) == 1
+    assert len(test_plist1.get_players()) == tare + 1
     test_plist2.add_player(test_player2)
-    assert len(test_plist1.get_players()) == 2
-    assert len(test_plist2.get_players()) == 2
+    assert len(test_plist1.get_players()) == tare + 2
+    assert len(test_plist2.get_players()) == tare + 2
     test_plist1.add_player(test_player3)
     test_plist2.add_player(test_player4)
     test_plist1.add_player(test_player5)
     test_plist2.add_player(test_player6)
-    assert len(test_plist1.get_players()) == 6
+    assert len(test_plist1.get_players()) == tare + 6
 
 
 def test_get_next_turn():
@@ -90,6 +94,7 @@ def test_get_next_player():
 
 
 def test_get_players():
+
     assert test_plist1.get_players() == [test_player1, test_player2,
                                          test_player3, test_player4,
                                          test_player5, test_player6]
