@@ -6,7 +6,9 @@ from src.card import Card
 from src.cardtype import CardType
 from src.gamestatus import GameStatus
 from src.suggestion import Suggestion
-
+from src.deck import Deck
+import os
+import json
 
 class GameState(object):
     """Contains all required information about a game.
@@ -28,6 +30,37 @@ class GameState(object):
         self._solution = None
         self._state = GameStatus.LOBBY
         self._current_player = 0
+
+        # Read cards datafile and initialize Deck
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, '../data/cards.json')
+
+        with open(filename) as data_file:
+            card_data = json.load(data_file)
+
+        # Initialize all locations without neighbors
+        cards = []
+        for c in card_data['cards']:
+            if c['type'] == 'suspect':
+                card_type = CardType.SUSPECT
+            elif c['type'] == 'weapon':
+                card_type = CardType.WEAPON
+            else:
+                card_type = CardType.ROOM
+            card = Card(c['name'], card_type, c['key'])
+
+            # Initialize a new player and their location, add to PlayerList
+            if c['type'] == 'suspect':
+                player = Player(card)
+                player.set_location(c['start'])
+
+                player_list = PlayerList()
+                player_list.add_player(player)
+
+            # Add card to list for addition to Deck later
+            cards.append(card)
+
+        self.deck = Deck(cards)
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""

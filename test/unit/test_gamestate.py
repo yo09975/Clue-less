@@ -15,26 +15,24 @@ test_card3 = Card('Test Card 3 Name', CardType.WEAPON, 'TEST333ID')
 test_card4 = Card('Test Card 4 Name', CardType.ROOM, 'TEST444ID')
 test_card5 = Card('Test Card 5 Name', CardType.ROOM, 'TEST555ID')
 test_card6 = Card('Test Card 6 Name', CardType.ROOM, 'TEST666ID')
-test_player1 = Player(test_card1)
-test_player2 = Player(test_card2)
-test_player3 = Player(test_card3)
-test_player4 = Player(test_card4)
-test_player5 = Player(test_card5)
-test_player6 = Player(test_card6)
-test_plist1 = PlayerList()
-test_plist1.add_player(test_player1)
-test_plist1.add_player(test_player2)
-test_plist1.add_player(test_player3)
-test_plist1.add_player(test_player4)
-test_plist1.add_player(test_player5)
-test_plist1.add_player(test_player6)
-test_player1.set_status(PlayerStatus.ACTIVE)
-test_player2.set_status(PlayerStatus.COMP)
-test_player3.set_status(PlayerStatus.ACTIVE)
-test_player4.set_status(PlayerStatus.LOST)
-test_player5.set_status(PlayerStatus.COMP)
-test_player6.set_status(PlayerStatus.COMP)
+
 test_gamestate = GameState()
+player_list = PlayerList()
+players = player_list.get_players()
+test_player_0 = players[0]
+test_player_1 = players[1]
+test_player_2 = players[2]
+test_player_3 = players[3]
+test_player_4 = players[4]
+test_player_5 = players[5]
+
+test_player_0.set_status(PlayerStatus.ACTIVE)
+test_player_1.set_status(PlayerStatus.COMP)
+test_player_2.set_status(PlayerStatus.ACTIVE)
+test_player_3.set_status(PlayerStatus.LOST)
+test_player_4.set_status(PlayerStatus.COMP)
+test_player_5.set_status(PlayerStatus.COMP)
+
 test_solution = Suggestion(test_card4, test_card3, test_card1)
 
 
@@ -44,7 +42,7 @@ def test_init():
 
 def test_next_turn():
     assert test_gamestate.get_current_player() == 0
-    assert test_gamestate.next_turn() == test_player3
+    assert test_gamestate.next_turn() == test_player_2
     assert test_gamestate.get_current_player() == 2
     assert type(test_gamestate.next_turn()) is Player
     assert test_gamestate.get_current_player() == 0
