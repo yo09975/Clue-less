@@ -59,14 +59,7 @@ class ServerNetworkInterface(metaclass=Singleton):
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
 
-        # Debug
-        for conn in self.client_socket_list:
-            conn[1].sendall(f'Your UUID is {conn[0]}'.encode())
-            # Close connection
-            conn[1].close()
-        # Close the server's socket
-        self.server_socket.close()
-
+        self.shutdown()
     """ Retrieve the appropriate socket object associated with a particular uuid """
     def _get_sock_by_uuid(self, uuid):
         for conn in self.client_socket_list:
@@ -86,6 +79,7 @@ class ServerNetworkInterface(metaclass=Singleton):
         if message.get_uuid() != self.get_uuid():
             message.set_uuid(self.get_uuid())
             print('DEBUG: Outgoing UUID had to be corrected!')
+        # TODO: Error checking/retry logic
         client_sock.sendall(message.encode())
 
     """ Read message from a GameSocket """
@@ -102,6 +96,7 @@ class ServerNetworkInterface(metaclass=Singleton):
         # TODO: send all clients message that server is shutting down
         for conn in self.client_socket_list:
             conn[1].close()
+            self.client_socket_list.remove(conn)
 
     """ Terminate all connections """
     def shutdown(self):
@@ -109,6 +104,7 @@ class ServerNetworkInterface(metaclass=Singleton):
         self.close_all()
         if self.server_socket:
             self.server_socket.close()
+            self.server_socket = None
         exit(0)
 
 
