@@ -2,6 +2,7 @@
 from singleton import Singleton
 import uuid
 from socket import *
+from message import *
 
 class ServerNetworkInterface(metaclass=Singleton):
     """
@@ -74,7 +75,14 @@ class ServerNetworkInterface(metaclass=Singleton):
 
     """ Send message to a GameSocket """
     def send_message(self, uuid, message):
-        raise NotImplementedError
+        # Need to get the socket object associated with a particular UUID
+        client_sock = self._get_sock_by_uuid(uuid)
+        # Verify that the UUID field is correct in our outgoing message
+        if message.get_uuid() != self.get_uuid():
+            message.set_uuid(self.get_uuid())
+            print('DEBUG: Outgoing UUID had to be corrected!')
+        client_sock.sendall(message.encode())
+
     """ Read message from a GameSocket """
     def read_message(self, uuid):
         raise NotImplementedError
