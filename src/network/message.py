@@ -25,10 +25,14 @@ class Message:
         """ payload is a string containing the actual data """
         self._payload = payload
 
+    """ Setter for uuid """
+    def set_uuid(self, uuid):
+        self._uuid = uuid
+
     """ Getter for uuid """
     def get_uuid(self):
         return self._uuid
-
+    
     """ Getter for msg_type """
     def get_msg_type(self):
         return self._msg_type
