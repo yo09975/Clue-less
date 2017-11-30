@@ -1,8 +1,15 @@
-from singleton import Singleton
+#!/usr/bin/env python3.6
 
+from singleton import Singleton
+from servernetworkinterface import *
+from socket import *
 
 class ClientNetworkInterface(metaclass=Singleton):
-    __connection = None
+    
+    """ Constructor """
+    def __init__(self):
+        # Socket representing connection to a ServerNetworkInterface
+        self.client_socket = None
 
     """ Connect to the ServerNetworkInterface """
     def connect(self, ip, port):
