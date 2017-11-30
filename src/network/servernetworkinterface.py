@@ -17,10 +17,15 @@ class ServerNetworkInterface(metaclass=Singleton):
         # Tuple of (IP, PORT)
         self.address = address
         self.server_socket = None
+
+        # UUID of server
+        self._uuid = str(uuid.uuid4())
+
         # List of currently connected clients
         # Each element is a tuple of ((str) uuid, socket)
         self.client_socket_list = []
-
+    
+    """ Binds and listens for the appropriate number of players to connect """
     def start(self):
         # Create a TCP socket
         self.server_socket = socket(AF_INET, SOCK_STREAM)
@@ -62,6 +67,10 @@ class ServerNetworkInterface(metaclass=Singleton):
             if conn[0] == uuid:
                 return conn[1]
         raise KeyError(f"Unable to find UUID: {uuid} in client list")
+
+    """ Getter for the server's UUID """
+    def get_uuid(self):
+        return self._uuid
 
     """ Send message to a GameSocket """
     def send_message(self, uuid, message):
