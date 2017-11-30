@@ -86,9 +86,11 @@ class ServerNetworkInterface(metaclass=Singleton):
     """ Read message from a GameSocket """
     def read_message(self, uuid):
         raise NotImplementedError
+
     """ Send message to all GameSocket """
     def send_all(self, message):
-        raise NotImplementedError
+        for conn in self.client_socket_list:
+            self.send_message(conn[0], message)
 
 if __name__ == '__main__':
     try:
