@@ -11,6 +11,7 @@ class ServerNetworkInterface(metaclass=Singleton):
     
     """ Class scoped variable for amount of expected socket connections (players) """
     MIN_PLAYERS = 6
+    BUFSIZE = 4096
 
     def __init__(self, address):
         # Tuple of (IP, PORT)
@@ -32,16 +33,25 @@ class ServerNetworkInterface(metaclass=Singleton):
 
         
         # Wait until the minimum amount of players has connected
+        # Synchronous
         while len(self.client_socket_list) != ServerNetworkInterface.MIN_PLAYERS:
             # Accept a connection
             client_sock, client_addr = self.server_socket.accept()
+            client = (str(uuid.uuid4()), client_sock)
+
+            # Send UUID to client (perhaps use a Message later)
+            client[1].sendall(f'{client[0]}'.encode())
+
             # Add connection to the CSL
             self.client_socket_list.append((str(uuid.uuid4()), client_sock))
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
 
         print('All players have connected successfully!')
+
+        # Debug
         for conn in self.client_socket_list:
+            conn[1].sendall(f'Your UUID is {conn[0]}'.encode())
             # Close connection
             conn[1].close()
         # Close the server's socket
