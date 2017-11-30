@@ -46,7 +46,6 @@ class ServerNetworkInterface(metaclass=Singleton):
             self.client_socket_list.append((str(uuid.uuid4()), client_sock))
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
-
         print('All players have connected successfully!')
 
         # Debug
@@ -56,6 +55,14 @@ class ServerNetworkInterface(metaclass=Singleton):
             conn[1].close()
         # Close the server's socket
         self.server_socket.close()
+
+    """ Retrieve the appropriate socket object associated with a particular uuid """
+    def _get_sock_by_uuid(self, uuid):
+        for conn in self.client_socket_list:
+            if conn[0] == uuid:
+                return conn[1]
+        raise KeyError(f"Unable to find UUID: {uuid} in client list")
+
     """ Send message to a GameSocket """
     def send_message(self, uuid, message):
         raise NotImplementedError
