@@ -13,10 +13,12 @@ class ServerNetworkInterface(metaclass=Singleton):
     """ Class scoped variable for amount of expected socket connections (players) """
     MIN_PLAYERS = 6
     BUFSIZE = 4096
+    PORT = 1337
 
-    def __init__(self, address):
-        # Tuple of (IP, PORT)
-        self.address = address
+    def __init__(self):
+
+        # Tuple of (<Symbolic representation of 'all available interfaces'>, unprivileged port number)
+        self.address = ('', ServerNetworkInterface.PORT)
         self.server_socket = None
 
         # UUID of server
@@ -25,7 +27,10 @@ class ServerNetworkInterface(metaclass=Singleton):
         # List of currently connected clients
         # Each element is a tuple of ((str) uuid, socket)
         self.client_socket_list = []
-    
+
+        # Blocking call to wait for all incoming player connections
+        self.start()
+
     """ Binds and listens for the appropriate number of players to connect """
     def start(self):
         # Create a TCP socket
@@ -92,10 +97,24 @@ class ServerNetworkInterface(metaclass=Singleton):
         for conn in self.client_socket_list:
             self.send_message(conn[0], message)
 
+    """ Terminate all player connections """
+    def close_all(self):
+        # TODO: send all clients message that server is shutting down
+        for conn in self.client_socket_list:
+            conn[1].close()
+
+    """ Terminate all connections """
+    def shutdown(self):
+        print('DEBUG: Server is shutting down')
+        self.close_all()
+        if self.server_socket:
+            self.server_socket.close()
+        exit(0)
+
+
 if __name__ == '__main__':
     try:
-        s = ServerNetworkInterface(('', 1337))
-        s.start()
+        s = ServerNetworkInterface()
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)
