@@ -36,3 +36,11 @@ class Message:
     """ Getter for payload """
     def get_payload(self):
         return self._payload
+
+    """ Stringifys and returns a byte representation of a Message """
+    def encode(self):
+        return str(self).encode()
+
+    """ Stringifys the Message """
+    def __str__(self):
+        return f'{self.get_uuid()},{self.get_msg_type()},{self.get_payload()}'
