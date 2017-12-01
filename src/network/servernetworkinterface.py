@@ -83,7 +83,12 @@ class ServerNetworkInterface(metaclass=Singleton):
 
     """ Read message from a GameSocket """
     def read_message(self, uuid):
-        raise NotImplementedError
+        # Grab the appropriate socket
+        client_sock =  self._get_sock_by_uuid(uuid)
+        # Attempt to read a message
+        # TODO: Retry/error checking/timeout
+        message_bytes = client_sock.recv(ServerNetworkInterface.BUFSIZE).decode()
+        print(f'DEBUG: Received a message: {message_bytes}')
 
     """ Send message to all GameSocket """
     def send_all(self, message):
