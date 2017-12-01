@@ -39,15 +39,19 @@ class GameState(object):
             card_data = json.load(data_file)
 
         # Initialize all locations without neighbors
-        cards = []
+        suspects = []
+        weapons = []
+        rooms = []
         for c in card_data['cards']:
             if c['type'] == 'suspect':
-                card_type = CardType.SUSPECT
+                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                suspects.append(card)
             elif c['type'] == 'weapon':
-                card_type = CardType.WEAPON
+                card = Card(c['name'], CardType.WEAPON, c['key'])
+                weapons.append(card)
             else:
-                card_type = CardType.ROOM
-            card = Card(c['name'], card_type, c['key'])
+                card = Card(c['name'], CardType.ROOM, c['key'])
+                rooms.append(card)
 
             # Initialize a new player and their location, add to PlayerList
             if c['type'] == 'suspect':
@@ -57,10 +61,31 @@ class GameState(object):
                 player_list = PlayerList()
                 player_list.add_player(player)
 
-            # Add card to list for addition to Deck later
-            cards.append(card)
-
-        self.deck = Deck(cards)
+        # Init decks and shuffle
+        suspect_deck = Deck(suspects)
+        suspect_deck.shuffle()
+        weapon_deck = Deck(weapons)
+        weapon_deck.shuffle()
+        room_deck = Deck(rooms)
+        room_deck.shuffle()
+        
+        # Deal solution
+        self._solution = Suggestion(room_deck.deal(), weapon_deck.deal(), suspect_deck.deal())
+        
+        # Combine sorted cards into one deck and shuffle
+        self._deck = suspect_deck + weapon_deck + room_deck
+        self._deck.shuffle()
+        
+        # Deal cards to players
+        while dealt_card = self._deck:
+            player = self.next_turn()
+            hand = player.get_hand()
+            player.set_hand(hand.add_card(dealt_card))
+            
+        # Reset self._current_player
+        self._current_player = 0
+        
+        
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""

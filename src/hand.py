@@ -13,10 +13,10 @@ class Hand(object):
 
     """
 
-    def __init__(self, cards: list):
+    def __init__(self):
         """Constructor"""
         # print('Constructor in Hand class')
-        self._cards = cards
+        self._cards = []
 
     def __str__(self) -> str:
         """Overridden toString method"""
