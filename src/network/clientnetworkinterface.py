@@ -8,6 +8,14 @@ from message import *
 
 class ClientNetworkInterface(metaclass=Singleton):
 
+    """ Class scoped variable """
+    # Maximum amount of bytes to read per message
+    BUFSIZE = 4096
+    # ServerNetworkInterface port
+    PORT = 1337
+    # Arbitrary socket timeout
+    TIMEOUT = 15
+
     """ Constructor """
     def __init__(self):
         # Socket representing connection to a ServerNetworkInterface
@@ -57,7 +65,24 @@ class ClientNetworkInterface(metaclass=Singleton):
 
     """ Read message from a GameSocket """
     def read_message(self, uuid):
-        raise NotImplementedError
+        if not self.is_connected():
+            raise ConnectionError('Not connected to a server')
+        try:
+            message_string = self._client_socket.recv(self.BUFSIZE)
+        except socket.timeout as e:
+            print(f'Error: read_message timed out')
+            return None
+        return self.parse_message_string(message_string)
+
+    """ Parse messages of the form:
+        SenderUUID, MessageType, Payload
+        back into a Message object
+    """
+    def parse_message_string(self, message_string):
+        if not isinstance(message_string, str):
+            raise ValueError('Method expects string type parameter \'message_string\'')
+        msg_uuid, msg_type, msg_payload = message_string.split(',')
+        return Message(msg_uuid, MessageType(int(msg_type)), msg_payload)
 
 if __name__ == '__main__':
     try:
@@ -66,4 +91,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)
-
