@@ -59,7 +59,6 @@ class ServerNetworkInterface(metaclass=Singleton):
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
 
-        self.shutdown()
     """ Retrieve the appropriate socket object associated with a particular uuid """
     def _get_sock_by_uuid(self, uuid):
         for conn in self.client_socket_list:
