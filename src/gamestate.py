@@ -39,53 +39,74 @@ class GameState(object):
             card_data = json.load(data_file)
 
         # Initialize all locations without neighbors
-        suspects = []
-        weapons = []
-        rooms = []
+
+        suspect_deck = Deck([])
+        weapon_deck = Deck([])
+        room_deck = Deck([])
+
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['name'], CardType.SUSPECT, c['key'])
-                suspects.append(card)
-            elif c['type'] == 'weapon':
-                card = Card(c['name'], CardType.WEAPON, c['key'])
-                weapons.append(card)
-            else:
-                card = Card(c['name'], CardType.ROOM, c['key'])
-                rooms.append(card)
+                suspect_deck.add_card(card)
 
-            # Initialize a new player and their location, add to PlayerList
-            if c['type'] == 'suspect':
                 player = Player(card)
                 player.set_location(c['start'])
 
                 player_list = PlayerList()
                 player_list.add_player(player)
 
+    def start(self):
+        """Start game by creating deck, dealing the solution, dealing cards."""
+        # Read cards datafile and initialize Deck
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, '../data/cards.json')
+
+        with open(filename) as data_file:
+            card_data = json.load(data_file)
+
+        # Initialize all locations without neighbors
+
+        suspect_deck = Deck([])
+        weapon_deck = Deck([])
+        room_deck = Deck([])
+
+        for c in card_data['cards']:
+            if c['type'] == 'suspect':
+                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                suspect_deck.add_card(card)
+            elif c['type'] == 'weapon':
+                card = Card(c['name'], CardType.WEAPON, c['key'])
+                weapon_deck.add_card(card)
+            else:
+                card = Card(c['name'], CardType.ROOM, c['key'])
+                room_deck.add_card(card)
+
         # Init decks and shuffle
-        suspect_deck = Deck(suspects)
         suspect_deck.shuffle()
-        weapon_deck = Deck(weapons)
         weapon_deck.shuffle()
-        room_deck = Deck(rooms)
         room_deck.shuffle()
-        
+
         # Deal solution
-        self._solution = Suggestion(room_deck.deal(), weapon_deck.deal(), suspect_deck.deal())
-        
+        room_sol = room_deck.deal()
+        weapon_sol = weapon_deck.deal()
+        suspect_sol = suspect_deck.deal()
+        self._solution = Suggestion(room_sol, weapon_sol, suspect_sol)
+
         # Combine sorted cards into one deck and shuffle
-        self._deck = suspect_deck + weapon_deck + room_deck
+        temp_deck = suspect_deck + weapon_deck
+        self._deck = temp_deck + room_deck
         self._deck.shuffle()
-        
+
         # Deal cards to players
-        while dealt_card = self._deck:
+        while self._deck.get_cards():
+            dealt_card = self._deck.deal()
             player = self.next_turn()
             hand = player.get_hand()
-            player.set_hand(hand.add_card(dealt_card))
-            
+            hand.add_card(dealt_card)
+            player.set_hand(hand)
+
         # Reset self._current_player
         self._current_player = 0
-        
-        
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""

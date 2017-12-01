@@ -27,10 +27,7 @@ def test_str():
 
 
 def test_set_and_get_hand():
-    if test_player.get_hand() is None:
-        assert True
-    else:
-        assert False
+    assert len(test_player.get_hand().get_cards()) == 0
     test_player.set_hand(test_hand)
     assert test_player.get_hand() == test_hand
     assert type(test_player.get_hand()) == Hand
@@ -53,14 +50,8 @@ def test_set_and_get_status():
 
 
 def test_set_and_get_locations():
-    if test_player.get_current_location() is None:
-        assert True
-    else:
-        assert False
-    if test_player.get_previous_location() is None:
-        assert True
-    else:
-        assert False
+    assert test_player.get_current_location() is None
+    assert test_player.get_previous_location() is None
     test_player.set_location(test_location1)
     assert test_player.get_current_location() == test_location1
     assert test_player.get_previous_location() == test_location1
