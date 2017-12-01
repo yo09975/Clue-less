@@ -87,8 +87,19 @@ class ServerNetworkInterface(metaclass=Singleton):
         client_sock =  self._get_sock_by_uuid(uuid)
         # Attempt to read a message
         # TODO: Retry/error checking/timeout
-        message_bytes = client_sock.recv(ServerNetworkInterface.BUFSIZE).decode()
-        print(f'DEBUG: Received a message: {message_bytes}')
+        message_string = client_sock.recv(ServerNetworkInterface.BUFSIZE).decode()
+        # Messages are transmitted as strings, construct a Message object from said string
+        return self.parse_message_string(message_string)
+
+    """ Parse messages of the form:
+        SenderUUID,MessageType,Payload
+        back into a Message object
+    """
+    def parse_message_string(self, message_string):
+        if not isinstance(message_string, str):
+            raise ValueError('Method expects string type parameter \'message_string\'')
+        msg_uuid, msg_type, msg_payload = message_string.split(',')
+        return Message(msg_uuid, MessageType(int(msg_type)), msg_payload)
 
     """ Send message to all GameSocket """
     def send_all(self, message):
