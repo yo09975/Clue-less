@@ -10,16 +10,23 @@ class ClientNetworkInterface(metaclass=Singleton):
     def __init__(self):
         # Socket representing connection to a ServerNetworkInterface
         self._client_socket = None
+        self._uuid = None
+
+    """ Getter for uuid """
+    def get_uuid(self):
+        return self._uuid
 
     """ Connect to the ServerNetworkInterface """
     def connect(self, ip):
         if self.is_connected():
             print('Already connected to server!')
             return True
-
+        
         # Create a TCP socket connection to server
         try:
             self._client_socket = create_connection((ip, ServerNetworkInterface.PORT), 5)
+            self._uuid = self._client_socket.recv(ServerNetworkInterface.BUFSIZE).decode()
+            print(f'Successfully connected to server and assigned UUID:{self._uuid}')
         except Exception as e:
             print(f'Error: Failed to connect to ({ip},{ServerNetworkInterface.PORT}). Exception is {e}.')
             return False
