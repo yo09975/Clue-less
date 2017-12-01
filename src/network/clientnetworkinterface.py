@@ -3,6 +3,7 @@
 from singleton import Singleton
 from servernetworkinterface import *
 from socket import *
+from message import *
 
 class ClientNetworkInterface(metaclass=Singleton):
     
@@ -44,9 +45,15 @@ class ClientNetworkInterface(metaclass=Singleton):
             self._client_socket = None
 
     """ Send message to a GameSocket """
-    def send_message(self, uuid, message):
-        raise NotImplementedError
+    def send_message(self, message):
+        # Verify that the message was created with the correct UUID
+        if message.get_uuid() != self.get_uuid():
+            message.set_uuid(self.get_uuid())
+            print('DEBUG: Outgoing UUID has to be corrected!')
 
+        # TODO: Error checking/retry logic
+        self._client_socket.sendall(message.encode())
+        
     """ Read message from a GameSocket """
     def read_message(self, uuid):
         raise NotImplementedError
@@ -55,8 +62,6 @@ if __name__ == '__main__':
     try:
         c = ClientNetworkInterface()
         c.connect('localhost')
-        c2 = ClientNetworkInterface()
-        c2.connect('localhost')
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)
