@@ -70,6 +70,10 @@ class ServerNetworkInterface(metaclass=Singleton):
     def get_uuid(self):
         return self._uuid
 
+    """ Getter for count of currently connected players """
+    def get_connection_count(self):
+        return len(self.client_socket_list)
+
     """ Send message to a GameSocket """
     def send_message(self, uuid, message):
         # Need to get the socket object associated with a particular UUID
