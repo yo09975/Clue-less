@@ -4,20 +4,21 @@ import uuid
 from socket import *
 from message import *
 
+
 class ServerNetworkInterface(metaclass=Singleton):
+
     """
     Sends and receives messages from the ClientNetworkInterface
     and various subsystems
     """
-    
-    """ Class scoped variable for amount of expected socket connections (players) """
+
+    # Class scoped variable for number of expected player connections
     MIN_PLAYERS = 6
     BUFSIZE = 4096
     PORT = 1337
 
     def __init__(self):
-
-        # Tuple of (<Symbolic representation of 'all available interfaces'>, unprivileged port number)
+        # '' is a symbolic representation for all interfaces
         self.address = ('', ServerNetworkInterface.PORT)
         self.server_socket = None
 
@@ -39,10 +40,9 @@ class ServerNetworkInterface(metaclass=Singleton):
         self.server_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         # Binds the socket to the given address tuple (e.g. (localhost, 1337))
         self.server_socket.bind(self.address)
-        # Allow server to accept connections. After 5 unsuccessful attempts to connect, reject that host
+        # After 5 unsuccessful attempts to connect, reject that host
         self.server_socket.listen(5)
 
-        
         # Wait until the minimum amount of players has connected
         # Synchronous
         while len(self.client_socket_list) != ServerNetworkInterface.MIN_PLAYERS:
@@ -59,7 +59,7 @@ class ServerNetworkInterface(metaclass=Singleton):
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
 
-    """ Retrieve the appropriate socket object associated with a particular uuid """
+    """ Getter for socket object associated with a specific uuid """
     def _get_sock_by_uuid(self, uuid):
         for conn in self.client_socket_list:
             if conn[0] == uuid:
@@ -88,11 +88,10 @@ class ServerNetworkInterface(metaclass=Singleton):
     """ Read message from a GameSocket """
     def read_message(self, uuid):
         # Grab the appropriate socket
-        client_sock =  self._get_sock_by_uuid(uuid)
+        client_sock = self._get_sock_by_uuid(uuid)
         # Attempt to read a message
         # TODO: Retry/error checking/timeout
         message_string = client_sock.recv(ServerNetworkInterface.BUFSIZE).decode()
-        # Messages are transmitted as strings, construct a Message object from said string
         return self.parse_message_string(message_string)
 
     """ Parse messages of the form:

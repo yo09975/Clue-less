@@ -5,8 +5,9 @@ from servernetworkinterface import *
 from socket import *
 from message import *
 
+
 class ClientNetworkInterface(metaclass=Singleton):
-    
+
     """ Constructor """
     def __init__(self):
         # Socket representing connection to a ServerNetworkInterface
@@ -22,7 +23,7 @@ class ClientNetworkInterface(metaclass=Singleton):
         if self.is_connected():
             print('Already connected to server!')
             return True
-        
+
         # Create a TCP socket connection to server
         try:
             self._client_socket = create_connection((ip, ServerNetworkInterface.PORT), 5)
@@ -31,10 +32,10 @@ class ClientNetworkInterface(metaclass=Singleton):
         except Exception as e:
             print(f'Error: Failed to connect to ({ip},{ServerNetworkInterface.PORT}). Exception is {e}.')
             return False
-    
+
     """ Returns whether we have a valid connection to the server """
     def is_connected(self):
-        return self._client_socket != None
+        return self._client_socket is not None
 
     """ Disconnect from the ServerNetworkInterface """
     def disconnect(self):
@@ -53,7 +54,7 @@ class ClientNetworkInterface(metaclass=Singleton):
 
         # TODO: Error checking/retry logic
         self._client_socket.sendall(message.encode())
-        
+
     """ Read message from a GameSocket """
     def read_message(self, uuid):
         raise NotImplementedError
