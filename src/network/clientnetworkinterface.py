@@ -1,10 +1,9 @@
 #!/usr/bin/env python3.6
 
+from common import *
+from message import Message, MessageType
 from singleton import Singleton
-from servernetworkinterface import *
 from socket import *
-from message import *
-
 
 class ClientNetworkInterface(metaclass=Singleton):
 
@@ -34,12 +33,22 @@ class ClientNetworkInterface(metaclass=Singleton):
 
         # Create a TCP socket connection to server
         try:
-            self._client_socket = create_connection((ip, ServerNetworkInterface.PORT), 5)
-            self._uuid = self._client_socket.recv(ServerNetworkInterface.BUFSIZE).decode()
-            print(f'Successfully connected to server and assigned UUID:{self._uuid}')
-        except Exception as e:
-            print(f'Error: Failed to connect to ({ip},{ServerNetworkInterface.PORT}). Exception is {e}.')
+            self._client_socket = create_connection((ip, self.PORT), 5)
+            self._client_socket.settimeout(self.TIMEOUT)
+        except ConnectionError as e:
+            print(f'Error: Failed to connect to ({ip},{self.PORT}).')
+            print(f'Exception is {e}.')
             return False
+
+        # Attempt to read the server's UUID assignment
+        try:
+            self._uuid = self._client_socket.recv(self.BUFSIZE).decode()
+            print(f'Successfully connected to server and assigned UUID:{self._uuid}')
+        except OSError as e:
+            print(f'Error: Failed to receive UUID message from server before timeout')
+            return False
+
+        return True
 
     """ Returns whether we have a valid connection to the server """
     def is_connected(self):
@@ -55,13 +64,19 @@ class ClientNetworkInterface(metaclass=Singleton):
 
     """ Send message to a GameSocket """
     def send_message(self, message):
+        if not self.is_connected():
+            raise ConnectionError('Not connected to a server')
         # Verify that the message was created with the correct UUID
         if message.get_uuid() != self.get_uuid():
             message.set_uuid(self.get_uuid())
             print('DEBUG: Outgoing UUID has to be corrected!')
 
-        # TODO: Error checking/retry logic
-        self._client_socket.sendall(message.encode())
+        try:
+            self._client_socket.sendall(message.encode())
+        except socket.timeout as e:
+            print(f'Error: send_message timed out')
+            return False
+        return True
 
     """ Read message from a GameSocket """
     def read_message(self, uuid):
