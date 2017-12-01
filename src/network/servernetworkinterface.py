@@ -1,8 +1,10 @@
 #!/usr/bin/env python3.6
+
+from common import *
+from message import Message, MessageType
 from singleton import Singleton
-import uuid
 from socket import *
-from message import *
+from uuid import uuid4
 
 
 class ServerNetworkInterface(metaclass=Singleton):
@@ -19,11 +21,11 @@ class ServerNetworkInterface(metaclass=Singleton):
 
     def __init__(self):
         # '' is a symbolic representation for all interfaces
-        self.address = ('', ServerNetworkInterface.PORT)
+        self.address = ('', self.PORT)
         self.server_socket = None
 
         # UUID of server
-        self._uuid = str(uuid.uuid4())
+        self._uuid = str(uuid4())
 
         # List of currently connected clients
         # Each element is a tuple of ((str) uuid, socket)
@@ -48,13 +50,13 @@ class ServerNetworkInterface(metaclass=Singleton):
         while len(self.client_socket_list) != ServerNetworkInterface.MIN_PLAYERS:
             # Accept a connection
             client_sock, client_addr = self.server_socket.accept()
-            client = (str(uuid.uuid4()), client_sock)
+            client = (str(uuid4()), client_sock)
 
             # Send UUID to client (perhaps use a Message later)
             client[1].sendall(f'{client[0]}'.encode())
 
             # Add connection to the CSL
-            self.client_socket_list.append((str(uuid.uuid4()), client_sock))
+            self.client_socket_list.append((str(uuid4()), client_sock))
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
@@ -82,16 +84,23 @@ class ServerNetworkInterface(metaclass=Singleton):
         if message.get_uuid() != self.get_uuid():
             message.set_uuid(self.get_uuid())
             print('DEBUG: Outgoing UUID had to be corrected!')
-        # TODO: Error checking/retry logic
-        client_sock.sendall(message.encode())
+        try:
+            client_sock.sendall(message.encode())
+        except socket.timeout as e:
+            print(f'Error: send_message timed out')
+            return False
+        return True
 
     """ Read message from a GameSocket """
     def read_message(self, uuid):
         # Grab the appropriate socket
         client_sock = self._get_sock_by_uuid(uuid)
         # Attempt to read a message
-        # TODO: Retry/error checking/timeout
-        message_string = client_sock.recv(ServerNetworkInterface.BUFSIZE).decode()
+        try:
+            message_string = client_sock.recv(self.BUFSIZE).decode()
+        except socket.timeout as e:
+            print(f'Error: read_message timed out')
+            return None
         return self.parse_message_string(message_string)
 
     """ Parse messages of the form:
