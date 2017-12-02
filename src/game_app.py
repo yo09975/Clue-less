@@ -1,5 +1,4 @@
 """game_app.py"""
-import user_interface
 
 
 class GameApp(object):
