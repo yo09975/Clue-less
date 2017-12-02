@@ -5,6 +5,7 @@ from src.gamestate import GameState
 from src.cardtype import CardType
 from src.playerlist import PlayerList
 from src.player import Player
+from src.servernetworkinterface import ServerNetworkInterface
 
 
 class SuggestionEngine:
@@ -32,35 +33,44 @@ class SuggestionEngine:
         """Makes a suggestion. Also offers to move the suggested character to the suggested room."""
 
         responder = self.game_state.next_turn()  # The first person to "answer" is the next player.
+        suggesting_player = PlayerList.get_player(self.game_state.get_current_player())
 
-        if (suggestion.get_room().get_type() != CardType.ROOM) or (suggestion.get_weapon().get_type() != CardType.WEAPON) or (suggestion.get_character().get_type() != CardType.SUSPECT):
-            print('This is not a valid suggestion. It requires a room, weapon, and character.')  # placeholder message
+        if (suggestion.get_room().get_type() != CardType.ROOM) or \
+                (suggestion.get_weapon().get_type() != CardType.WEAPON) or \
+                (suggestion.get_character().get_type() != CardType.SUSPECT):
+            ServerNetworkInterface.send_message(
+                suggesting_player.get_token(),
+                "This is not a valid suggestion; there must be a room, character, and weapon")
+            return True
         else:
-            # send message to MovementEngine to move character
-            while responder != self.game_state.get_current_player():
-                response = self.answer_suggestion(suggestion, responder)
+            ServerNetworkInterface.send_all("A suggestion was made...")
+            ServerNetworkInterface.send_all(suggestion.get_room())
+            ServerNetworkInterface.send_all(suggestion.get_character())
+            ServerNetworkInterface.send_all(suggestion.get_weapon())
+
+            while responder != suggesting_player:
+                response = self.answer_suggestion(responder)
                 if response in suggestion.get_suggestion_set():
-                    print("A suggestion was refuted.")  # placeholder message
-                    return False
+                    ServerNetworkInterface.send_all("The suggestion was refuted.")
+                    ServerNetworkInterface.send_message(suggesting_player.get_token(), response)
+                    return True
                 else:
                     responder = PlayerList.get_next_player(responder)
-            print("The suggestion could not be refuted.")  # placeholder message
-            return True
+            ServerNetworkInterface.send_all("The suggestion could not be refuted.")
+            return False
 
-    def answer_suggestion(self, suggestion: Suggestion, responder: Player):
+    def answer_suggestion(self, responder: Player):
         """Allows a player to answer a suggestion."""
-
-        print(suggestion)
-        response = input('Pick a from your hand that will refute the suggestion, if possible. If not enter None.')
-        if response in responder.get_hand() and response in suggestion.get_suggestion_set():
-            return response
-        else:
-            return 'None'
+        ServerNetworkInterface.send_message(
+            responder.get_token(),
+            "Pick a card that refutes the suggestion. If you cannot refute, select any card.")
+        response = ServerNetworkInterface.read_message(responder.get_token())
+        return response
 
     def make_accusation(self, suggestion: Suggestion, accuser: Player):
         """Makes an accusation; if correct the game is won, if not the player loses."""
 
         if suggestion == self.game_state.get_solution():
-            self.game_state.set_status("WON")
+            self.game_state.set_state(5)
         else:
             accuser.set_status(3)
