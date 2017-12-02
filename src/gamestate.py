@@ -41,9 +41,7 @@ class GameState(object):
         # Initialize all locations without neighbors
 
         suspect_deck = Deck([])
-        weapon_deck = Deck([])
-        room_deck = Deck([])
-
+        
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['name'], CardType.SUSPECT, c['key'])
