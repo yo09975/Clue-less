@@ -1,30 +1,6 @@
 """user_interface.py"""
 import pygame
 
-pygame.init()
-
-# Setting the display frame and title
-gameDisplay = pygame.display.set_mode((1410, 900))
-pygame.display.set_caption('Clue-less')
-background = pygame.image.load('../data/clue-less_board.png')
-clock = pygame.time.Clock()
-
-# setting dummy conditions for displaying board - TEMPORARY
-crashed = False
-
-while not crashed:
-
-    gameDisplay.blit(background, (0, 0))
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            crashed = True
-
-        print(event)
-
-    pygame.display.update()
-
-    clock.tick(60)
 
 
 class UserInterface(object):
