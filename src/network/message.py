@@ -5,8 +5,15 @@ class MessageType(Enum):
     MOVEMENT = 1
     SUGGESTION = 2
     SUGGESTION_RESP = 3
-    ACCUSATION = 4
-
+    SUGGESTION_NOTIFY = 4
+    ACCUSATION = 5
+    ACCUSATION_NOTIFY = 6
+    ACK = 7
+    NACK = 8
+    NOTIFY = 9
+    GIVE_UUID = 10
+    SELECT_PIECE = 11
+    UPDATE_BOARD = 12
 
 class Message:
     """
