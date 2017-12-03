@@ -1,11 +1,10 @@
 #!/usr/bin/env python3.6
 
-from common import *
-from message import Message, MessageType
-from singleton import Singleton
+import src.network.common
+from src.network.message import Message, MessageType
+from src.network.singleton import Singleton
 from socket import *
 from uuid import uuid4
-
 
 class ServerNetworkInterface(metaclass=Singleton):
 
@@ -30,9 +29,6 @@ class ServerNetworkInterface(metaclass=Singleton):
         # List of currently connected clients
         # Each element is a tuple of ((str) uuid, socket)
         self.client_socket_list = []
-
-        # Blocking call to wait for all incoming player connections
-        self.start()
 
     """ Binds and listens for the appropriate number of players to connect """
     def start(self):
@@ -60,7 +56,6 @@ class ServerNetworkInterface(metaclass=Singleton):
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
-
     """ Getter for socket object associated with a specific uuid """
     def _get_sock_by_uuid(self, uuid):
         for conn in self.client_socket_list:
