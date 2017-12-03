@@ -1,11 +1,10 @@
 #!/usr/bin/env python3.6
 
-from common import *
-from message import Message, MessageType
-from singleton import Singleton
+import src.network.common
+from src.network.message import Message, MessageType
+from src.network.singleton import Singleton
 from socket import *
 from uuid import uuid4
-
 
 class ServerNetworkInterface(metaclass=Singleton):
 
@@ -31,9 +30,6 @@ class ServerNetworkInterface(metaclass=Singleton):
         # Each element is a tuple of ((str) uuid, socket)
         self.client_socket_list = []
 
-        # Blocking call to wait for all incoming player connections
-        self.start()
-
     """ Binds and listens for the appropriate number of players to connect """
     def start(self):
         # Create a TCP socket
@@ -56,11 +52,10 @@ class ServerNetworkInterface(metaclass=Singleton):
             client[1].sendall(f'{client[0]}'.encode())
 
             # Add connection to the CSL
-            self.client_socket_list.append((str(uuid4()), client_sock))
+            self.client_socket_list.append(client)
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
-
     """ Getter for socket object associated with a specific uuid """
     def _get_sock_by_uuid(self, uuid):
         for conn in self.client_socket_list:
@@ -115,8 +110,11 @@ class ServerNetworkInterface(metaclass=Singleton):
 
     """ Send message to all GameSocket """
     def send_all(self, message):
+        status = True
         for conn in self.client_socket_list:
-            self.send_message(conn[0], message)
+            if not self.send_message(conn[0], message):
+                status = False
+        return status
 
     """ Terminate all player connections """
     def close_all(self):
