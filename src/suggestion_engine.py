@@ -6,7 +6,8 @@ from src.card import Card
 from src.cardtype import CardType
 from src.playerlist import PlayerList
 from src.player import Player
-from src.network.message import Message
+from src.playerstatus import PlayerStatus
+from src.network.message import Message, MessageType
 from src.network.servernetworkinterface import ServerNetworkInterface
 
 
@@ -54,15 +55,16 @@ class SuggestionEngine:
                 hand = responder.get_hand()
                 if hand.contains_card(suggestion.get_room()) or hand.contains_card(suggestion.get_character()) or \
                         hand.contains_card(suggestion.get_weapon()):
-                    response_msg = Message(ServerNetworkInterface.get_uuid(), SUGGESTION_REQUEST, suggestion)
+                    response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_REQUEST, suggestion.serialize())
                     ServerNetworkInterface.send_message(responder.get_uuid(), response_msg)
                     return True
                 else:
-                    could_not_respond_msg = Message(ServerNetworkInterface.get_uuid(), SUGGESTION_NOTIFY,
+                    could_not_respond_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
                                                     responder.get_character().get_name() + " could not disprove.")
                     ServerNetworkInterface.send_all(could_not_respond_msg)
                     responder = PlayerList.get_next_player(responder)
-            no_response_msg = Message(ServerNetworkInterface.get_uuid(), SUGGESTION_NOTIFY,
+
+            no_response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
                                       "The suggestion could not be refuted.")
             ServerNetworkInterface.send_all(no_response_msg)
             return False
@@ -73,7 +75,7 @@ class SuggestionEngine:
         current = self.game_state.get_current_player()
         players = PlayerList.get_players()
         suggesting_player = players[current]
-        response_msg = Message(ServerNetworkInterface.get_uuid(), SUGGESTION_NOTIFY, response)
+        response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY, response)
         ServerNetworkInterface.send_message(suggesting_player.get_uuid(), response_msg)
 
     def make_accusation(self, suggestion: Suggestion, accuser: Player):
@@ -82,9 +84,9 @@ class SuggestionEngine:
         if suggestion == self.game_state.get_solution():
             return True
         else:
-            accuser.set_status(3)
-            notification_msg = Message(ServerNetworkInterface.get_uuid(), NOTIFY, accuser.get_character().get_name() +
+            accuser.set_status(PlayerStatus.LOST)
+            accusation_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.ACCUSATION_NOTIFY, suggestion)
+            ServerNetworkInterface.send_all(accusation_msg)
+            notification_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.NOTIFY, accuser.get_character().get_name() +
                                        " made an incorrect accusation.")
             ServerNetworkInterface.send_all(notification_msg)
-            accusation_msg = Message(ServerNetworkInterface.get_uuid(), ACCUSATION_NOTIFY, suggestion)
-            ServerNetworkInterface.send_all(accusation_msg)
