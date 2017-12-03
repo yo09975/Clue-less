@@ -15,10 +15,10 @@ class PyButton(PyView):
 
                 # If click action exists and button is clicked
                 if click[0] == 1:
-                    # try:
-                    self._click_action(self._click_args)
-                    # except:
-                    #     pass
+                    try:
+                        self._click_action(self._click_args)
+                    except:
+                         pass
                 else:
                     try:
                         self._hover_action(self._hover_args)
@@ -26,8 +26,12 @@ class PyButton(PyView):
                         pass
 
             else:
-                # Non-hover action
-                self.fill(pygame.Color(0, 100, 0))
+                # Default action
+                try:
+                    self._default_action(self._default_args)
+                except:
+                    pass
+
 
             display.blit(self, self._coords)
         else:
@@ -43,6 +47,10 @@ class PyButton(PyView):
     def set_on_click(self, function, args):
         self._click_action = function
         self._click_args = args
+
+    def set_default_action(self, function, args):
+        self._default_action = function
+        self._default_args = args
 
     def set_enabled(self, enabled):
         self._is_enabled = enabled
