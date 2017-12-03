@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.6
 
-from common import *
-from message import Message, MessageType
-from singleton import Singleton
+import src.network.common 
+from src.network.message import Message, MessageType
+from src.network.singleton import Singleton
 from socket import *
 
 class ClientNetworkInterface(metaclass=Singleton):
