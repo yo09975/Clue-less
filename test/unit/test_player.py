@@ -19,7 +19,7 @@ test_player = Player(test_card1)
 
 def test_init():
     assert type(test_player) is Player
-    assert test_player.get_token() == 'TEST111ID'
+    assert test_player.get_card_id() == 'TEST111ID'
 
 
 def test_str():
@@ -61,11 +61,17 @@ def test_set_and_get_locations():
     assert test_player.get_previous_location() == test_location1
 
 
-def test_set_and_get_token():
-    assert test_player.get_token() == 'TEST111ID'
-    assert type(test_player.get_token()) is str
-    test_player.set_token('NEW TOKEN')
-    assert test_player.get_token() == 'NEW TOKEN'
+def test_set_and_get_card_id():
+    assert test_player.get_card_id() == 'TEST111ID'
+    assert type(test_player.get_card_id()) is str
+    test_player.set_card_id('NEW CARD ID')
+    assert test_player.get_card_id() == 'NEW CARD ID'
+
+
+def test_set_and_get_uuid():
+    test_player.set_uuid('TEST UUID')
+    assert test_player.get_uuid() == 'TEST UUID'
+    assert type(test_player.get_uuid()) is str
 
 
 def test_set_and_get_was_transferred():

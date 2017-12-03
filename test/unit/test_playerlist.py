@@ -19,6 +19,7 @@ test_player2 = Player(test_card2)
 test_player2.set_status(PlayerStatus.COMP)
 test_player3 = Player(test_card3)
 test_player3.set_status(PlayerStatus.ACTIVE)
+test_player3.set_uuid('TEST UUID')
 test_player4 = Player(test_card4)
 test_player4.set_status(PlayerStatus.LOST)
 test_player5 = Player(test_card5)
@@ -106,5 +107,5 @@ def test_get_player():
         assert True
     else:
         assert False
-    assert test_plist1.get_player('TEST333ID') == test_player3
-    assert type(test_plist1.get_player('TEST333ID')) is Player
+    assert test_plist1.get_player('TEST UUID') == test_player3
+    assert type(test_plist1.get_player('TEST UUID')) is Player
