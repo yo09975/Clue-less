@@ -68,3 +68,14 @@ def test_get_and_set_current_player():
     assert type(test_gamestate.get_current_player()) is int
     test_gamestate.set_current_player(0)
     assert test_gamestate.get_current_player() == 0
+
+
+def test_deal_cards():
+    """Ensure that only active players are dealt cards."""
+    test_gamestate.start()
+    players = player_list.get_players()
+    for p in players:
+        if p.get_status() == PlayerStatus.ACTIVE:
+            assert len(p.get_hand().get_cards()) != 0
+        else:
+            assert len(p.get_hand().get_cards()) == 0

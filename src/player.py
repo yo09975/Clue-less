@@ -27,7 +27,7 @@ class Player(object):
     def __init__(self, card: Card):
         """Constructor"""
         # print('Constructor in Player class')
-        self._player_hand = None
+        self._player_hand = Hand([])
         self._character = card
         self._status = PlayerStatus.COMP
         self._token = self.get_character().get_id()
