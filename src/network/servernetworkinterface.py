@@ -52,7 +52,7 @@ class ServerNetworkInterface(metaclass=Singleton):
             client[1].sendall(f'{client[0]}'.encode())
 
             # Add connection to the CSL
-            self.client_socket_list.append((str(uuid4()), client_sock))
+            self.client_socket_list.append(client)
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
         print('All players have connected successfully!')
