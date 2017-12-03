@@ -35,7 +35,7 @@ class GameApp():
         # self.__note_card_controller = note_card_controller
 
         pygame.init()
-        gameDisplay = pygame.display.set_mode((800, 600))
+        gameDisplay = pygame.display.set_mode((1410, 900))
         crashed = False
 
         game_img = pygame.image.load('../data/clue-less_board.png')
@@ -59,9 +59,9 @@ class GameApp():
             def location_default(args):
                 args['b'].set_alpha(0)
 
-            location = PyButton(l['dims']['x'], l['dims']['y'], l['dims']['height'], l['dims']['width'])
-            location.set_default_action(location_default, {'b', location})
-            location.set_on_hover_action(location_hover, {'b', location})
+            location = PyButton(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
+            location.set_default_action(location_default, {'b': location})
+            location.set_on_hover_action(location_hover, {'b': location})
 
             board[l['key']] = location
             if l['type'] == "room":
@@ -83,7 +83,7 @@ class GameApp():
             gameDisplay.blit(game_img, (0, 0))
 
             for loc in board:
-                loc.draw(gameDisplay, pygame.mouse)
+                board[loc].draw( pygame.mouse, gameDisplay)
             # notecard_view.draw(gameDisplay, pygame.mouse)
 
             # # Detect state and draw accordingly

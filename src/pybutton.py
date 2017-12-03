@@ -20,10 +20,10 @@ class PyButton(PyView):
                     except:
                          pass
                 else:
-                    try:
+                    # try:
                         self._hover_action(self._hover_args)
-                    except:
-                        pass
+                    # except:
+                    #     pass
 
             else:
                 # Default action
