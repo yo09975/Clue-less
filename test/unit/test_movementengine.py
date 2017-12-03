@@ -37,8 +37,8 @@ _6x2 = me._board.get_location("6x2")
 
 def test_detect_illegal_move():
     """Ask the Movement Engine to check move to non-neighbor."""
-    MIS_SCA.set_location(_4x0)
-    COL_MUS.set_location(_6x2)
+    MIS_SCA.set_location(_4x0._key)
+    COL_MUS.set_location(_6x2._key)
 
     # Sanity check - characters are in locations
     assert me._board.get_location("4x0").get_occupant_count() == 1

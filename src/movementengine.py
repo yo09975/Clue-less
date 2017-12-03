@@ -32,7 +32,7 @@ class MovementEngine:
         # Get player's current location
         player_list = PlayerList()
         player = player_list.get_player(move.get_charcter_id())
-        from_location = player.get_current_location()
+        from_location = self._board.get_location(player.get_current_location())
 
         # Get destination location from board
         destination = self._board.get_location(move.get_destination())
@@ -53,8 +53,7 @@ class MovementEngine:
         from_location = player.get_current_location()
 
         # Execute move on board and update player location
-        self._board.move(from_location._key, move.get_destination())
-        dest_location = self._board.get_location(move.get_destination())
-        player.set_location(dest_location)
+        self._board.move(from_location, move.get_destination())
+        player.set_location(move.get_destination())
 
         return

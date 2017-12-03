@@ -67,7 +67,9 @@ class Player(object):
         # print('get_status method in Player class')
         return self._status
 
-    def set_location(self, location: Location):
+    def set_location(self, location: str):
+        if type(location) is not str:
+            raise TypeError('set_location expects a string index of a location')
         """Sets the Location to where the Player is on the gameboard"""
         # print('set_location method in Player class')
         if self._previous_location is None:
@@ -76,11 +78,11 @@ class Player(object):
             self._previous_location = self._current_location
         self._current_location = location
 
-    def get_current_location(self) -> Location:
+    def get_current_location(self) -> str:
         """Return the Player's current Location"""
         return self._current_location
 
-    def get_previous_location(self) -> Location:
+    def get_previous_location(self) -> str:
         """Return the Player's previous Location"""
         return self._previous_location
 
