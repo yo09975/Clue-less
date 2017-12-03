@@ -16,7 +16,8 @@ class Player(object):
                    Player
     _character - A Card object representing the Player's character
     _status - A flag representing the status of the Player
-    _token - String representing a unique Player identifier
+    _card_id - String representing the Player's suspect card
+    _uuid - Player's unique ID for messaging
     _current_location - Player's current location on the gameboard
     _previous_location - Player's previous location on the gameboard
     _was_transferred - Boolean representing if the Player was moved to current
@@ -30,7 +31,8 @@ class Player(object):
         self._player_hand = Hand([])
         self._character = card
         self._status = PlayerStatus.COMP
-        self._token = self.get_character().get_id()
+        self._card_id = self.get_character().get_id()
+        self._uuid = None
         self._current_location = None
         self._previous_location = None
         self._was_transferred = False
@@ -82,13 +84,19 @@ class Player(object):
         """Return the Player's previous Location"""
         return self._previous_location
 
-    def set_token(self, token: str):
+    def set_card_id(self, card_id: str):
         """Accepts a String to set the Player's unique token"""
-        self._token = token
+        self._card_id = card_id
 
-    def get_token(self) -> str:
+    def get_card_id(self) -> str:
         """Returns a String representing the Player's unique token"""
-        return self._token
+        return self._card_id
+
+    def set_uuid(self, uuid: str):
+        self._uuid = uuid
+
+    def get_uuid(self) -> str:
+        return self._uuid
 
     def set_was_transferred(self, transferred: bool):
         """Accepts a Boolean and sets if the Player was transferred via

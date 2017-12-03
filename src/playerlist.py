@@ -69,7 +69,7 @@ class PlayerList:
     def get_player(self, uuid: str) -> Player:
         """Accepts a UUID and returns the corresponding Player object"""
         for player in self._player_list:
-            if uuid == player.get_token():
+            if uuid == player.get_uuid():
                 player_index = self._player_list.index(player)
                 return self._player_list[player_index]
         return None
