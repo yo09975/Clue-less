@@ -110,8 +110,11 @@ class ServerNetworkInterface(metaclass=Singleton):
 
     """ Send message to all GameSocket """
     def send_all(self, message):
+        status = True
         for conn in self.client_socket_list:
-            self.send_message(conn[0], message)
+            if not self.send_message(conn[0], message):
+                status = False
+        return status
 
     """ Terminate all player connections """
     def close_all(self):
