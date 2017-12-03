@@ -79,7 +79,7 @@ class ClientNetworkInterface(metaclass=Singleton):
         return True
 
     """ Read message from a GameSocket """
-    def read_message(self, uuid):
+    def read_message(self):
         if not self.is_connected():
             raise ConnectionError('Not connected to a server')
         try:
