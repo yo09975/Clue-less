@@ -42,7 +42,11 @@ class ClientNetworkInterface(metaclass=Singleton):
 
         # Attempt to read the server's UUID assignment
         try:
-            self._uuid = self._client_socket.recv(self.BUFSIZE).decode()
+            uuid_msg_string = self._client_socket.recv(self.BUFSIZE).decode()
+            uuid_msg = self.parse_message_string(uuid_msg_string)
+            if uuid_msg.get_msg_type() != MessageType.GIVE_UUID:
+                raise ValueError('Error: Expected GIVE_UUID message, got {uuid_msg.get_msg_type()}')
+            self._uuid = uuid_msg.get_payload()
             print(f'Successfully connected to server and assigned UUID:{self._uuid}')
         except OSError as e:
             print(f'Error: Failed to receive UUID message from server before timeout')
