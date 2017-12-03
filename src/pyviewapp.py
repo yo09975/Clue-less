@@ -15,6 +15,16 @@ clock = pygame.time.Clock()
 
 big_button = PyButton(10, 10, 200, 200)
 
+
+def big_clicked(args):
+    args['b'].fill(pygame.Color(100,0,0))
+
+def big_hover(args):
+    args['b'].fill(pygame.Color(0,0,100))
+
+big_button.set_on_click(big_clicked, {'b': big_button})
+big_button.set_on_hover_action(big_hover, {'b': big_button})
+
 sm_button_1 = PyButton(20, 20, 50, 50)
 sm_button_2 = PyButton(70, 70, 50, 50)
 
