@@ -44,6 +44,7 @@ class GameApp():
 
         # Set up game board
         board = {}
+        disp_board = {}
 
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, '../data/locations.json')
@@ -64,6 +65,7 @@ class GameApp():
             location.set_on_hover_action(location_hover, location)
 
             board[l['key']] = location
+            disp_board[l['key']] = location
             if l['type'] == "room":
                 board[l['name']] = location
             # TODO Need to assign click actions
@@ -82,9 +84,8 @@ class GameApp():
 
             gameDisplay.blit(game_img, (0, 0))
 
-            s = set(val for val in board.values())
-            for loc in board:
-                board[loc].draw(pygame.mouse, gameDisplay)
+            for l in disp_board:
+                disp_board[l].draw(pygame.mouse, gameDisplay)
             # notecard_view.draw(gameDisplay, pygame.mouse)
 
             # # Detect state and draw accordingly

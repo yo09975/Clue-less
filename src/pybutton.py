@@ -15,15 +15,16 @@ class PyButton(PyView):
 
                 # If click action exists and button is clicked
                 if click[0] == 1:
+                    print("click")
                     try:
                         self._click_action(self._click_args)
                     except:
                          pass
                 else:
-                    # try:
+                    try:
                         self._hover_action(self._hover_args)
-                    # except:
-                    #     pass
+                    except:
+                        pass
 
             else:
                 # Default action
