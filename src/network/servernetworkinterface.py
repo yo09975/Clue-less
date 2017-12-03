@@ -46,10 +46,12 @@ class ServerNetworkInterface(metaclass=Singleton):
         while len(self.client_socket_list) != ServerNetworkInterface.MIN_PLAYERS:
             # Accept a connection
             client_sock, client_addr = self.server_socket.accept()
-            client = (str(uuid4()), client_sock)
+            client_uuid = str(uuid4())
+            client = (client_uuid, client_sock)
 
             # Send UUID to client (perhaps use a Message later)
-            client[1].sendall(f'{client[0]}'.encode())
+            uuid_msg = Message(self.get_uuid(), MessageType.GIVE_UUID, client_uuid)
+            client[1].sendall(f'{uuid_msg}'.encode())
 
             # Add connection to the CSL
             self.client_socket_list.append(client)
