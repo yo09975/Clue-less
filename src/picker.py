@@ -1,24 +1,36 @@
 """picker.py"""
+from src.pyview import PyView
 
-
-class Picker(object):
-    """A list of toggles, where only one toggle can be selected at any given time"""
+class Picker(PyView):
+    """A list of toggles, where only one toggle can be selected at any given time
 
     choices = None  # an array of toggle objects that contains the choices
     key = None
+    """
 
     def __init__(self, choices):
         """Constructor that accepts an array of card objects to initialize the Picker object"""
-        self.__choices = choices
+        super(Picker, self).__init__(x, y, w, h)
+        self._choices = choices
+        for c in self._choices:
+            self.add_view(c)
+
 
     def disable_button(self, key):
         """Accepts an integer identifying the button to disable"""
-        return True
+        self._choices[key].set_enabled(False)
+
 
     def deselect_all_except(self, key):
         """Accepts an integer identifying the button to select"""
-        return True
+        for i in range(len(self._choices)):
+            if i == key:
+                next
+            self._choices[i].set_selected(False)
+
 
     def get_selected(self):
         """Returns a Card object that represents the selected item"""
-        return True
+        for t in self._choices:
+            if t._is_selected:
+                return t  # TODO determine what this should return

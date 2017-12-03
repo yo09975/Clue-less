@@ -38,3 +38,6 @@ class PyButton(PyView):
 
     def on_click(self):
         self.fill(pygame.Color(200,200,0))
+
+    def set_enabled(self, enabled):
+        self._is_enabled = enabled

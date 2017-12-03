@@ -21,6 +21,7 @@ sm_button_2 = PyButton(70, 70, 50, 50)
 big_button.add_view(sm_button_1)
 big_button.add_view(sm_button_2)
 
+
 # Always display the board and notecard
 # ENTER MAIN GAME LOOP
 while not crashed:
