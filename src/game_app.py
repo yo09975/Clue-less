@@ -53,15 +53,15 @@ class GameApp():
 
         for l in locs['locations']:
             def location_hover(args):
-                args['b'].fill(pygame.Color(0, 0, 100))
-                args['b'].set_alpha(100)
+                args.fill(pygame.Color(0, 0, 100))
+                args.set_alpha(100)
 
             def location_default(args):
-                args['b'].set_alpha(0)
+                args.set_alpha(0)
 
             location = PyButton(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
-            location.set_default_action(location_default, {'b': location})
-            location.set_on_hover_action(location_hover, {'b': location})
+            location.set_default_action(location_default, location)
+            location.set_on_hover_action(location_hover, location)
 
             board[l['key']] = location
             if l['type'] == "room":
@@ -82,8 +82,9 @@ class GameApp():
 
             gameDisplay.blit(game_img, (0, 0))
 
+            s = set(val for val in board.values())
             for loc in board:
-                board[loc].draw( pygame.mouse, gameDisplay)
+                board[loc].draw(pygame.mouse, gameDisplay)
             # notecard_view.draw(gameDisplay, pygame.mouse)
 
             # # Detect state and draw accordingly
