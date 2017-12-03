@@ -83,7 +83,7 @@ class ClientNetworkInterface(metaclass=Singleton):
         if not self.is_connected():
             raise ConnectionError('Not connected to a server')
         try:
-            message_string = self._client_socket.recv(self.BUFSIZE)
+            message_string = self._client_socket.recv(self.BUFSIZE).decode()
         except socket.timeout as e:
             print(f'Error: read_message timed out')
             return None
