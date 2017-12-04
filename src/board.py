@@ -60,7 +60,8 @@ class Board:
 
     def move(self, from_location, to_location):
         """Move a player from one location and to another."""
-
+        if type(from_location) is not str or type(to_location) is not str:
+            raise TypeError('to_location and from_location should be type str')
         if not self._locations[from_location].remove_occupant():
             #raise ValueError()
             return

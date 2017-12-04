@@ -37,14 +37,14 @@ _6x2 = me._board.get_location("6x2")
 
 def test_detect_illegal_move():
     """Ask the Movement Engine to check move to non-neighbor."""
-    MIS_SCA.set_location(_4x0)
-    COL_MUS.set_location(_6x2)
+    MIS_SCA.set_location(_4x0._key)
+    COL_MUS.set_location(_6x2._key)
 
     # Sanity check - characters are in locations
     assert me._board.get_location("4x0").get_occupant_count() == 1
     assert me._board.get_location("6x2").get_occupant_count() == 1
 
-    move = Move(MIS_SCA.get_token(), _5x1._key)
+    move = Move(MIS_SCA.get_card_id(), _5x1._key)
 
     assert not me.is_valid_move(move)
 
@@ -52,7 +52,7 @@ def test_detect_illegal_move():
 def test_detect_move_to_occupied_passage():
     """Ask the Movement Engine to check a move to an occupied passage."""
     # Move character to passage blocking Miss Scarlet
-    move = Move(COL_MUS.get_token(), _4x1._key)
+    move = Move(COL_MUS.get_card_id(), _4x1._key)
     me.do_move(move)
 
     # Sanity check - characters are in locations
@@ -60,14 +60,14 @@ def test_detect_move_to_occupied_passage():
     assert me._board.get_location("4x0").get_occupant_count() == 1
 
     # Check validity of moving Miss Scarlett to newly occupied passage
-    move2 = Move(MIS_SCA.get_token(), _4x1._key)
+    move2 = Move(MIS_SCA.get_card_id(), _4x1._key)
     assert not me.is_valid_move(move2)
 
 
 def test_detect_move_to_unoccupied_passage():
     """Ask the Movement Engine to check a valid move."""
     # Move character out of Miss Scarlet's way
-    move = Move(COL_MUS.get_token(), _5x1._key)
+    move = Move(COL_MUS.get_card_id(), _5x1._key)
     me.do_move(move)
 
     # Sanity check - characters are in locations
@@ -75,14 +75,14 @@ def test_detect_move_to_unoccupied_passage():
     assert me._board.get_location("4x0").get_occupant_count() == 1
 
     # Check validity of moving Miss Scarlett to newly unoccupied passage
-    move2 = Move(MIS_SCA.get_token(), _4x1._key)
+    move2 = Move(MIS_SCA.get_card_id(), _4x1._key)
     assert me.is_valid_move(move2)
 
 
 def test_detect_move_to_occupied_room():
     """Ask the Movement Engine to check validity of move to occupied room."""
     # Move Miss Scarlet out of her starting point
-    move = Move(MIS_SCA.get_token(), _4x1._key)
+    move = Move(MIS_SCA.get_card_id(), _4x1._key)
     me.do_move(move)
 
     # Sanity check - characters are in locations
@@ -90,14 +90,14 @@ def test_detect_move_to_occupied_room():
     assert me._board.get_location("5x1").get_occupant_count() == 1
 
     # Check validity of moving Miss Scarlet to Lounge
-    move2 = Move(MIS_SCA.get_token(), _5x1._key)
+    move2 = Move(MIS_SCA.get_card_id(), _5x1._key)
     assert me.is_valid_move(move2)
 
 
 def test_detect_move_to_unoccupied_room():
     """Ask the Movemetn Engine to check validity of move to empty room."""
     # Move player out of Lounge
-    move = Move(COL_MUS.get_token(), _3x1._key)
+    move = Move(COL_MUS.get_card_id(), _3x1._key)
     me.do_move(move)
 
     # Sanity check - characters are in locations
@@ -105,7 +105,7 @@ def test_detect_move_to_unoccupied_room():
     assert me._board.get_location("3x1").get_occupant_count() == 1
 
     # Check validity of moving Miss Scarlet to Lounge
-    move2 = Move(MIS_SCA.get_token(), _5x1._key)
+    move2 = Move(MIS_SCA.get_card_id(), _5x1._key)
     assert me.is_valid_move(move2)
     me.do_move(move2)
 
@@ -113,7 +113,7 @@ def test_detect_move_to_unoccupied_room():
 def test_execute_non_neighbor_move():
     """Ensure MovementEngine.do_move() works when someone is suggested."""
     hall_occ = me._board.get_location("3x1").get_occupant_count()
-    move = Move(MIS_SCA.get_token(), _3x1._key)
+    move = Move(MIS_SCA.get_card_id(), _3x1._key)
 
     assert not me.is_valid_move(move)
 

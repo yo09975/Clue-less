@@ -107,5 +107,5 @@ def test_get_player():
         assert True
     else:
         assert False
-    assert test_plist1.get_player('TEST UUID') == test_player3
-    assert type(test_plist1.get_player('TEST UUID')) is Player
+    assert test_plist1.get_player("TEST333ID") == test_player3
+    assert type(test_plist1.get_player('TEST333ID')) is Player

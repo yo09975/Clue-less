@@ -52,13 +52,13 @@ def test_set_and_get_status():
 def test_set_and_get_locations():
     assert test_player.get_current_location() is None
     assert test_player.get_previous_location() is None
-    test_player.set_location(test_location1)
-    assert test_player.get_current_location() == test_location1
-    assert test_player.get_previous_location() == test_location1
-    assert type(test_player.get_current_location()) is Location
-    test_player.set_location(test_location2)
-    assert test_player.get_current_location() == test_location2
-    assert test_player.get_previous_location() == test_location1
+    test_player.set_location(test_location1._key)
+    assert test_player.get_current_location() == test_location1._key
+    assert test_player.get_previous_location() == test_location1._key
+    assert type(test_player.get_current_location()) is str
+    test_player.set_location(test_location2._key)
+    assert test_player.get_current_location() == test_location2._key
+    assert test_player.get_previous_location() == test_location1._key
 
 
 def test_set_and_get_card_id():
