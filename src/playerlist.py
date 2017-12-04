@@ -1,7 +1,6 @@
 """playerlist.py"""
 from src.player import Player
 from src.playerstatus import PlayerStatus
-import json
 
 
 class PlayerList:

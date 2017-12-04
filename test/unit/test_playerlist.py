@@ -5,7 +5,6 @@ from src.player import Player
 from src.card import Card
 from src.cardtype import CardType
 from src.playerstatus import PlayerStatus
-from src.gamestate import GameState
 
 test_card1 = Card('Test Card 1 Name', CardType.SUSPECT, 'TEST111ID')
 test_card2 = Card('Test Card 2 Name', CardType.SUSPECT, 'TEST222ID')
