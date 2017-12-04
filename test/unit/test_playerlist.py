@@ -109,25 +109,3 @@ def test_get_player():
         assert False
     assert test_plist1.get_player("TEST333ID") == test_player3
     assert type(test_plist1.get_player('TEST333ID')) is Player
-
-
-def test_serialize_locations():
-    gs = GameState()
-    pl = PlayerList()
-    payload = pl.serialize()
-    assert type(payload) is str
-    # Ensure that Col. Mustard's starting location is serialized
-    assert payload.find('"Colonel Mustard": "6x2"') != -1
-
-
-def test_deserialize_locations():
-    # Invoke GameState so that starting positions are initialized
-    gs = GameState()
-    pl = PlayerList()
-    payload = pl.serialize()
-
-    # Change Col. Mustard's location and test to see if serialization worked
-    payload = payload.replace("6x2", "5x2")
-    pl.deserialize(payload)
-    COL = pl.get_player("Colonel Mustard")
-    assert COL.get_current_location() == "5x2"
