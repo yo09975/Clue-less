@@ -2,6 +2,7 @@
 
 Contains the piece to move, and the destination for it to be moved to.
 """
+import json
 from src.location import Location
 
 
@@ -23,3 +24,15 @@ class Move:
     def get_destination(self):
         """Return destination id."""
         return self._destination
+
+    def serialize(self):
+        """ Convert a Move to JSON """
+        move = {}
+        move['character'] = self.get_character_id()
+        move['destination'] = self.get_destination()
+        return json.dumps(move)
+
+    def deserialize(payload):
+        """ Convert a JSON string to a Move """
+        serial_move = json.loads(payload)
+        return Move(serial_move['character'], serial_move['destination'])
