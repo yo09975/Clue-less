@@ -11,11 +11,11 @@ class Dialog(View):
         w = 900
         h = 500
         super(Dialog, self).__init__(x, y, w, h)
-        
-        self._top_button = Button(self._coords[0] + 681, self._coords[1] + 396, 200, 40)
+
+        self._top_button = Button(self._coords[0] + 685, self._coords[1] + 395, 200, 40)
         self.add_view(self._top_button)
 
-        self._bottom_button = Button(self._coords[0] + 681, self._coords[1] + 446, 200, 40)
+        self._bottom_button = Button(self._coords[0] + 685, self._coords[1] + 445, 200, 40)
         self.add_view(self._bottom_button)
 
     def get_top_button(self):

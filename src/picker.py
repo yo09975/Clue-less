@@ -5,9 +5,12 @@ import pygame
 class Picker(View):
 
 
-    def __init__(self, choices, x, y, w, h):
-        super(Picker, self).__init__(x, y, w, h)
+    def __init__(self, choices, x, y):
 
+        w = 200
+        h = len(choices) * 50
+
+        super(Picker, self).__init__(x, y, w, h)
         self._choices = choices
         self._toggles = []
         # Draw buttons and assign functionality
@@ -25,10 +28,10 @@ class Picker(View):
                 toggle = args['t']
                 if toggle.get_selected():
                     toggle.fill(pygame.Color(255, 0, 0))
-                    toggle.set_alpha(255)
+                    toggle.set_alpha(100)
                 else:
                     toggle.fill(pygame.Color(255, 0, 0))
-                    toggle.set_alpha(100)
+                    toggle.set_alpha(0)
 
             toggle.set_on_click(click_action, {'t': toggle, 'p': self, 'i': i})
             toggle.set_default_action(default_action, {'t': toggle})
