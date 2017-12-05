@@ -1,0 +1,115 @@
+{
+    "cards": [
+        {
+            "name": "Study",
+            "key": "Study",
+            "type": "room"
+        },
+        {
+            "name": "Hall",
+            "key": "Hall",
+            "type": "room"
+        },
+        {
+            "name": "Lounge",
+            "key": "Lounge",
+            "type": "room"
+        },
+        {
+            "name": "Library",
+            "key": "Library",
+            "type": "room"
+        },
+        {
+            "name": "Billiard Room",
+            "key": "Billiard Room",
+            "type": "room"
+        },
+        {
+            "name": "Dining Room",
+            "key": "Dining Room",
+            "type": "room"
+        },
+        {
+            "name": "Conservatory",
+            "key": "Conservatory",
+            "type": "room"
+        },
+        {
+            "name": "Ballroom",
+            "key": "Ballroom",
+            "type": "room"
+        },
+        {
+            "name": "Kitchen",
+            "key": "Kitchen",
+            "type": "room"
+        },
+        {
+            "name": "Miss Scarlet",
+            "key": "Miss Scarlet",
+            "type": "suspect",
+            "start": "4x0"
+        },
+        {
+            "name": "Colonel Mustard",
+            "key": "Colonel Mustard",
+            "type": "suspect",
+            "start": "6x2"
+        },
+        {
+            "name": "Mrs. White",
+            "key": "Mrs. White",
+            "type": "suspect",
+            "start": "4x6"
+        },
+        {
+            "name": "Mr. Green",
+            "key": "Mr. Green",
+            "type": "suspect",
+            "start": "2x6"
+        },
+        {
+            "name": "Mrs. Peacock",
+            "key": "Mrs. Peacock",
+            "type": "suspect",
+            "start": "0x4"
+        },
+        {
+            "name": "Professor Plum",
+            "key": "Professor Plum",
+            "type": "suspect",
+            "start": "0x2"
+        },
+        {
+            "name": "Knife",
+            "key": "Knife",
+            "type": "weapon"
+        },
+        {
+            "name": "Candlestick",
+            "key": "Candlestick",
+            "type": "weapon"
+        },
+        {
+            "name": "Revolver",
+            "key": "Revolver",
+            "type": "weapon"
+        },
+        {
+            "name": "Rope",
+            "key": "Rope",
+            "type": "weapon"
+        },
+        {
+            "name": "Lead Pipe",
+            "key": "Lead Pipe",
+            "type": "weapon"
+        },
+        {
+            "name": "Wrench",
+            "key": "Wrench",
+            "type": "weapon"
+        }
+    ]
+}
