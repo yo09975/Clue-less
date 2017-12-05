@@ -34,6 +34,19 @@ _5x1 = me._board.get_location("5x1")
 _3x1 = me._board.get_location("3x1")
 _6x2 = me._board.get_location("6x2")
 
+def test_serialize_move():
+    """ Test that serializing a Move object gives the correct string """
+    move = Move(MIS_SCA.get_card_id(), _4x0._key)
+    move_serial = move.serialize()
+    assert move_serial.find(f'"character": "TEST111ID", "destination": "{_4x0._key}"') != -1
+
+def test_deserialize_move():
+    """ Test that deserializing a Move string gives the correct object """
+    move = Move(MIS_SCA.get_card_id(), _4x0._key)
+    move_serial = move.serialize()
+    move_deserialized = Move.deserialize(move_serial)
+    assert move_deserialized.get_character_id() == move.get_character_id()
+    assert move_deserialized.get_destination() == move.get_destination()
 
 def test_detect_illegal_move():
     """Ask the Movement Engine to check move to non-neighbor."""
