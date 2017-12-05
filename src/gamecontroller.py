@@ -93,7 +93,7 @@ class GameController(object):
                         self._move_engine.do_move(move)
                         self._current_game.set_state(GameStatus.POST_MOVE)
 
-                elif msg_type == MessageType.SUGGESTION_REQUEST:
+                elif msg_type == MessageType.SUGGESTION_MAKE:
                     suggestion = Suggestion.deserialize(msg_payload)
                     self._suggest_engine.make_suggestion(suggestion)
                     self._current_game.set_state(GameStatus.WAIT_SUGG)
