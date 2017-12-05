@@ -2,9 +2,13 @@
 from src.gamestate import GameState
 from src.suggestion_engine import SuggestionEngine
 from src.movementengine import MovementEngine
-from src.message import Message
-from src.message import MessageType
+from src.network.message import Message
+from src.network.message import MessageType
 from src.gamestatus import GameStatus
+from src.move import Move
+from src.suggestion import Suggestion
+from src.playerlist import PlayerList
+from src.network.servernetworkinterface import ServerNetworkInterface
 
 
 class GameController(object):
@@ -43,12 +47,109 @@ class GameController(object):
 
     def read_message(self, message: Message):
         """Accepts a Message to process"""
+        """Tear apart message"""
+        msg_uuid = message.get_uuid()
         msg_type = message.get_msg_type()
-        if msg_type == MessageType.MOVEMENT:
-            self._current_game.set_state(GameStatus.MOVE_PIECE)
-        elif msg_type == MessageType.SUGGESTION:
-            self._current_game.set_state(GameStatus.MAKE_SUGG)
-        elif msg_type == MessageType.SUGGESTION_RESP:
-            self._current_game.set_state(GameStatus.ANSWER_SUGG)
-        elif msg_type == MessageType.ACCUSATION:
-            self._current_game.set_state(GameStatus.MAKE_ACCUS)
+        msg_payload = message.get_payload()
+        """Retrieve current game status for comparisons"""
+        state = self._current_game.get_state()
+
+        sni = ServerNetworkInterface()
+        pl = PlayerList()
+
+        """Short circuits any additional processing if a player leaves the
+           game
+        """
+        if msg_type == MessageType.LEAVE_GAME:
+            current_player_index = self._current_game.get_current_player()
+            current_player_uuid = pl[current_player_index].get_uuid()
+            current_player_character = pl[current_player_index].get_character().get_name()
+            leave_message = Message(sni.get_uuid(), MessageType.NOTIFY, f'{current_player_character} has left the game.')
+            sni.send_all(leave_message)
+            self._current_game.set_state(GameStatus.LOBBY)
+
+        else:
+
+            # Initial game setup where players are choosing their characters
+            if state == GameStatus.LOBBY:
+
+                if msg_type == MessageType.SELECT_PIECE:
+                    card_id = msg_payload
+                    selected_player = pl.get_player(card_id)
+                    if selected_player.get_uuid() is None:
+                        selected_player.set_uuid(msg_uuid)
+                        update_message = Message(sni.get_uuid(), MessageType.SEND_PLAYERS, pl.serialize())
+
+                if msg_type == MessageType.START_GAME:
+                    self._current_game.start()
+                    self._current_game.set_state(GameStatus.START_TURN)
+
+            # Start of a turn, player can Move, Suggestion, Accuse, or End Turn
+            elif state == GameStatus.START_TURN:
+
+                if msg_type == MessageType.MOVEMENT:
+                    move = Move.deserialize(msg_payload)
+                    if self._move_engine.is_valid_move(move):
+                        self._move_engine.do_move(move)
+                        self._current_game.set_state(GameStatus.POST_MOVE)
+
+                elif msg_type == MessageType.SUGGESTION_REQUEST:
+                    suggestion = Suggestion.deserialize(msg_payload)
+                    self._suggest_engine.make_suggestion(suggestion)
+                    self._current_game.set_state(GameStatus.WAIT_SUGG)
+
+                elif msg_type == MessageType.ACCUSATION:
+                    do_accusation(msg_uuid, msg_type, msg_payload)
+
+                elif msg_type == MessageType.END_TURN:
+                    do_end_turn()
+
+            # After a move, player can Suggestion, Accuse, or End Turn
+            elif state == GameStatus.POST_MOVE:
+
+                if msg_type == MessageType.SUGGESTION_MAKE:
+                    suggestion = Suggestion.deserialize(msg_payload)
+                    self._suggest_engine.make_suggestion(suggestion)
+                    self._current_game.set_state(GameStatus.WAIT_SUGG)
+
+                elif msg_type == MessageType.ACCUSATION:
+                    do_accusation(msg_uuid, msg_type, msg_payload)
+
+                elif msg_type == MessageType.END_TURN:
+                    do_end_turn()
+
+            # After suggestion is made, waiting for suggestion response
+            elif state == GameStatus.WAIT_SUGG:
+
+                if msg_type == MessageType.SUGGESTION_RESPONSE:
+                    card = Card.deserialize(payload)
+                    self._suggest_engine.answer_suggestion(card)
+                    self._current_game.set_state(GameStatus.POST_SUGG)
+
+            # After a suggestion is answered, player can Accuse, or End Turn
+            elif state == GameStatus.POST_SUGG:
+
+                if msg_type == MessageType.ACCUSATION:
+                    do_accusation(msg_uuid, msg_type, msg_payload)
+
+                elif msg_type == MessageType.END_TURN:
+                    do_end_turn()
+
+    def do_accusation(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+        accusation = Suggestion.deserialize(msg_payload)
+        pl = PlayerList()
+        accuser = pl[self._current_game.get_current_player()]
+        if self._suggest_engine.make_accusation(accusation, accuser):
+            self._current_game.set_state(GameStatus.LOBBY)
+        else:
+            set_next_player()
+            self._current_game.set_state(GameStatus.START_TURN)
+
+    def do_end_turn(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+        set_next_player()
+        self._current_game.set_state(GameStatus.START_TURN)
+
+    def set_next_player():
+        next_player = self._current_game.next_turn()
+        next_player_index = pl.index(next_player)
+        self._current_game.set_current_player(next_player_index)

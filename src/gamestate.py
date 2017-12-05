@@ -41,7 +41,7 @@ class GameState(object):
         # Initialize all locations without neighbors
 
         suspect_deck = Deck([])
-        
+
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['name'], CardType.SUSPECT, c['key'])
@@ -104,7 +104,8 @@ class GameState(object):
             player.set_hand(hand)
 
         # Reset self._current_player
-        self._current_player = 0
+        self._current_player = 5
+        first_player = next_turn()
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""
