@@ -3,17 +3,22 @@ from enum import Enum
 
 class MessageType(Enum):
     MOVEMENT = 1
-    SUGGESTION = 2
-    SUGGESTION_RESP = 3
-    SUGGESTION_NOTIFY = 4
-    ACCUSATION = 5
-    ACCUSATION_NOTIFY = 6
-    ACK = 7
-    NACK = 8
-    NOTIFY = 9
-    GIVE_UUID = 10
-    SELECT_PIECE = 11
-    UPDATE_BOARD = 12
+    SUGGESTION_MAKE = 2
+    SUGGESTION_REQUEST = 3
+    SUGGESTION_RESPONSE = 4
+    SUGGESTION_NOTIFY = 5
+    ACCUSATION = 6
+    ACCUSATION_NOTIFY = 7
+    ACK = 8
+    NACK = 9
+    NOTIFY = 10
+    GIVE_UUID = 11
+    SELECT_PIECE = 12
+    UPDATE_BOARD = 13
+    END_TURN = 14
+    LEAVE_GAME = 15
+    START_GAME = 16
+    SEND_PLAYERS = 17
 
 class Message:
     """
@@ -39,7 +44,7 @@ class Message:
     """ Getter for uuid """
     def get_uuid(self):
         return self._uuid
-    
+
     """ Getter for msg_type """
     def get_msg_type(self):
         return self._msg_type
