@@ -16,7 +16,7 @@ class Move:
         self._character = character
         self._destination = destination
 
-    def get_charcter_id(self):
+    def get_character_id(self):
         """Return character_id of character to be moved."""
         return self._character
 
