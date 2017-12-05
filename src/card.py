@@ -1,6 +1,6 @@
 """card.py."""
 from src.cardtype import CardType
-
+import json
 
 class Card(object):
     """Represents a weapon, room, or suspect card.
@@ -42,3 +42,14 @@ class Card(object):
         """Returns an Enum that represents the type of the Card"""
         # print('get_type method in Card class')
         return self._card_type
+
+    def serialize(self):
+        card = {}
+        card['name'] = self._name
+        card['card_type'] = self._card_type.value
+        card['card_id'] = self._card_id
+        return json.dumps(card)
+
+    def deserialize(payload):
+        card = json.loads(payload)
+        return Card(card['name'], CardType(card['card_type']), card['card_id'])

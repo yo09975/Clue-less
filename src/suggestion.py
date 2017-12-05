@@ -35,14 +35,15 @@ class Suggestion:
         return self.suggestion_set[2]
 
     def serialize(self):
-        suggestions = {}
-        for s in self.suggestion_set:
-            suggestions[s.get_type()] = s.get_id()
-        return json.dumps(suggestions)
+        suggestion = {}
+        suggestion['room'] = self.get_room().serialize()
+        suggestion['weapon'] = self.get_weapon().serialize()
+        suggestion['character'] = self.get_character().serialize()
+        return json.dumps(suggestion)
 
     def deserialize(payload):
-        suggestions = json.loads(payload)
-        for s in suggestions:
-            print(s.get_type)
-            print(s.get_id)
-        return Suggestion(suggestions[0], suggestions[1], suggestions[2])
+        suggestion = json.loads(payload)
+        room = Card.deserialize(suggestion['room'])
+        weapon = Card.deserialize(suggestion['weapon'])
+        character = Card.deserialize(suggestion['character'])
+        return Suggestion(room, weapon, character)
