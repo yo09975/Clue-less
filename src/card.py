@@ -48,3 +48,4 @@ class Card(object):
         card = {}
         card['card_id'] = self.get_id()
         return json.dumps(payload)
+

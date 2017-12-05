@@ -86,3 +86,4 @@ class PlayerList:
         """Converting JSON string to PlayerList"""
         serial_player_list = json.loads(payload)
         return PlayerList(serial_player_list['card_id'],serial_player_list['user_id'])
+
