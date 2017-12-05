@@ -14,7 +14,9 @@ crashed = False
 clock = pygame.time.Clock()
 
 toggle1 = Toggle(20, 20, 100, 100)
+toggle1.set_alpha(255)
 toggle2 = Toggle(140, 20, 100, 100)
+toggle2.set_alpha(255)
 
 def toggle_default(args):
     if args['b'].get_selected():

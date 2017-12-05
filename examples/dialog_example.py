@@ -24,8 +24,10 @@ dialog = Dialog(50, 50)
 dialog.fill(pygame.Color(255, 0, 0))
 dialog.get_top_button().fill(pygame.Color(0, 255, 0))
 dialog.set_is_visible(False)
+dialog.set_alpha(255)
 bottom = dialog.get_bottom_button()
 bottom.fill(pygame.Color(0, 0, 255))
+bottom.set_alpha(255)
 
 visible = DialogVisible.NOT_VISIBLE
 
@@ -40,6 +42,7 @@ bottom.set_on_click(close_dialog, {'d': dialog})
 # Create a button that pulls up the dialog
 button = Button(100, 100, 200, 50)
 button.fill(pygame.Color(100, 100, 0))
+button.set_alpha(255)
 
 def show_dialog(args):
     args['d'].set_is_visible(True)
@@ -48,6 +51,7 @@ button.set_on_click(show_dialog, {'d': dialog})
 
 backgroundview = View(0, 0, 1000, 1000)
 backgroundview.fill(pygame.Color(255, 255, 255))
+backgroundview.set_alpha(255)
 
 
 

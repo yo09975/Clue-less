@@ -22,11 +22,13 @@ test_card3 = Card('Test Card 3 Name', CardType.SUSPECT, 'TEST333ID')
 test_card4 = Card('Test Card 4 Name', CardType.SUSPECT, 'TEST444ID')
 cards = [test_card1, test_card2, test_card3, test_card4]
 
-picker1 = Picker(cards, 0, 0, 200, 200)
+picker1 = Picker(cards, 0, 0)
 picker1.fill(pygame.Color(0, 0, 255))
+picker1.set_alpha(255)
 
-picker2 = Picker(cards, 300, 0, 200, 200)
+picker2 = Picker(cards, 300, 0)
 picker2.fill(pygame.Color(0, 0, 255))
+picker2.set_alpha(255)
 picker2.disable_button(3)
 
 def button_action(args):
