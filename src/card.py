@@ -42,3 +42,9 @@ class Card(object):
         """Returns an Enum that represents the type of the Card"""
         # print('get_type method in Card class')
         return self._card_type
+
+    def serialize(self, payload):
+        """serialize card_id to a JSON file"""
+        card = {}
+        card['card_id'] = self.get_id()
+        return json.dumps(payload)
