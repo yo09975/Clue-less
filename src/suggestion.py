@@ -47,3 +47,7 @@ class Suggestion:
         weapon = Card.deserialize(suggestion['weapon'])
         character = Card.deserialize(suggestion['character'])
         return Suggestion(room, weapon, character)
+
+    def __str__(self):
+        return self.get_character().get_name() + ", with the " + \
+        self.get_weapon().get_name() + ", in the " + self.get_room().get_name()
