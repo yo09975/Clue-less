@@ -67,8 +67,11 @@ class GameController(object):
             current_player_index = self._current_game.get_current_player()
             current_player_uuid = pl[current_player_index].get_uuid()
             players = pl.get_players()
-            current_player_character = players[current_player_index].get_character().get_name()
-            leave_message = Message(sni.get_uuid(), MessageType.NOTIFY, f'{current_player_character} has left the game.')
+            current_player_character = players[current_player_index].\
+                get_character().get_name()
+            leave_message = Message(sni.get_uuid(
+                ), MessageType.NOTIFY, f'{current_player_character} \
+                has left the game.')
             sni.send_all(leave_message)
             self._current_game.set_state(GameStatus.LOBBY)
 
@@ -82,9 +85,9 @@ class GameController(object):
                     selected_player = pl.get_player(card_id)
                     if selected_player.get_uuid() is None:
                         selected_player.set_uuid(msg_uuid)
-                    update_message = Message(sni.get_uuid(), MessageType.SEND_PLAYERS, pl.serialize())
+                    update_message = Message(sni.get_uuid(
+                        ), MessageType.SEND_PLAYERS, pl.serialize())
                     sni.send_all(leave_message)
-
 
                 if msg_type == MessageType.START_GAME:
                     total_players = 0
@@ -106,8 +109,9 @@ class GameController(object):
 
                 elif msg_type == MessageType.SUGGESTION_MAKE:
                     suggesting_player = self.get_player_from_uuid(msg_uuid)
-                    if suggesting_player.get_was_transferred()
-                        do_suggestion(msg_uuid, msg_type, msg_payload, suggesting_player)
+                    if suggesting_player.get_was_transferred():
+                        do_suggestion(
+                            msg_uuid, msg_type, msg_payload, suggesting_player)
 
                 elif msg_type == MessageType.ACCUSATION:
                     do_accusation(msg_uuid, msg_type, msg_payload)
@@ -120,7 +124,8 @@ class GameController(object):
 
                 if msg_type == MessageType.SUGGESTION_MAKE:
                     suggesting_player = self.get_player_from_uuid(msg_uuid)
-                    do_suggestion(msg_uuid, msg_type, msg_payload, suggesting_player)
+                    do_suggestion(
+                        msg_uuid, msg_type, msg_payload, suggesting_player)
 
                 elif msg_type == MessageType.ACCUSATION:
                     do_accusation(msg_uuid, msg_type, msg_payload)
@@ -151,21 +156,26 @@ class GameController(object):
             if msg_uuid == p.get_uuid():
                 return p
 
-    def do_suggestion(msg_uuid: str, msg_type: MessageType, msg_payload: str, suggesting_player: Player):
+    def do_suggestion(
+        msg_uuid: str, msg_type: MessageType, msg_payload: str,
+            suggesting_player: Player):
         suggestion = Suggestion.deserialize(msg_payload)
-        if self._suggest_engine.is_valid_suggestion(suggesting_player, suggestion):
+        if self._suggest_engine.is_valid_suggestion(
+                suggesting_player, suggestion):
             if self._suggest_engine.make_suggestion(suggestion):
                 self._current_game.set_state(GameStatus.WAIT_SUGG)
             else:
                 self._current_game.set_state(GameStatus.POST_SUGG)
-            suggested_player = pl.get_player(suggestion.get_character().get_id())
+            suggested_player = pl.get_player(
+                suggestion.get_character().get_id())
             suggested_location = suggestion.get_room().get_id()
-            self._move_engine.do_move(Move(suggested_player.get_card_id(), suggested_location))
+            self._move_engine.do_move(Move(
+                suggested_player.get_card_id(), suggested_location))
             suggested_player.set_was_transferred(True)
             suggesting_player.set_was_transferred(False)
-            update_board_message = Message(sni.get_uuid(), MessageType.NOTIFY, Board.serialize())
+            update_board_message = Message(
+                sni.get_uuid(), MessageType.NOTIFY, Board.serialize())
             sni.send_all(update_board_message)
-
 
     def do_accusation(msg_uuid: str, msg_type: MessageType, msg_payload: str):
         accusation = Suggestion.deserialize(msg_payload)
