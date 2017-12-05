@@ -50,8 +50,8 @@ def test_next_turn():
 
 def test_get_and_set_state():
     assert test_gamestate.get_state() == GameStatus.LOBBY
-    test_gamestate.set_state(GameStatus.MOVE_PIECE)
-    assert test_gamestate.get_state() == GameStatus.MOVE_PIECE
+    test_gamestate.set_state(GameStatus.START_TURN)
+    assert test_gamestate.get_state() == GameStatus.START_TURN
     assert type(test_gamestate.get_state()) is GameStatus
 
 
