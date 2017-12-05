@@ -6,7 +6,6 @@ from src.card import Card
 from src.cardtype import CardType
 from src.playerstatus import PlayerStatus
 
-
 test_card1 = Card('Test Card 1 Name', CardType.SUSPECT, 'TEST111ID')
 test_card2 = Card('Test Card 2 Name', CardType.SUSPECT, 'TEST222ID')
 test_card3 = Card('Test Card 3 Name', CardType.WEAPON, 'TEST333ID')

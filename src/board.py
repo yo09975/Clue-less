@@ -7,6 +7,7 @@ import json
 import os
 from src.hall import Hall
 from src.location import Location
+from src.playerlist import PlayerList
 
 
 class Board:
@@ -76,3 +77,31 @@ class Board:
     def get_location(self, location_id):
         """Return a location from either a coordinate string or room id."""
         return self._locations[location_id]
+
+
+    def serialize(self):
+        board = {}
+        # Serialize where all players' locatations
+        pl = PlayerList()
+        for p in pl.get_players():
+            board[p.get_card_id()] = p.get_current_location()
+
+        return json.dumps(board)
+
+
+    def deserialize(self, payload):
+        pl = PlayerList()
+        # Deserialize here
+        board = json.loads(payload)
+
+        # Clear board location's occpancy
+        for l in self._locations:
+            while self._locations[l].get_occupant_count() != 0:
+                self._locations[l].remove_occupant()
+
+        # Update locations in PlayerList and set occupancy in Board
+        for p in board:
+            if board[p] is None:
+                continue
+            pl.get_player(p).set_location(board[p])
+            self._locations[board[p]].add_occupant()
