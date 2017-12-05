@@ -40,8 +40,9 @@ class Suggestion:
             suggestions[s.get_type()] = s.get_id()
         return json.dumps(suggestions)
 
-    def deserialize(self, payload):
+    def deserialize(payload):
         suggestions = json.loads(payload)
         for s in suggestions:
             print(s.get_type)
             print(s.get_id)
+        return Suggestion(suggestions[0], suggestions[1], suggestions[2])
