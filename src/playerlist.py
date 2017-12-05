@@ -1,7 +1,6 @@
 """playerlist.py"""
 from src.player import Player
 from src.playerstatus import PlayerStatus
-import json
 
 
 class PlayerList:
@@ -74,22 +73,3 @@ class PlayerList:
                 player_index = self._player_list.index(player)
                 return self._player_list[player_index]
         return None
-
-    def serialize(self):
-        board = {}
-        # Serialize where all players' locatations
-
-        for p in PlayerList._player_list:
-            board[p.get_card_id()] = p.get_current_location()
-
-        return json.dumps(board)
-
-
-    def deserialize(self, payload):
-        pl = PlayerList()
-        # Deserialize here
-        board = json.loads(payload)
-        for p in board:
-            if board[p] is None:
-                continue
-            pl.get_player(p).set_location(board[p])
