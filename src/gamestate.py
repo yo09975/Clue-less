@@ -105,7 +105,7 @@ class GameState(object):
 
         # Reset self._current_player
         self._current_player = 5
-        first_player = next_turn()
+        first_player = self.next_turn()
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""
