@@ -5,13 +5,9 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
 from src.view import View
-from src.dialog import Dialog
+from src.suggestion_dialog import SuggestionDialog as SD
 from src.button import Button
 from enum import Enum
-
-class DialogVisible(Enum):
-    VISIBLE = 1
-    NOT_VISIBLE = 2
 
 
 pygame.init()
@@ -20,23 +16,11 @@ crashed = False
 
 clock = pygame.time.Clock()
 
-dialog = Dialog(50, 50)
-dialog.fill(pygame.Color(255, 0, 0))
+dialog = SD(60, 60)
 dialog.get_top_button().fill(pygame.Color(0, 255, 0))
+dialog.set_alpha(0)
 dialog.set_is_visible(False)
-dialog.set_alpha(255)
-bottom = dialog.get_bottom_button()
-bottom.fill(pygame.Color(0, 0, 255))
-bottom.set_alpha(255)
 
-visible = DialogVisible.NOT_VISIBLE
-
-
-# Make bottom button close the Dialog
-def close_dialog(args):
-    args['d'].set_is_visible(False)
-
-bottom.set_on_click(close_dialog, {'d': dialog})
 
 
 # Create a button that pulls up the dialog

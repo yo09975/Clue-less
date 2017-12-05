@@ -18,6 +18,10 @@ class View(pygame.Surface):
 
         super(View, self).__init__((w, h))
 
+        # Default to a transparent view
+        self.set_alpha(0)
+
+
     def add_view(self, view):
         """Add a subview to this view."""
         self._views.append(view)
