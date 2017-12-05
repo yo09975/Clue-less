@@ -1,6 +1,6 @@
 from src.toggle import Toggle
 from src.view import View
-
+import pygame
 
 class Picker(View):
 
@@ -12,7 +12,7 @@ class Picker(View):
         self._toggles = []
         # Draw buttons and assign functionality
         for i, c in enumerate(choices):
-            toggle = Toggle(self._coords[0], self._coord[0] + 50 * i, 200, 40)
+            toggle = Toggle(self._coords[0], self._coords[1] + 50 * i, 200, 40)
 
             def click_action(args):
                 toggle = args['t']
@@ -25,13 +25,15 @@ class Picker(View):
                 toggle = args['t']
                 if toggle.get_selected():
                     toggle.fill(pygame.Color(255, 0, 0))
-                    toggle.set_alpha(100)
+                    toggle.set_alpha(255)
                 else:
-                    toggle.set_alpha(0)
+                    toggle.fill(pygame.Color(255, 0, 0))
+                    toggle.set_alpha(100)
 
             toggle.set_on_click(click_action, {'t': toggle, 'p': self, 'i': i})
             toggle.set_default_action(default_action, {'t': toggle})
             self._toggles.append(toggle)
+            self.add_view(toggle)
 
     def disable_button(self, key):
         self._toggles[key].set_enabled(False)
