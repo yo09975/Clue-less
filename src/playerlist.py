@@ -75,7 +75,7 @@ class PlayerList:
         return None
 
     def get_player_by_index(self, index: int) -> Player:
-        return self._player_list[i]
+        return self._player_list[index]
 
     def clear(self):
         self._player_list = []
