@@ -1,11 +1,6 @@
 {
     "cards": [
         {
-            "name": "Study",
-            "key": "Study",
-            "type": "room"
-        },
-        {
             "name": "Hall",
             "key": "Hall",
             "type": "room"
@@ -16,23 +11,13 @@
             "type": "room"
         },
         {
-            "name": "Library",
-            "key": "Library",
-            "type": "room"
-        },
-        {
-            "name": "Billiard Room",
-            "key": "Billiard Room",
-            "type": "room"
-        },
-        {
             "name": "Dining Room",
             "key": "Dining Room",
             "type": "room"
         },
         {
-            "name": "Conservatory",
-            "key": "Conservatory",
+            "name": "Kitchen",
+            "key": "Kitchen",
             "type": "room"
         },
         {
@@ -41,8 +26,23 @@
             "type": "room"
         },
         {
-            "name": "Kitchen",
-            "key": "Kitchen",
+            "name": "Conservatory",
+            "key": "Conservatory",
+            "type": "room"
+        },
+        {
+            "name": "Billiard Room",
+            "key": "Billiard Room",
+            "type": "room"
+        },
+        {
+            "name": "Library",
+            "key": "Library",
+            "type": "room"
+        },
+        {
+            "name": "Study",
+            "key": "Study",
             "type": "room"
         },
         {
