@@ -1,16 +1,14 @@
 """playerlist.py"""
 from src.player import Player
 from src.playerstatus import PlayerStatus
-from src.card import Card
-import json
 
 
 class PlayerList:
     """Represents all Players in the game.
 
     PlayerList class in the Game Management Subsystem. Stores all Player
-    objects in a list that is stored globally to allow for tracing of game
-    information such as turn sequencing, player location, etc. This class
+    objects in a list that is stored globally to allow for tracjing of game
+    information such as turn sqeuencing, player location, etc. This class
     is a Singleton.
     """
 
@@ -76,13 +74,11 @@ class PlayerList:
                 return self._player_list[player_index]
         return None
 
-    def serialize(self, uuid):
-        """Converting PlayerList to JSON"""
-        player_list = {}
-        player_list['user_id'] = self.get_player(uuid)
-        return json.dump(player_list)
+    def get_player_by_index(self, index: int) -> Player:
+        return self._player_list[i]
 
-    def deserialize(payload):
-        """Converting JSON string to PlayerList"""
-        serial_player_list = json.loads(payload)
-        return PlayerList(serial_player_list['card_id'],serial_player_list['user_id'])
+    def clear(self):
+        self._player_list = []
+
+    def __len__(self):
+        return len(self._player_list)

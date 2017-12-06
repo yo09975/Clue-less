@@ -26,3 +26,9 @@ def test_get_type():
     testvar = test_card.get_type()
     assert testvar == CardType.SUSPECT
     assert type(testvar) is CardType
+
+
+def test_serialization():
+    payload = test_card.serialize()
+    test_card2 = Card.deserialize(payload)
+    assert payload == test_card2.serialize()
