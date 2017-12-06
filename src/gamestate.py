@@ -55,7 +55,11 @@ class GameState(object):
                 self.suspect_deck.add_card(card)
                 player = Player(card)
                 player.set_location(c['start'])
-                player_list.add_player(player)
+                try:
+                    player_list.add_player(player)
+                except IndexError:
+                    # PlayerList was already initialized
+                    pass
             elif c['type'] == 'weapon':
                 card = Card(c['name'], CardType.WEAPON, c['key'])
                 self.weapon_deck.add_card(card)
