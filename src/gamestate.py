@@ -10,6 +10,7 @@ from src.deck import Deck
 import os
 import json
 
+
 class GameState(object):
     """Contains all required information about a game.
 
@@ -104,7 +105,8 @@ class GameState(object):
             player.set_hand(hand)
 
         # Reset self._current_player
-        self._current_player = 5
+        pl = PlayerList()
+        self._current_player = len(pl) - 1
         first_player = self.next_turn()
 
     def next_turn(self) -> Player:
@@ -112,7 +114,8 @@ class GameState(object):
         # print('next_turn method in GameState class')
         p_list = PlayerList()
         next_player = p_list.get_next_turn(self._current_player)
-        self._current_player = p_list.get_players().index(next_player)
+        if next_player is not None:
+            self._current_player = p_list.get_players().index(next_player)
         return next_player
 
     def get_state(self) -> GameStatus:

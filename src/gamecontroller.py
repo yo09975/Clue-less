@@ -64,13 +64,11 @@ class GameController(object):
            game
         """
         if msg_type == MessageType.LEAVE_GAME:
-            current_player_index = self._current_game.get_current_player()
-            current_player_uuid = pl[current_player_index].get_uuid()
-            players = pl.get_players()
-            current_player_character = players[current_player_index].\
-                get_character().get_name()
+            leaving_player = get_player_from_uuid(msg_uuid)
+            leaving_player_character = leaving_player.get_character(
+                ).get_name()
             leave_message = Message(sni.get_uuid(
-                ), MessageType.NOTIFY, f'{current_player_character} \
+                ), MessageType.NOTIFY, f'{leaving_player_character} \
                 has left the game.')
             sni.send_all(leave_message)
             self._current_game.set_state(GameStatus.LOBBY)
@@ -105,6 +103,8 @@ class GameController(object):
                     move = Move.deserialize(msg_payload)
                     if self._move_engine.is_valid_move(move):
                         self._move_engine.do_move(move)
+                        moving_player = self.get_player_from_uuid(msg_uuid)
+                        moving_player.set_was_transferred(False)
                         self._current_game.set_state(GameStatus.POST_MOVE)
 
                 elif msg_type == MessageType.SUGGESTION_MAKE:
@@ -184,14 +184,17 @@ class GameController(object):
         if self._suggest_engine.make_accusation(accusation, accuser):
             self._current_game.set_state(GameStatus.LOBBY)
         else:
-            set_next_player()
-            self._current_game.set_state(GameStatus.START_TURN)
+            accuser.set_status(PlayerStatus.LOST)
+            next_player = self._current_game.next_turn()
+            # Check to see if everyone has lost
+            if next_player is None:
+                all_lost_message = Message(
+                    sni.get_uuid(), MessageType.NOTIFY, 'All players have made \
+                    an incorrect accusation. No one wins.')
+                self._current_game.set_state(GameStatus.LOBBY)
+            else:
+                self._current_game.set_state(GameStatus.START_TURN)
 
     def do_end_turn(msg_uuid: str, msg_type: MessageType, msg_payload: str):
-        set_next_player()
+        self._current_game.next_turn()
         self._current_game.set_state(GameStatus.START_TURN)
-
-    def set_next_player():
-        next_player = self._current_game.next_turn()
-        next_player_index = pl.index(next_player)
-        self._current_game.set_current_player(next_player_index)
