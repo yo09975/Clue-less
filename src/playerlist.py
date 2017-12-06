@@ -29,6 +29,8 @@ class PlayerList:
 
     def add_player(self, player: Player):
         """Accepts a Player object to add to the end of the list"""
+        if len(self._player_list) == self.__MAX_PLAYERS:
+            raise IndexError(f'Attempted to add more than {self.__MAX_PLAYERS} players')
         self._player_list.append(player)
 
     def get_next_turn(self, current: int) -> Player:
