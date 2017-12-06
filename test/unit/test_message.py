@@ -4,8 +4,8 @@ from uuid import uuid4
 test_uuid = uuid4()
 test_payload = 'test payload'
 test_message_movement = Message(test_uuid, MessageType.MOVEMENT, test_payload)
-test_message_suggestion = Message(test_uuid, MessageType.SUGGESTION, test_payload)
-test_message_suggestion_response = Message(test_uuid, MessageType.SUGGESTION_RESP, test_payload)
+test_message_suggestion = Message(test_uuid, MessageType.SUGGESTION_MAKE, test_payload)
+test_message_suggestion_response = Message(test_uuid, MessageType.SUGGESTION_RESPONSE, test_payload)
 test_message_accusation = Message(test_uuid, MessageType.ACCUSATION, test_payload)
 
 def test_init():
@@ -19,8 +19,8 @@ def test_get_uuid():
 
 def test_get_msg_type():
 	assert test_message_movement.get_msg_type() == MessageType.MOVEMENT
-	assert test_message_suggestion.get_msg_type() == MessageType.SUGGESTION
-	assert test_message_suggestion_response.get_msg_type() == MessageType.SUGGESTION_RESP
+	assert test_message_suggestion.get_msg_type() == MessageType.SUGGESTION_MAKE
+	assert test_message_suggestion_response.get_msg_type() == MessageType.SUGGESTION_RESPONSE
 	assert test_message_accusation.get_msg_type() == MessageType.ACCUSATION
 
 def test_get_payload():
