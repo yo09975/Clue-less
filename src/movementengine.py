@@ -49,13 +49,19 @@ class MovementEngine:
     def do_move(self, move):
         """Accept a Move and process it."""
 
+        # Don't attempt an invalid move
+        if not self.is_valid_move(move):
+            return False
+
         # Get the player's current location
         player_list = PlayerList()
         player = player_list.get_player(move.get_character_id())
+        if not player:
+            return False
         from_location = player.get_current_location()
 
         # Execute move on board and update player location
         self._board.move(from_location, move.get_destination())
         player.set_location(move.get_destination())
 
-        return
+        return True

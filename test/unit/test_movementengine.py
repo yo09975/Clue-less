@@ -66,7 +66,7 @@ def test_detect_move_to_occupied_passage():
     """Ask the Movement Engine to check a move to an occupied passage."""
     # Move character to passage blocking Miss Scarlet
     move = Move(COL_MUS.get_card_id(), _4x1._key)
-    me.do_move(move)
+    assert me.do_move(move)
 
     # Sanity check - characters are in locations
     assert me._board.get_location("4x1").get_occupant_count() == 1
@@ -81,7 +81,7 @@ def test_detect_move_to_unoccupied_passage():
     """Ask the Movement Engine to check a valid move."""
     # Move character out of Miss Scarlet's way
     move = Move(COL_MUS.get_card_id(), _5x1._key)
-    me.do_move(move)
+    assert me.do_move(move)
 
     # Sanity check - characters are in locations
     assert me._board.get_location("5x1").get_occupant_count() == 1
@@ -96,7 +96,7 @@ def test_detect_move_to_occupied_room():
     """Ask the Movement Engine to check validity of move to occupied room."""
     # Move Miss Scarlet out of her starting point
     move = Move(MIS_SCA.get_card_id(), _4x1._key)
-    me.do_move(move)
+    assert me.do_move(move)
 
     # Sanity check - characters are in locations
     assert me._board.get_location("4x1").get_occupant_count() == 1
@@ -111,7 +111,7 @@ def test_detect_move_to_unoccupied_room():
     """Ask the Movemetn Engine to check validity of move to empty room."""
     # Move player out of Lounge
     move = Move(COL_MUS.get_card_id(), _3x1._key)
-    me.do_move(move)
+    assert me.do_move(move)
 
     # Sanity check - characters are in locations
     assert me._board.get_location("4x1").get_occupant_count() == 1
@@ -120,7 +120,7 @@ def test_detect_move_to_unoccupied_room():
     # Check validity of moving Miss Scarlet to Lounge
     move2 = Move(MIS_SCA.get_card_id(), _5x1._key)
     assert me.is_valid_move(move2)
-    me.do_move(move2)
+    assert me.do_move(move2)
 
 
 def test_execute_non_neighbor_move():
@@ -130,6 +130,6 @@ def test_execute_non_neighbor_move():
 
     assert not me.is_valid_move(move)
 
-    me.do_move(move)
+    assert me.do_move(move)
     new_hall_occ = me._board.get_location("3x1").get_occupant_count()
     assert new_hall_occ == hall_occ + 1
