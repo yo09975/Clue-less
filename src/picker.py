@@ -23,6 +23,11 @@ class Picker(View):
                 index = args['i']
                 if toggle.get_selected():
                     picker.deselect_all_except(index)
+                    # Call the on_changed function
+                    try:
+                        picker._on_change_function(picker._on_change_args)
+                    except AttributeError:
+                        pass
 
             def default_action(args):
                 toggle = args['t']
@@ -47,6 +52,9 @@ class Picker(View):
             if i != key:
                 t.set_selected(False)
 
+    def enable_all(self):
+        for t in self._toggles:
+            t.set_enabled(True)
 
     def get_selected(self):
         for i, t in enumerate(self._toggles):
@@ -55,3 +63,8 @@ class Picker(View):
 
         # If you haven't found a selected toggle, return False
         return False
+
+    def set_on_changed(self, function, args):
+        ## Set the method that is called when a toggle in the picker changes
+        self._on_change_function = function
+        self._on_change_args = args
