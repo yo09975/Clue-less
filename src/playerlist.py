@@ -70,7 +70,10 @@ class PlayerList:
         return self._player_list
 
     def get_player(self, card_id: str) -> Player:
-        """Accepts a UUID and returns the corresponding Player object"""
+        """
+        Searches the PlayerList for the Player object associated with a given
+        card_id string and returns it
+        """
         for player in self._player_list:
             if card_id == player.get_card_id():
                 player_index = self._player_list.index(player)
