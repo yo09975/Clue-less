@@ -52,20 +52,20 @@ class Button(View):
         # Default action
         try:
             self._default_action(self._default_args)
-        except:
+        except AttributeError:
             pass
 
     def click(self):
         try:
             self._click_action(self._click_args)
-        except:
+        except AttributeError:
             # If click isn't defined, hover
             self.hover()
 
     def hover(self):
         try:
             self._hover_action(self._hover_args)
-        except:
+        except AttributeError:
             # If hovering is not defined, do default
             self.default()
 
