@@ -38,8 +38,13 @@ class Picker(View):
                     toggle.fill(pygame.Color(255, 0, 0))
                     toggle.set_alpha(0)
 
+            def disabled_action(args):
+                args['b'].set_alpha(255)
+                args['b'].fill(pygame.Color(121, 121, 121))
+
             toggle.set_on_click(click_action, {'t': toggle, 'p': self, 'i': i})
             toggle.set_default_action(default_action, {'t': toggle})
+            toggle.set_disabled_action(disabled_action, {'b': toggle})
             self._toggles.append(toggle)
             self.add_view(toggle)
 

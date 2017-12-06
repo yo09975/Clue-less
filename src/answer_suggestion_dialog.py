@@ -87,7 +87,7 @@ class AnswerSuggestionDialog(Dialog):
             'd': self })
 
         # set background image
-        self._background_image = pygame.image.load('resources/answerselect.jpg')
+        self._background_image = pygame.image.load('resources/suggestionanswer.jpg')
 
 
     # Override draw method to include background image
@@ -108,31 +108,39 @@ class AnswerSuggestionDialog(Dialog):
         super(AnswerSuggestionDialog, self).set_is_visible(is_visible)
 
     def set_player_hand(self, hand):
-        for h in hand.get_cards():
-            if h.get_type == CardType.ROOM:
-                for i, c in enumerate(self._rooms):
-                    if h.get_id() != c.get_id():
-                        self._room_picker.disable_button(i)
-            elif h.get_type == CardType.SUSPECT:
-                for i, c in enumerate(self._characters):
-                    if h.get_id() != c.get_id():
-                        self._character_picker.disable_button(i)
-            elif h.get_type == CardType.WEAPON:
-                for i, c in enumerate(self._weapons):
-                    if h.get_id() != c.get_id():
-                        self._weapon_picker.disable_button(i)
+
+        for i, c in enumerate(self._rooms):
+            found = False
+            for h in hand.get_cards():
+                if h.get_id() == c.get_id():
+                    found = True
+            if not found:
+                self._room_picker.disable_button(i)
+
+        for i, c in enumerate(self._characters):
+            found = False
+            for h in hand.get_cards():
+                if h.get_id() == c.get_id():
+                    found = True
+            if not found:
+                self._character_picker.disable_button(i)
+
+        for i, c in enumerate(self._weapons):
+            found = False
+            for h in hand.get_cards():
+                if h.get_id() == c.get_id():
+                    found = True
+            if not found:
+                self._weapon_picker.disable_button(i)
+
 
     def set_suggestion(self, suggestion):
-        print("disabling")
         for i, c in enumerate(self._rooms):
             if suggestion.get_room().get_id() != c.get_id():
-                print("room ", i)
                 self._room_picker.disable_button(i)
         for i, c in enumerate(self._characters):
             if suggestion.get_character().get_id() != c.get_id():
-                print("ch ", i)
                 self._character_picker.disable_button(i)
         for i, c in enumerate(self._weapons):
             if suggestion.get_weapon().get_id() != c.get_id():
-                print("w ", i)
                 self._weapon_picker.disable_button(i)

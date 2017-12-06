@@ -11,6 +11,7 @@ from enum import Enum
 from src.suggestion import Suggestion
 from src.card import Card
 from src.cardtype import CardType
+from src.hand import Hand
 
 
 pygame.init()
@@ -31,15 +32,13 @@ button.set_alpha(255)
 
 def show_dialog(args):
     args['d'].set_is_visible(True)
-    print('here1')
-
     r = Card("Hall", CardType.ROOM, "Hall")
     w = Card("Revolver", CardType.WEAPON, "Revolver")
     s = Card("Colonel Mustard", CardType.SUSPECT, "Colonel Mustard")
     sug = Suggestion(r, w, s)
-    print('here2')
+    hand = Hand([r, w])
     args['d'].set_suggestion(sug)
-    print('here3')
+    args['d'].set_player_hand(hand)
 
 button.set_on_click(show_dialog, {'d': dialog})
 
