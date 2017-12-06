@@ -32,6 +32,8 @@ class MovementEngine:
         # Get player's current location
         player_list = PlayerList()
         player = player_list.get_player(move.get_character_id())
+        if not player:
+            return False
         from_location = self._board.get_location(player.get_current_location())
 
         # Get destination location from board
