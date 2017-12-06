@@ -7,13 +7,15 @@ class PlayerList:
     """Represents all Players in the game.
 
     PlayerList class in the Game Management Subsystem. Stores all Player
-    objects in a list that is stored globally to allow for tracjing of game
-    information such as turn sqeuencing, player location, etc. This class
+    objects in a list that is stored globally to allow for tracing of game
+    information such as turn sequencing, player location, etc. This class
     is a Singleton.
     """
 
+    # List of Player objects representing the Player order
     _player_list = []
-    """List of Player objects representing the Player order"""
+    # Maximum number of players in the game
+    __MAX_PLAYERS = 6
 
     class __impl:
         """Implementation of the Singleton class"""
@@ -36,9 +38,9 @@ class PlayerList:
             while i < len(self._player_list):
                 """Creating index and adjusting to remain in bounds"""
                 search_index = (current + i) % len(self._player_list)
-                if self._player_list[search_index].get_status(
-                        ) == PlayerStatus.ACTIVE:
-                    return self._player_list[search_index]
+                player = self.get_player_by_index(search_index)
+                if player.get_status() == PlayerStatus.ACTIVE:
+                    return player
                 i += 1
             return None
         else:
@@ -52,10 +54,9 @@ class PlayerList:
             while i < len(self._player_list):
                 """Creating index and adjusting to remain in bounds"""
                 search_index = (current_index + i) % len(self._player_list)
-                if (self._player_list[search_index].get_status(
-                        ) == PlayerStatus.ACTIVE) or (
-                    self._player_list[search_index].get_status(
-                        ) == PlayerStatus.LOST):
+                player = self.get_player_by_index(search_index)
+                if (player.get_status() == PlayerStatus.ACTIVE) or \
+                   (player.get_status() == PlayerStatus.LOST):
                     return self._player_list[search_index]
                 i += 1
             return None
