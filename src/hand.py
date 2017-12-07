@@ -40,3 +40,12 @@ class Hand(object):
         """Returns the entire List of Cards"""
         # print('get_cards method in Hand class')
         return self._cards
+
+    def serialize(self):
+        hand = {}
+        hand['card_id'] = self._cards
+        return json.dumps(hand)
+
+    def deserialize(payload):
+        hand = json.loads(payload)
+        return Hand(hand['card_id'])
