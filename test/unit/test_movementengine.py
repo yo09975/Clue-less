@@ -23,6 +23,7 @@ MIS_SCA.set_status(PlayerStatus.ACTIVE)
 COL_MUS = Player(COL_MUS_CARD)
 COL_MUS.set_status(PlayerStatus.ACTIVE)
 player_list = PlayerList()
+player_list.clear()
 player_list.add_player(MIS_SCA)
 player_list.add_player(COL_MUS)
 
