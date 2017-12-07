@@ -19,15 +19,15 @@ class CharacterPickerDialog(Dialog):
             card_data = json.load(data_file)
 
         # Build separate card decks
-        characters = []
+        self._characters = []
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['name'], CardType.SUSPECT, c['key'])
-                characters.append(card)
+                self._characters.append(card)
 
         # Build pickers
-        self._character_picker = CharacterPicker(characters, 110 + self._coords[0], 50 + self._coords[1])
+        self._character_picker = CharacterPicker(self._characters, 110 + self._coords[0], 50 + self._coords[1])
 
         self.add_view(self._character_picker)
 
@@ -60,3 +60,10 @@ class CharacterPickerDialog(Dialog):
         if is_visible:
             self._character_picker.deselect_all_except(-1)
         super(CharacterPickerDialog, self).set_is_visible(is_visible)
+
+    def set_unavailable_players(self, players):
+        for p in players:
+            for i, c in enumerate(self._characters):
+                if p.get_id() == c.get_id():
+                    self._character_picker.disable_button(i)
+                next

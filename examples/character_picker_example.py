@@ -8,6 +8,8 @@ from src.view import View
 from src.character_picker_dialog import CharacterPickerDialog as CPD
 from src.button import Button
 from enum import Enum
+from src.card import Card
+from src.cardtype import CardType
 
 
 pygame.init()
@@ -18,7 +20,7 @@ clock = pygame.time.Clock()
 
 dialog = CPD(60, 60)
 dialog.get_top_button().fill(pygame.Color(0, 255, 0))
-# dialog.set_alpha(0)
+# dialog.set_alpha(255)
 dialog.set_is_visible(False)
 
 
@@ -29,6 +31,9 @@ button.fill(pygame.Color(100, 100, 0))
 button.set_alpha(255)
 
 def show_dialog(args):
+
+    s = Card("Colonel Mustard", CardType.SUSPECT, "Colonel Mustard")
+    args['d'].set_unavailable_players([s])
     args['d'].set_is_visible(True)
 
 button.set_on_click(show_dialog, {'d': dialog})
