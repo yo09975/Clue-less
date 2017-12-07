@@ -81,5 +81,4 @@ class Message:
 
     """ Stringifys the Message """
     def __str__(self):
-        return f'{self.get_uuid()},{self.get_msg_type().value},\
-            {self.get_payload()}'
+        return f'{self.get_uuid()},{self.get_msg_type().value},{self.get_payload()}'
