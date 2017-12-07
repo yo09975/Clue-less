@@ -9,7 +9,7 @@ class NoteCard:
     HEIGHT = 21
 
     def __init__(self):
-        self._note_state = [[0 for x in range(NoteCard.WIDTH)] for y in range(NoteCard.HEIGHT)]
+        self._note_state = [[0 for y in range(NoteCard.HEIGHT)] for x in range(NoteCard.WIDTH)]
 
     def mark(self, x: int, y: int):
         if NoteCard.WIDTH > x >= 0 and NoteCard.HEIGHT > y >= 0:
