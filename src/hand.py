@@ -1,6 +1,6 @@
 """hand.py."""
 from src.card import Card
-
+import json
 
 class Hand(object):
     """Represents a collection of Card objects
@@ -24,6 +24,11 @@ class Hand(object):
         for card in self._cards:
             string += str(card.get_name()) + ', '
         return string[:-2]
+
+    def __eq__(self, other):
+        if isinstance(self, other.__class__):
+            return self.__dict__ == other.__dict__
+        return False
 
     def add_card(self, card: Card):
         """Accepts a Card object and adds it to the List of Cards"""
