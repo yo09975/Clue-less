@@ -43,9 +43,14 @@ class Hand(object):
 
     def serialize(self):
         hand = {}
-        hand['card_id'] = self._cards
+        for c in self._cards:
+            hand[c.get_id()] = c.serialize()
         return json.dumps(hand)
 
     def deserialize(payload):
-        hand = json.loads(payload)
-        return Hand(hand['card_id'])
+        hand_dict = json.loads(payload)
+        hand = Hand([])
+        for card_id in hand_dict:
+            card = Card.deserialize(hand_dict[card_id])
+            hand.add_card(card)
+        return hand
