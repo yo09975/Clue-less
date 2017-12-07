@@ -83,14 +83,15 @@ class GameController(object):
                     selected_player = pl.get_player(card_id)
                     if selected_player.get_uuid() is None:
                         selected_player.set_uuid(msg_uuid)
+                        selected_player.set_status(PlayerStatus.ACTIVE)
                     update_message = Message(sni.get_uuid(
                         ), MessageType.SEND_PLAYERS, pl.serialize())
                     sni.send_all(leave_message)
 
                 if msg_type == MessageType.START_GAME:
                     total_players = 0
-                    for p in pl:
-                        if p.get_status() == PlayerStatus.COMP:
+                    for p in pl.get_players():
+                        if p.get_status() == PlayerStatus.ACTIVE:
                             total_players += 1
                     if total_players > 2:
                         self._current_game.start()
@@ -106,6 +107,10 @@ class GameController(object):
                         moving_player = self.get_player_from_uuid(msg_uuid)
                         moving_player.set_was_transferred(False)
                         self._current_game.set_state(GameStatus.POST_MOVE)
+                        update_board_message = Message(
+                            sni.get_uuid(), MessageType.NOTIFY,
+                            self._move_engine._board.serialize())
+                        sni.send_all(update_board_message)
 
                 elif msg_type == MessageType.SUGGESTION_MAKE:
                     suggesting_player = self.get_player_from_uuid(msg_uuid)
@@ -174,7 +179,8 @@ class GameController(object):
             suggested_player.set_was_transferred(True)
             suggesting_player.set_was_transferred(False)
             update_board_message = Message(
-                sni.get_uuid(), MessageType.NOTIFY, Board.serialize())
+                sni.get_uuid(), MessageType.NOTIFY,
+                self._move_engine._board.serialize())
             sni.send_all(update_board_message)
 
     def do_accusation(msg_uuid: str, msg_type: MessageType, msg_payload: str):

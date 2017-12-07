@@ -7,6 +7,10 @@ from src.cardtype import CardType
 from src.gamestatus import GameStatus
 from src.suggestion import Suggestion
 from src.deck import Deck
+from src.playerstatus import PlayerStatus
+from src.network.servernetworkinterface import ServerNetworkInterface as SNI
+from src.network.message import Message
+from src.network.message import MessageType
 import os
 import json
 
@@ -104,8 +108,17 @@ class GameState(object):
             hand.add_card(dealt_card)
             player.set_hand(hand)
 
-        # Reset self._current_player
+        # Send each player their dealt cards (Hand)
         pl = PlayerList()
+        sni = SNI()
+        for p in pl.get_players():
+            if p.get_status() == PlayerStatus.ACTIVE:
+                msg_payload = p.get_hand().serialize()
+                to_uuid = p.get_uuid()
+                sni.send_message(to_uuid, Message(
+                    sni.get_uuid(), MessageType.PLAYER_HAND, msg_payload))
+
+        # Reset self._current_player
         self._current_player = len(pl) - 1
         first_player = self.next_turn()
 
