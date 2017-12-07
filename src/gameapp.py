@@ -7,6 +7,7 @@ sys.path.insert(0, myPath + '/../')
 from src.view import View
 from src.suggestion_dialog import SuggestionDialog as SD
 from src.answer_suggestion_dialog import AnswerSuggestionDialog as ASD
+from src.notecard_view import NoteCardView
 from src.button import Button
 from enum import Enum
 
@@ -57,7 +58,11 @@ class GameApp:
             disp_board[l['key']] = location
             if l['type'] == "room":
                 board[l['name']] = location
-            #self._board.add_view(location)
+
+        # Set up note card
+        self._note_card = NoteCardView(1231, 121)
+
+        # Set up gameplay button
 
         clock = pygame.time.Clock()
 
