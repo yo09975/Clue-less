@@ -1,9 +1,9 @@
 """playerlist.py"""
 from src.player import Player
 from src.playerstatus import PlayerStatus
+from src.network.singleton import Singleton
 
-
-class PlayerList:
+class PlayerList(metaclass=Singleton):
     """Represents all Players in the game.
 
     PlayerList class in the Game Management Subsystem. Stores all Player
@@ -16,16 +16,6 @@ class PlayerList:
     _player_list = []
     # Maximum number of players in the game
     __MAX_PLAYERS = 6
-
-    class __impl:
-        """Implementation of the Singleton class"""
-
-    __instance = __impl()
-    """The private class attribute holding the "one and only instance"""
-
-    def get_instance(self):
-        """Returns the instance of PlayerList"""
-        return self.__instance
 
     def add_player(self, player: Player):
         """Accepts a Player object to add to the end of the list"""
