@@ -14,6 +14,11 @@ class Suggestion:
 
         self.suggestion_set = (room, weapon, character)
 
+    def __eq__(self, other):
+        if type(other) is type(self):
+            return self.__dict__ == other.__dict__
+        return False
+
     def get_suggestion_set(self):
         """Returns the tuple that represents all three suggested Cards."""
 
