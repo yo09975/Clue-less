@@ -7,8 +7,13 @@ from src.cardtype import CardType
 from src.gamestatus import GameStatus
 from src.suggestion import Suggestion
 from src.deck import Deck
+from src.playerstatus import PlayerStatus
+from src.network.servernetworkinterface import ServerNetworkInterface as SNI
+from src.network.message import Message
+from src.network.message import MessageType
 import os
 import json
+
 
 class GameState(object):
     """Contains all required information about a game.
@@ -41,7 +46,7 @@ class GameState(object):
         # Initialize all locations without neighbors
 
         suspect_deck = Deck([])
-        
+
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['name'], CardType.SUSPECT, c['key'])
@@ -103,15 +108,27 @@ class GameState(object):
             hand.add_card(dealt_card)
             player.set_hand(hand)
 
+        # Send each player their dealt cards (Hand)
+        pl = PlayerList()
+        sni = SNI()
+        for p in pl.get_players():
+            if p.get_status() == PlayerStatus.ACTIVE:
+                msg_payload = p.get_hand().serialize()
+                to_uuid = p.get_uuid()
+                sni.send_message(to_uuid, Message(
+                    sni.get_uuid(), MessageType.PLAYER_HAND, msg_payload))
+
         # Reset self._current_player
-        self._current_player = 0
+        self._current_player = len(pl) - 1
+        first_player = self.next_turn()
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""
         # print('next_turn method in GameState class')
         p_list = PlayerList()
         next_player = p_list.get_next_turn(self._current_player)
-        self._current_player = p_list.get_players().index(next_player)
+        if next_player is not None:
+            self._current_player = p_list.get_players().index(next_player)
         return next_player
 
     def get_state(self) -> GameStatus:

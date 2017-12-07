@@ -17,7 +17,7 @@ class GameStatus(Enum):
 
     """
     LOBBY = 1
-    MOVE_PIECE = 2
-    MAKE_SUGG = 3
-    ANSWER_SUGG = 4
-    MAKE_ACCUS = 5
+    START_TURN = 2
+    POST_MOVE = 3
+    WAIT_SUGG = 4
+    POST_SUGG = 5

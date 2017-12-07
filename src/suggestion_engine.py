@@ -105,3 +105,7 @@ class SuggestionEngine:
                                        accuser.get_character().get_name() + " made an incorrect accusation.")
             ServerNetworkInterface.send_all(notification_msg)
             return False
+
+    def is_valid_suggestion(self, suggesting_player: Player, suggestion: Suggestion) -> bool:
+        """Makes sure the suggesting player is in the room suggested"""
+        return suggesting_player.get_current_location() == suggestion.get_room().get_id()
