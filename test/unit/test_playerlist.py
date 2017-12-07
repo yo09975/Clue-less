@@ -33,8 +33,8 @@ test_plist2 = PlayerList()
 def test_init():
     assert type(test_plist1) is PlayerList
     assert type(test_plist2) is PlayerList
-    assert test_plist1.get_instance() == test_plist2.get_instance()
-
+    assert test_plist1 is test_plist2
+    assert test_plist1 == test_plist2
 def test_add_player():
     # If another test has populated the playerlist, clear it
     if (len(test_plist1) != 0):
