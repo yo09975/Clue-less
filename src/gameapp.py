@@ -151,15 +151,34 @@ class GameApp:
             # Display views based on state
             if self._state == PlayerState.SELECT_PLAYER:
                 # Display player picker
-                pass
+                if message.get_msg_type() == MessageType.SEND_PLAYERS:
+                    # Update player picker
+
+                elif message.get_msg_type() == MessageType.YOUR_TURN:
+                    state = PlayerState.MY_TURN
+                    queue.put(state)
+
+                elif message.get_msg_type() == MessageType.START_GAME:
+                    # Start game
+                    state = PlayerState.WAIT_FOR_TURN
+                    queue.put(state)
+
             elif self._state == PlayerState.WAIT_FOR_TURN:
                 # Display suggestion, accusation, board, and next turn butotns
-                pass
+                if message.get_msg_type() == MessageType.SUGGESTION_REQUEST:
+                    state = PlayerState.ANSWER_SUGGESTION
+                    queue.put(state)
+                elif message.get_msg_type() == MessageType.UPDATE_BOARD:
+                    # TODO update Board
+                    pass
 
             elif self._state == PlayerState.ANSWER_SUGGESTION:
                 self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
+                # TODO get input from UI and change state to wait_for_turn
 
             elif self._state == PlayerState.MY_TURN:
+                # Get command to change state from UI
+
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
                 self._make_sugg_button.draw(pygame.mouse, self._gameDisplay)
@@ -173,8 +192,16 @@ class GameApp:
                 self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
 
             elif self._state == PlayerState.POST_SUGGESTION:
-                pass
+
+                if message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
+                    state = PlayerState.POST_SUGGESTION_ANSWER
+                    queue.put(state)
+                elif message.get_msg_type() == MessageType.UPDATE_BOARD:
+                    # TODO update Board
+                    pass
+
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
+                # get command to change state from UI, change to wait_for_turn
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
                 self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
@@ -183,7 +210,13 @@ class GameApp:
                 self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
                 self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
 
+<<<<<<< HEAD
             elif self.state == PlayerState.POST_MOVE:
+=======
+            elif self._state == PlayerState.POST_MOVE:
+                # get command from GUI and change state accordingly
+
+>>>>>>> 89a68ca... Move state transition logic to UI thread.
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
                 self._make_sugg_button.draw(pygame.mouse, self._gameDisplay)
@@ -203,44 +236,6 @@ def state_machine(queue):
 
         message = Message()
 
-        if state == PlayerState.SELECT_PLAYER:
-            if message.get_msg_type() == MessageType.SEND_PLAYERS:
-                # Update player picker
-                pass
-            elif message.get_msg_type() == MessageType.YOUR_TURN:
-                state = PlayerState.MY_TURN
-                queue.put(state)
-                pass
-            elif message.get_msg_type() == MessageType.START_GAME:
-                # Start game
-                state = PlayerState.WAIT_FOR_TURN
-                queue.put(state)=
-        elif state == PlayerState.WAIT_FOR_TURN:
-            if message.get_msg_type() == MessageType.SUGGESTION_REQUEST:
-                state = PlayerState.ANSWER_SUGGESTION
-                queue.put(state)
-            elif message.get_msg_type() == MessageType.UPDATE_BOARD:
-                # TODO update Board
-                pass
-        elif state == PlayerState.ANSWER_SUGGESTION:
-            # TODO get input from UI and change state to wait_for_turn
-            pass
-        elif state == PlayerState.MY_TURN:
-            # Get command to change state from UI
-            pass
-        elif state == PlayerState.POST_SUGGESTION:
-            if message.get_msg_type() == MessageType.SUGGESTION_RESPONSE:
-                state = PlayerState.POST_SUGGESTION_ANSWER
-                queue.put(state)
-            elif message.get_msg_type() == MessageType.UPDATE_BOARD:
-                # TODO update Board
-                pass
-        elif state == PlayerState.POST_SUGGESTION_ANSWER:
-            # get command to change state from UI, change to wait_for_turn
-            pass
-        elif state == PlayerState.POST_MOVE:
-            # get command from GUI and change state accordingly
-            pass
 
 
 
