@@ -7,6 +7,7 @@ sys.path.insert(0, myPath + '/../')
 from src.view import View
 from src.suggestion_dialog import SuggestionDialog as SD
 from src.answer_suggestion_dialog import AnswerSuggestionDialog as ASD
+from src.character_picker_dialog import CharacterPickerDialog as CPD
 from src.notecard_view import NoteCardView
 from src.button import Button
 from enum import Enum
@@ -14,8 +15,11 @@ from src.playerstate import PlayerState
 import json
 from queue import Queue
 from threading import Thread
-from src.message import MessageType
-from src.message import Message
+from src.network.message import MessageType
+from src.network.message import Message
+from src.network.clientnetworkinterface import ClientNewtworkInterface
+from src.playerlist import PlayerList
+from src.board import Board
 import time
 
 queue = Queue()
@@ -50,6 +54,9 @@ class GameApp:
 
         # Set up character picker dialog
         # TODO waiting for merge
+        self._char_picker_dialog = CPD(80, 80)
+        self._char_picker_dialog.set_is_visible(True)
+
 
         # Set up board
         dir = os.path.dirname(__file__)
@@ -124,7 +131,7 @@ class GameApp:
     def start(self):
 
         clock = pygame.time.Clock()
-
+        cni = CNI()
         # ENTER MAIN GAME LOOP
         while not self._crashed:
 
@@ -132,13 +139,8 @@ class GameApp:
                 if event.type == pygame.QUIT:
                     crashed = True
 
-            # Get and set new state if available
-            try:
-                if not queue.empty():
-                    state = queue.get()
-                    self._state = state
-            except:
-                pass
+            # Get latest message, if any
+            message = cni.get_message()
 
             self._gameDisplay.blit(self._background, (0, 0))
 
@@ -148,36 +150,58 @@ class GameApp:
             self._note_card.draw(pygame.mouse, self._gameDisplay)
             self._leave_game_button.draw(pygame.mouse, self._gameDisplay)
 
+            # Always draw game pieces on the game board
+            # TODO render game pieces
+
             # Display views based on state
             if self._state == PlayerState.SELECT_PLAYER:
+                if message is not None:
+                    if message.get_msg_type() == MessageType.SEND_PLAYERS:
+                        # Deserialize player list, find taken tokens, and hide
+                        pl = PlayerList.deserialize(message.get_payload)
+                        player_list = pl.get_players()
+                        unavailable = []
+                        for p in player_list():
+                            if p.get_uuid() is not None and p.get_uuid() != cni.get_uuid():
+                                unavailable.append(p)
+
+                        self._char_picker_dialog.set_unavailable_players(unavailable)
+
+                    elif message.get_msg_type() == MessageType.PLAYER_HAND:
+                        # Start game
+                        self._state = PlayerState.WAIT_FOR_TURN
+                        self._hand = Hand.deserialize(message.get_payload())
+
                 # Display player picker
-                if message.get_msg_type() == MessageType.SEND_PLAYERS:
-                    # Update player picker
-
-                elif message.get_msg_type() == MessageType.YOUR_TURN:
-                    state = PlayerState.MY_TURN
-                    queue.put(state)
-
-                elif message.get_msg_type() == MessageType.START_GAME:
-                    # Start game
-                    state = PlayerState.WAIT_FOR_TURN
-                    queue.put(state)
+                self._char_picker_dialog.draw(pygame.mouse, self._gameDisplay)
 
             elif self._state == PlayerState.WAIT_FOR_TURN:
                 # Display suggestion, accusation, board, and next turn butotns
-                if message.get_msg_type() == MessageType.SUGGESTION_REQUEST:
-                    state = PlayerState.ANSWER_SUGGESTION
-                    queue.put(state)
-                elif message.get_msg_type() == MessageType.UPDATE_BOARD:
-                    # TODO update Board
-                    pass
+                if message is not None:
+                    if message.get_msg_type() == MessageType.SUGGESTION_REQUEST:
+                        self._state = PlayerState.ANSWER_SUGGESTION
+
+                        # Show answer suggestion dialog and disable any NA cards
+                        self._ans_sugg_dialog.set_is_visible(True)
+                        suggestion = Suggestion.deserialize(message.get_payload())
+                        self._ans_sugg_dialog.set_suggestion(suggestion)
+                        self._ans_sugg_dialog.set_player_hand(self._hand)
+
+                    elif message.get_msg_type() == MessageType.UPDATE_BOARD:
+                        # Update board
+                        self._board = Board.deserialize(message.get_payload())
+
+                    elif message.get_msg_type() == MessageType.YOUR_TURN:
+                        # Make it your turn
+                        self._state = PlayerState.MY_TURN
+
 
             elif self._state == PlayerState.ANSWER_SUGGESTION:
                 self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
-                # TODO get input from UI and change state to wait_for_turn
+                # Wait for button action to change game state
 
             elif self._state == PlayerState.MY_TURN:
-                # Get command to change state from UI
+                # Wait for button action to change game state
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -192,16 +216,19 @@ class GameApp:
                 self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
 
             elif self._state == PlayerState.POST_SUGGESTION:
+                if message is not None:
+                    if message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
+                        # TODO Write suggestion notification to msg center
+                        self._state = PlayerState.POST_SUGGESTION_ANSWER
 
-                if message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
-                    state = PlayerState.POST_SUGGESTION_ANSWER
-                    queue.put(state)
-                elif message.get_msg_type() == MessageType.UPDATE_BOARD:
-                    # TODO update Board
-                    pass
+                    elif message.get_msg_type() == MessageType.UPDATE_BOARD:
+                        # Update board
+                        self._board = Board.deserialize(message.get_payload())
+
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
-                # get command to change state from UI, change to wait_for_turn
+                # Wait for button actions to change state
+
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
                 self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
@@ -214,7 +241,7 @@ class GameApp:
             elif self.state == PlayerState.POST_MOVE:
 =======
             elif self._state == PlayerState.POST_MOVE:
-                # get command from GUI and change state accordingly
+                # Wait for button actions to change state
 
 >>>>>>> 89a68ca... Move state transition logic to UI thread.
                 # Buttons
@@ -225,26 +252,13 @@ class GameApp:
                 # Dialogs
                 self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
                 self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
+            elif message is not None:
+                if message.get_msg_type() == MessageType.NOTIFY:
+                    # TODO update notification center
+                    pass
 
 
 
-
-def state_machine(queue):
-    state = PlayerState.SELECT_PLAYER
-    while True:
-        #CNI.read_message()
-
-        message = Message()
-
-
-
-
-
-
-
-t = Thread(target=state_machine, args=(queue,))
-t.daemon = True
-t.start()
 
 game = GameApp()
 game.start()
