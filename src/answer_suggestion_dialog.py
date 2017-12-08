@@ -4,6 +4,9 @@ from src.dialog import Dialog
 from src.picker import Picker
 from src.card import Card
 from src.cardtype import CardType
+from src.message import Message
+from src.message import MessageType
+
 import pygame
 import os
 import json
@@ -65,15 +68,24 @@ class AnswerSuggestionDialog(Dialog):
             num_selected = 0
             if room:
                 num_selected += 1
+                chosen = self._suggestion.get_room()
             if character:
                 num_selected += 1
+                chosen = self._suggestion.get_character()
             if weapon:
                 num_selected += 1
+                chosen = self._suggestion.get_weapon()
+
 
             # Make sure only one card is selected
             if num_selected == 1:
                 sugg_dialog.set_is_visible(False)
-                # TODO Send off suggestion answer
+                sugg_dialog.set_success(True)
+                # Send off suggestion answer
+                cni = CNI()
+                message = Message(cni.get_uuid(), MessageType.SUGGESTION_RESPONSE, chosen.serialize())
+                cni.send_message(message)
+
 
 
         def cancel(args):
@@ -135,6 +147,7 @@ class AnswerSuggestionDialog(Dialog):
 
 
     def set_suggestion(self, suggestion):
+        self._suggestion = suggestion
         for i, c in enumerate(self._rooms):
             if suggestion.get_room().get_id() != c.get_id():
                 self._room_picker.disable_button(i)

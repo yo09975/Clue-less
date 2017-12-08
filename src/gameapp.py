@@ -17,9 +17,10 @@ from queue import Queue
 from threading import Thread
 from src.network.message import MessageType
 from src.network.message import Message
-from src.network.clientnetworkinterface import ClientNewtworkInterface
+from src.network.clientnetworkinterface import ClientNewtworkInterface as CNI
 from src.playerlist import PlayerList
 from src.board import Board
+from src.move import Move
 import time
 
 queue = Queue()
@@ -40,12 +41,25 @@ class GameApp:
         # Set up different views
 
         # Set up Suggestion Dialog
+        def send_suggestion(args):
+            sugg_dialog = args['d']
+            sugg = sugg_dialog.get_suggestion()
+            if sugg is not None:
+                sugg_dialog.set_is_visible(False)
+                sugg_dialog.set_success(True)
+                cni = CNI()
+                message = Message(cni.get_uuid(), args['mt'], sugg.serialize())
+                cni.send(message)
+
         self._sugg_dialog = SD(60, 60)
         self._sugg_dialog.set_is_visible(False)
+        self._sugg_dialog.set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.SUGGESTION_MAKE})
 
         # Set up Accusation Dialog
         self._acc_dialog = SD(60, 60)
         self._acc_dialog.set_is_visible(False)
+        self._sugg_dialog.set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.ACCUSATION})
+
 
         # Set up Suggestion Response Dialog
         self._ans_sugg_dialog = ASD(60, 60)
@@ -73,11 +87,15 @@ class GameApp:
                 args['b'].fill(pygame.Color(255, 0, 0))
                 args['b'].set_alpha(100)
 
-            def location_default(args):
-                args['b'].set_alpha(0)
+            def location_click(args):
+                cni = CNI()
+                move = Move(cni.get_uuid(), args['loc_id'])
+                message = Message(cni.get_uuid(), MessageType.MOVEMENT, move.serialize())
+                cni.send_message(message)
+                args['s'] = PlayerState.POST_MOVE
 
             location = Button(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
-            # location.set_default_action(location_default, {'b': location})
+            location.set_on_click(location_click, {'loc_id': location['key'], 's': self._state})
             # location.set_on_hover_action(location_hover, {'b': location})
 
             ref_board[l['key']] = location
@@ -108,17 +126,23 @@ class GameApp:
         self._end_turn_button = Button(1056, 831, 170, 65)
 
         def end_turn(args):
-            args['d'].set_is_visible(True)
+            cni = CNI()
+            message = Message(cni.get_uuid(), MessageType.END_TURN, "")
+            cni.send_message(message)
+            args['s'] = PlayerState.WAIT_FOR_TURN
 
-        self._end_turn_button.set_on_click(end_turn, {})
+        self._end_turn_button.set_on_click(end_turn, {'s': self._state})
 
         # Set up leave game button
         self._leave_game_button = Button(1236, 831, 170, 65)
 
         def end_turn(args):
-            args['d'].set_is_visible(True)
+            cni = CNI()
+            message = Message(cni.get_uuid(), MessageType.END_TURN, "")
+            cni.send_message(message)
+            args['s'] = PlayerState.SELECT_PIECE
 
-        self._leave_game_button.set_on_click(end_turn, {'d': 'd'})
+        self._leave_game_button.set_on_click(end_turn, {'s': self._state})
 
         self._state_change_button = Button(0, 0, 20, 20)
 
@@ -199,9 +223,15 @@ class GameApp:
             elif self._state == PlayerState.ANSWER_SUGGESTION:
                 self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
                 # Wait for button action to change game state
+                if self._ans_sugg_dialog.get_success():
+                    self._state = PlayerState.WAIT_FOR_TURN
 
             elif self._state == PlayerState.MY_TURN:
                 # Wait for button action to change game state
+                if self._make_acc_dialog.get_success():
+                    self._state = PlayerState.WAIT_FOR_TURN
+                elif self._make_sugg_dialog.get_success():
+                    self._state = PlayerState.POST_SUGGESTION
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -228,6 +258,8 @@ class GameApp:
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
                 # Wait for button actions to change state
+                if self._make_acc_dialog.get_success():
+                    self._state = PlayerState.WAIT_FOR_TURN
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -242,6 +274,10 @@ class GameApp:
 =======
             elif self._state == PlayerState.POST_MOVE:
                 # Wait for button actions to change state
+                if self._make_acc_dialog.get_success():
+                    self._state = PlayerState.WAIT_FOR_TURN
+                elif self._make_sugg_dialog.get_success():
+                    self._state = PlayerState.POST_SUGGESTION
 
 >>>>>>> 89a68ca... Move state transition logic to UI thread.
                 # Buttons
