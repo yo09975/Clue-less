@@ -10,12 +10,16 @@ from src.answer_suggestion_dialog import AnswerSuggestionDialog as ASD
 from src.notecard_view import NoteCardView
 from src.button import Button
 from enum import Enum
+from src.playerstate import PlayerState
 import json
 
 class GameApp:
     def __init__(self):
 
         pygame.init()
+
+        self._state = PlayerState.SELECT_PLAYER
+
         self._gameDisplay = pygame.display.set_mode((1410, 900))
         self._crashed = False
 
@@ -102,6 +106,14 @@ class GameApp:
 
         self._leave_game_button.set_on_click(end_turn, {'d': 'd'})
 
+        self._state_change_button = Button(0, 0, 20, 20)
+
+        def change_state(args):
+            args['g']._state = PlayerState(args['g']._state.value + 1)
+            print(str(args['g']._state))
+
+        self._state_change_button.set_on_click(change_state, {'g': self})
+
     def start(self):
 
         clock = pygame.time.Clock()
@@ -115,19 +127,60 @@ class GameApp:
 
             self._gameDisplay.blit(self._background, (0, 0))
 
-            for l in self._disp_board:
-                self._disp_board[l].draw(pygame.mouse, self._gameDisplay)
+            self._state_change_button.draw(pygame.mouse, self._gameDisplay)
 
+            # Always draw note card and leave game
             self._note_card.draw(pygame.mouse, self._gameDisplay)
-
-            self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
-            self._make_sugg_button.draw(pygame.mouse, self._gameDisplay)
-            self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
             self._leave_game_button.draw(pygame.mouse, self._gameDisplay)
 
-            self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
-            self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
-            self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
+            # Display views based on state
+            if self._state == PlayerState.SELECT_PLAYER:
+                # Display player picker
+                pass
+            elif self._state == PlayerState.WAIT_FOR_TURN:
+                # Display suggestion, accusation, board, and next turn butotns
+                pass
+
+            elif self._state == PlayerState.ANSWER_SUGGESTION:
+                self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
+
+            elif self._state == PlayerState.MY_TURN:
+                # Buttons
+                self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
+                self._make_sugg_button.draw(pygame.mouse, self._gameDisplay)
+                self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
+
+                for l in self._disp_board:
+                    self._disp_board[l].draw(pygame.mouse, self._gameDisplay)
+
+                # Dialogs
+                self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
+                self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
+
+            elif self._state == PlayerState.POST_SUGGESTION:
+                pass
+            elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
+                # Buttons
+                self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
+                self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
+
+                # Dialogs
+                self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
+                self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
+
+            elif self.state == PlayerState.POST_MOVE:
+                # Buttons
+                self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
+                self._make_sugg_button.draw(pygame.mouse, self._gameDisplay)
+                self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
+
+                # Dialogs
+                self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
+                self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
+
+
+
+
 
             pygame.display.update()
 
