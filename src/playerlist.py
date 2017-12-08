@@ -1,32 +1,26 @@
 """playerlist.py"""
 from src.player import Player
 from src.playerstatus import PlayerStatus
+from src.network.singleton import Singleton
 
-
-class PlayerList:
+class PlayerList(metaclass=Singleton):
     """Represents all Players in the game.
 
     PlayerList class in the Game Management Subsystem. Stores all Player
-    objects in a list that is stored globally to allow for tracjing of game
-    information such as turn sqeuencing, player location, etc. This class
+    objects in a list that is stored globally to allow for tracing of game
+    information such as turn sequencing, player location, etc. This class
     is a Singleton.
     """
 
+    # List of Player objects representing the Player order
     _player_list = []
-    """List of Player objects representing the Player order"""
-
-    class __impl:
-        """Implementation of the Singleton class"""
-
-    __instance = __impl()
-    """The private class attribute holding the "one and only instance"""
-
-    def get_instance(self):
-        """Returns the instance of PlayerList"""
-        return self.__instance
+    # Maximum number of players in the game
+    __MAX_PLAYERS = 6
 
     def add_player(self, player: Player):
         """Accepts a Player object to add to the end of the list"""
+        if len(self._player_list) == self.__MAX_PLAYERS:
+            raise IndexError(f'Attempted to add more than {self.__MAX_PLAYERS} players')
         self._player_list.append(player)
 
     def get_next_turn(self, current: int) -> Player:
@@ -36,9 +30,9 @@ class PlayerList:
             while i < len(self._player_list):
                 """Creating index and adjusting to remain in bounds"""
                 search_index = (current + i) % len(self._player_list)
-                if self._player_list[search_index].get_status(
-                        ) == PlayerStatus.ACTIVE:
-                    return self._player_list[search_index]
+                player = self.get_player_by_index(search_index)
+                if player.get_status() == PlayerStatus.ACTIVE:
+                    return player
                 i += 1
             return None
         else:
@@ -52,10 +46,9 @@ class PlayerList:
             while i < len(self._player_list):
                 """Creating index and adjusting to remain in bounds"""
                 search_index = (current_index + i) % len(self._player_list)
-                if (self._player_list[search_index].get_status(
-                        ) == PlayerStatus.ACTIVE) or (
-                    self._player_list[search_index].get_status(
-                        ) == PlayerStatus.LOST):
+                player = self.get_player_by_index(search_index)
+                if (player.get_status() == PlayerStatus.ACTIVE) or \
+                   (player.get_status() == PlayerStatus.LOST):
                     return self._player_list[search_index]
                 i += 1
             return None
@@ -67,7 +60,10 @@ class PlayerList:
         return self._player_list
 
     def get_player(self, card_id: str) -> Player:
-        """Accepts a UUID and returns the corresponding Player object"""
+        """
+        Searches the PlayerList for the Player object associated with a given
+        card_id string and returns it
+        """
         for player in self._player_list:
             if card_id == player.get_card_id():
                 player_index = self._player_list.index(player)
@@ -75,7 +71,7 @@ class PlayerList:
         return None
 
     def get_player_by_index(self, index: int) -> Player:
-        return self._player_list[i]
+        return self._player_list[index]
 
     def clear(self):
         self._player_list = []

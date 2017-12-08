@@ -33,25 +33,36 @@ test_plist2 = PlayerList()
 def test_init():
     assert type(test_plist1) is PlayerList
     assert type(test_plist2) is PlayerList
-    assert test_plist1.get_instance() == test_plist2.get_instance()
-
-
+    assert test_plist1 is test_plist2
+    assert test_plist1 == test_plist2
 def test_add_player():
+    # If another test has populated the playerlist, clear it
+    if (len(test_plist1) != 0):
+        test_plist1.clear()
 
-    # Create a baseline off of which to test player counts
-    tare = len(test_plist1.get_players())
+    # Check that after a clear(), both lists are the same length
+    assert len(test_plist1) == len(test_plist2)
 
+    # Check that adding a player increases the size of the list
     test_plist1.add_player(test_player1)
-    assert len(test_plist1.get_players()) == tare + 1
+    assert len(test_plist1) ==  1
+
+    # Check that adding a player increases the size of the list for
+    # both references
     test_plist2.add_player(test_player2)
-    assert len(test_plist1.get_players()) == tare + 2
-    assert len(test_plist2.get_players()) == tare + 2
+    assert len(test_plist1) == 2
+    assert len(test_plist2) == 2
+
+    # Add four more players and check that the count is correct
     test_plist1.add_player(test_player3)
     test_plist2.add_player(test_player4)
     test_plist1.add_player(test_player5)
     test_plist2.add_player(test_player6)
-    assert len(test_plist1.get_players()) == tare + 6
+    assert len(test_plist1.get_players()) == 6
 
+    # Attempt to add one more player (more than __MAX_PLAYERS)
+    with pytest.raises(IndexError):
+        test_plist1.add_player(test_player6)
 
 def test_get_next_turn():
     """Out of Bounds Index returns Error"""
