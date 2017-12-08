@@ -41,40 +41,34 @@ class SuggestionEngine:
         suggesting_player = players[current]
         responder = PlayerList.get_next_player(suggesting_player)
 
-        """First checking if the suggestion is valid. If not, we return True as the suggestion is refuted."""
-        if (suggestion.get_room().get_type() != CardType.ROOM) or \
-                (suggestion.get_weapon().get_type() != CardType.WEAPON) or \
-                (suggestion.get_character().get_type() != CardType.SUSPECT):
-            return True
-        else:
-            """Iterating through each player in PlayerList. If they are able to refute, we send a SUGGESTION_REQUEST to
-            them asking that they select a card with which to refute the suggestion. If a player cannot refute we let
-            all users know they were unable to refute."""
-            suggestion_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                     suggesting_player.get_character().get_name() + suggestion.serialize())
-            ServerNetworkInterface.send_all(suggestion_msg)
+        """Iterating through each player in PlayerList. If they are able to refute, we send a SUGGESTION_REQUEST to
+        them asking that they select a card with which to refute the suggestion. If a player cannot refute we let
+        all users know they were unable to refute."""
+        suggestion_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+                                 suggesting_player.get_character().get_name() + suggestion.serialize())
+        ServerNetworkInterface.send_all(suggestion_msg)
 
-            while responder != suggesting_player:
-                hand = responder.get_hand()
-                if hand.contains_card(suggestion.get_room()) or hand.contains_card(suggestion.get_character()) or \
-                        hand.contains_card(suggestion.get_weapon()):
-                    response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_REQUEST,
-                                           suggestion.serialize())
-                    ServerNetworkInterface.send_message(responder.get_uuid(), response_msg)
-                    response_notification = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                                    responder.get_character().get_name() + "disproved the suggestion.")
-                    ServerNetworkInterface.send_all(response_notification)
-                    return True
-                else:
-                    could_not_respond_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                                    responder.get_character().get_name() + " could not disprove.")
-                    ServerNetworkInterface.send_all(could_not_respond_msg)
-                    responder = PlayerList.get_next_player(responder)
+        while responder != suggesting_player:
+            hand = responder.get_hand()
+            if hand.contains_card(suggestion.get_room()) or hand.contains_card(suggestion.get_character()) or \
+                    hand.contains_card(suggestion.get_weapon()):
+                response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_REQUEST,
+                                       suggestion.serialize())
+                ServerNetworkInterface.send_message(responder.get_uuid(), response_msg)
+                response_notification = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+                                                responder.get_character().get_name() + "disproved the suggestion.")
+                ServerNetworkInterface.send_all(response_notification)
+                return True
+            else:
+                could_not_respond_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+                                                responder.get_character().get_name() + " could not disprove.")
+                ServerNetworkInterface.send_all(could_not_respond_msg)
+                responder = PlayerList.get_next_player(responder)
 
-            no_response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                      "The suggestion could not be refuted.")
-            ServerNetworkInterface.send_all(no_response_msg)
-            return False
+        no_response_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+                                  "The suggestion could not be refuted.")
+        ServerNetworkInterface.send_all(no_response_msg)
+        return False
 
     def answer_suggestion(self, response: Card):
         """Allows a player to answer a suggestion."""
@@ -105,3 +99,7 @@ class SuggestionEngine:
                                        accuser.get_character().get_name() + " made an incorrect accusation.")
             ServerNetworkInterface.send_all(notification_msg)
             return False
+
+    def is_valid_suggestion(self, suggesting_player: Player, suggestion: Suggestion) -> bool:
+        """Makes sure the suggesting player is in the room suggested"""
+        return suggesting_player.get_current_location() == suggestion.get_room().get_id()

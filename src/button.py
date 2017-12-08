@@ -12,6 +12,11 @@ class Button(View):
         self._is_enabled = True
         super(Button, self).__init__(x, y, w, h)
 
+        def disabled_default(args):
+            args['b'].set_alpha(0)
+
+        self.set_disabled_action(disabled_default, {'b': self})
+
         # Use to debounce button
         self._pressed = False
 
@@ -43,7 +48,7 @@ class Button(View):
             #display.blit(self, self._coords)
         else:
             # If disabled, don't show button
-            self.set_alpha(0)
+            self.disabled()
 
         # Blit the button using the super class's draw
         super(Button, self).draw(event, display)
@@ -52,22 +57,29 @@ class Button(View):
         # Default action
         try:
             self._default_action(self._default_args)
-        except:
+        except AttributeError:
             pass
 
     def click(self):
         try:
             self._click_action(self._click_args)
-        except:
+        except AttributeError:
             # If click isn't defined, hover
             self.hover()
 
     def hover(self):
         try:
             self._hover_action(self._hover_args)
-        except:
+        except AttributeError:
             # If hovering is not defined, do default
             self.default()
+
+    def disabled(self):
+        try:
+            self._disabled_action(self._disabled_args)
+        except AttributeError:
+            # If hovering is not defined, do default
+            pass
 
     def set_on_hover_action(self, function, args):
         """Accept a function to be executed when mouse hovers over button."""
@@ -83,6 +95,11 @@ class Button(View):
         """Accept a function to be executed when button is clicked."""
         self._default_action = function
         self._default_args = args
+
+    def set_disabled_action(self, function, args):
+        """Accept a function to be executed when the button is disabled."""
+        self._disabled_action = function
+        self._disabled_args = args
 
     def set_enabled(self, enabled):
         """Set the button's enabled state."""

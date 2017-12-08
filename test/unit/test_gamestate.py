@@ -26,23 +26,28 @@ test_player_3 = players[3]
 test_player_4 = players[4]
 test_player_5 = players[5]
 
-test_player_0.set_status(PlayerStatus.ACTIVE)
-test_player_1.set_status(PlayerStatus.COMP)
-test_player_2.set_status(PlayerStatus.ACTIVE)
-test_player_3.set_status(PlayerStatus.LOST)
-test_player_4.set_status(PlayerStatus.COMP)
-test_player_5.set_status(PlayerStatus.COMP)
-
 test_solution = Suggestion(test_card4, test_card3, test_card1)
 
 
 def test_init():
     assert type(test_gamestate) is GameState
-
+    test_player_0.set_status(PlayerStatus.ACTIVE)
+    test_player_1.set_status(PlayerStatus.COMP)
+    test_player_2.set_status(PlayerStatus.ACTIVE)
+    test_player_3.set_status(PlayerStatus.LOST)
+    test_player_4.set_status(PlayerStatus.COMP)
+    test_player_5.set_status(PlayerStatus.COMP)
+    assert player_list.get_player_by_index(0).get_status() == PlayerStatus.ACTIVE
+    assert player_list.get_player_by_index(1).get_status() == PlayerStatus.COMP
+    assert player_list.get_player_by_index(2).get_status() == PlayerStatus.ACTIVE
+    assert player_list.get_player_by_index(3).get_status() == PlayerStatus.LOST
+    assert player_list.get_player_by_index(4).get_status() == PlayerStatus.COMP
+    assert player_list.get_player_by_index(5).get_status() == PlayerStatus.COMP
 
 def test_next_turn():
     assert test_gamestate.get_current_player() == 0
-    assert test_gamestate.next_turn() == test_player_2
+    next_player = test_gamestate.next_turn()
+    assert next_player == test_player_2
     assert test_gamestate.get_current_player() == 2
     assert type(test_gamestate.next_turn()) is Player
     assert test_gamestate.get_current_player() == 0
@@ -50,8 +55,8 @@ def test_next_turn():
 
 def test_get_and_set_state():
     assert test_gamestate.get_state() == GameStatus.LOBBY
-    test_gamestate.set_state(GameStatus.MOVE_PIECE)
-    assert test_gamestate.get_state() == GameStatus.MOVE_PIECE
+    test_gamestate.set_state(GameStatus.START_TURN)
+    assert test_gamestate.get_state() == GameStatus.START_TURN
     assert type(test_gamestate.get_state()) is GameStatus
 
 

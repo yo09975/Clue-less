@@ -2,18 +2,47 @@ from enum import Enum
 
 
 class MessageType(Enum):
+
     MOVEMENT = 1
-    SUGGESTION = 2
-    SUGGESTION_RESP = 3
-    SUGGESTION_NOTIFY = 4
-    ACCUSATION = 5
-    ACCUSATION_NOTIFY = 6
-    ACK = 7
-    NACK = 8
-    NOTIFY = 9
-    GIVE_UUID = 10
-    SELECT_PIECE = 11
-    UPDATE_BOARD = 12
+    """Contains player's requested move"""
+    SUGGESTION_MAKE = 2
+    """Contains player's suggestion"""
+    SUGGESTION_REQUEST = 3
+    """Contains cards for requesting an opponent to disprove"""
+    SUGGESTION_RESPONSE = 4
+    """Contains one card to disprove suggestion"""
+    SUGGESTION_NOTIFY = 5
+    """Notifies every player whether suggestion was disproved or not"""
+    ACCUSATION = 6
+    """Contain's player's accusation"""
+    ACCUSATION_NOTIFY = 7
+    """Notify's all player's if accusation was correct of not"""
+    ACK = 8
+    """Acknowledgement message for networking services"""
+    NACK = 9
+    """Negative acknowledgement message for networking services"""
+    NOTIFY = 10
+    """Contains a message for all players"""
+    GIVE_UUID = 11
+    """Contains player's UUID to set connect"""
+    SELECT_PIECE = 12
+    """Contains a character the player wishes to play as in game"""
+    UPDATE_BOARD = 13
+    """Contains serialized Board to update all players' board GUIs"""
+    END_TURN = 14
+    """Player wishes to end their turn"""
+    LEAVE_GAME = 15
+    """Player wishes to leave the game"""
+    START_GAME = 16
+    """A player wants the game to start"""
+    SEND_PLAYERS = 17
+    """Syncs PlayerList both server and client"""
+    PLAYER_HAND = 18
+    """Contains a player's Hand serialized so that can know the cards they
+       were dealt"""
+    YOUR_TURN = 19
+    """Tells next player to start turn"""
+
 
 class Message:
     """
@@ -39,7 +68,7 @@ class Message:
     """ Getter for uuid """
     def get_uuid(self):
         return self._uuid
-    
+
     """ Getter for msg_type """
     def get_msg_type(self):
         return self._msg_type

@@ -7,8 +7,13 @@ from src.cardtype import CardType
 from src.gamestatus import GameStatus
 from src.suggestion import Suggestion
 from src.deck import Deck
+from src.playerstatus import PlayerStatus
+from src.network.servernetworkinterface import ServerNetworkInterface as SNI
+from src.network.message import Message
+from src.network.message import MessageType
 import os
 import json
+
 
 class GameState(object):
     """Contains all required information about a game.
@@ -38,61 +43,46 @@ class GameState(object):
         with open(filename) as data_file:
             card_data = json.load(data_file)
 
-        # Initialize all locations without neighbors
+        self.suspect_deck = Deck([])
+        self.weapon_deck = Deck([])
+        self.room_deck = Deck([])
 
-        suspect_deck = Deck([])
-        
+        player_list = PlayerList()
+
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['name'], CardType.SUSPECT, c['key'])
-                suspect_deck.add_card(card)
-
+                self.suspect_deck.add_card(card)
                 player = Player(card)
                 player.set_location(c['start'])
-
-                player_list = PlayerList()
-                player_list.add_player(player)
-
-    def start(self):
-        """Start game by creating deck, dealing the solution, dealing cards."""
-        # Read cards datafile and initialize Deck
-        dir = os.path.dirname(__file__)
-        filename = os.path.join(dir, '../data/cards.json')
-
-        with open(filename) as data_file:
-            card_data = json.load(data_file)
-
-        # Initialize all locations without neighbors
-
-        suspect_deck = Deck([])
-        weapon_deck = Deck([])
-        room_deck = Deck([])
-
-        for c in card_data['cards']:
-            if c['type'] == 'suspect':
-                card = Card(c['name'], CardType.SUSPECT, c['key'])
-                suspect_deck.add_card(card)
+                try:
+                    player_list.add_player(player)
+                except IndexError:
+                    # PlayerList was already initialized
+                    pass
             elif c['type'] == 'weapon':
                 card = Card(c['name'], CardType.WEAPON, c['key'])
-                weapon_deck.add_card(card)
+                self.weapon_deck.add_card(card)
             else:
                 card = Card(c['name'], CardType.ROOM, c['key'])
-                room_deck.add_card(card)
+                self.room_deck.add_card(card)
+
+    def start(self):
+        """Start game by shuffling, dealing the solution, dealing cards."""
 
         # Init decks and shuffle
-        suspect_deck.shuffle()
-        weapon_deck.shuffle()
-        room_deck.shuffle()
+        self.suspect_deck.shuffle()
+        self.weapon_deck.shuffle()
+        self.room_deck.shuffle()
 
         # Deal solution
-        room_sol = room_deck.deal()
-        weapon_sol = weapon_deck.deal()
-        suspect_sol = suspect_deck.deal()
+        room_sol = self.room_deck.deal()
+        weapon_sol = self.weapon_deck.deal()
+        suspect_sol = self.suspect_deck.deal()
         self._solution = Suggestion(room_sol, weapon_sol, suspect_sol)
 
         # Combine sorted cards into one deck and shuffle
-        temp_deck = suspect_deck + weapon_deck
-        self._deck = temp_deck + room_deck
+        self._deck = self.suspect_deck + self.weapon_deck + self.room_deck
         self._deck.shuffle()
 
         # Deal cards to players
@@ -103,15 +93,27 @@ class GameState(object):
             hand.add_card(dealt_card)
             player.set_hand(hand)
 
+        # Send each player their dealt cards (Hand)
+        pl = PlayerList()
+        sni = SNI()
+        for p in pl.get_players():
+            if p.get_status() == PlayerStatus.ACTIVE:
+                msg_payload = p.get_hand().serialize()
+                to_uuid = p.get_uuid()
+                sni.send_message(to_uuid, Message(
+                    sni.get_uuid(), MessageType.PLAYER_HAND, msg_payload))
+
         # Reset self._current_player
-        self._current_player = 0
+        self._current_player = len(pl) - 1
+        first_player = self.next_turn()
 
     def next_turn(self) -> Player:
         """Returns the Player object who is the next player to take a turn"""
         # print('next_turn method in GameState class')
         p_list = PlayerList()
         next_player = p_list.get_next_turn(self._current_player)
-        self._current_player = p_list.get_players().index(next_player)
+        if next_player is not None:
+            self._current_player = p_list.get_players().index(next_player)
         return next_player
 
     def get_state(self) -> GameStatus:

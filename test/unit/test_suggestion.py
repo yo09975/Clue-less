@@ -1,4 +1,5 @@
-
+""" test_suggestion.py """
+import pytest
 from src.suggestion import Suggestion
 from src.cardtype import CardType
 from src.card import Card
@@ -6,10 +7,21 @@ from src.card import Card
 room = Card('room', CardType.ROOM, 'room')
 weapon = Card('weapon', CardType.WEAPON, 'weapon')
 susp = Card('susp', CardType.SUSPECT, 'susp')
-sugg = Suggestion(room, weapon, susp)
+
+def test_create_valid_suggestion():
+    suggestion_valid = Suggestion(room, weapon, susp)
+    assert type(suggestion_valid) is Suggestion
+    assert suggestion_valid.get_room() == room
+    assert suggestion_valid.get_weapon() == weapon
+    assert suggestion_valid.get_character() == susp
+
+def test_create_invalid_suggestion():
+    with pytest.raises(ValueError):
+        suggestion_invalid = Suggestion(room, room, weapon)
 
 def test_serialization():
-    payload = sugg.serialize()
+    suggestion_valid = Suggestion(room, weapon, susp)
+    payload = suggestion_valid.serialize()
     assert type(payload) is str
     sugg2 = Suggestion.deserialize(payload)
     assert type(sugg2) is Suggestion
@@ -17,4 +29,5 @@ def test_serialization():
     assert payload == payload2
 
 def test_to_string():
-    assert str(sugg) == 'susp, with the weapon, in the room'
+    suggestion_valid = Suggestion(room, weapon, susp)
+    assert str(suggestion_valid) == 'susp, with the weapon, in the room'
