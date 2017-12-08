@@ -87,7 +87,7 @@ class GameController(object):
                         selected_player.set_status(PlayerStatus.ACTIVE)
                     update_message = Message(sni.get_uuid(
                         ), MessageType.SEND_PLAYERS, pl.serialize())
-                    sni.send_all(leave_message)
+                    sni.send_all(update_message)
 
                 if msg_type == MessageType.START_GAME:
                     total_players = 0
@@ -100,13 +100,13 @@ class GameController(object):
                         first_player = pl.get_player_by_index(self._current_game.get_current_player())
 
                         # Tell all player's whose turn it is
-                        notify_msg = Message(sni.uuid, MessageType.NOTIFY,
+                        notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
                             f'Currently taking their turn: {first_player.get_character()}')
                         sni.send_all(notify_msg)
 
                         # Notify player it's their turn
-                        your_turn_payload = json.dumps({ 'was_transferred': first_player.was_transferred() })
-                        your_turn_msg = Message(sni.uuid, MessageType.YOUR_TURN, your_turn_payload)
+                        your_turn_payload = json.dumps({ 'was_transferred': first_player.get_was_transferred() })
+                        your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
                         sni.send_message(first_player.get_uuid(), your_turn_msg)
 
                         # Change GameStatus
@@ -222,13 +222,13 @@ class GameController(object):
         next_player = pl.get_player_by_index(self._current_game.get_current_player())
 
         # Tell all player's whose turn it is
-        notify_msg = Message(sni.uuid, MessageType.NOTIFY,
+        notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
             f'Currently taking their turn: {next_player.get_character()}')
         sni.send_all(notify_msg)
 
         # Notify player it's their turn
-        your_turn_payload = json.dumps({ 'was_transferred': next_player.was_transferred() })
-        your_turn_msg = Message(sni.uuid, MessageType.YOUR_TURN, your_turn_payload)
+        your_turn_payload = json.dumps({ 'was_transferred': next_player.get_was_transferred() })
+        your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
         sni.send_message(next_player.get_uuid(), your_turn_msg)
 
         # Change GameStatus
