@@ -1,6 +1,7 @@
 """suggestion.py"""
 
 from src.card import Card
+from src.cardtype import CardType
 import json
 
 
@@ -11,8 +12,11 @@ class Suggestion:
 
     def __init__(self, room: Card, weapon: Card, character: Card):
         """Constructor. Creates a tuple of three Cards that represents a possible solution."""
-
-        self.suggestion_set = (room, weapon, character)
+        if room.get_type() != CardType.ROOM or weapon.get_type() != CardType.WEAPON or \
+                character.get_type() != CardType.SUSPECT:
+            raise ValueError("A suggestion must contain a room, weapon, and character card.")
+        else:
+            self.suggestion_set = (room, weapon, character)
 
     def __eq__(self, other):
         if type(other) is type(self):
