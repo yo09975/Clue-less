@@ -12,6 +12,13 @@ from src.button import Button
 from enum import Enum
 from src.playerstate import PlayerState
 import json
+from queue import Queue
+from threading import Thread
+from src.message import MessageType
+from src.message import Message
+import time
+
+queue = Queue()
 
 class GameApp:
     def __init__(self):
@@ -125,6 +132,14 @@ class GameApp:
                 if event.type == pygame.QUIT:
                     crashed = True
 
+            # Get and set new state if available
+            try:
+                if not queue.empty():
+                    state = queue.get()
+                    self._state = state
+            except:
+                pass
+
             self._gameDisplay.blit(self._background, (0, 0))
 
             self._state_change_button.draw(pygame.mouse, self._gameDisplay)
@@ -181,10 +196,60 @@ class GameApp:
 
 
 
+def state_machine(queue):
+    state = PlayerState.SELECT_PLAYER
+    while True:
+        #CNI.read_message()
 
-            pygame.display.update()
+        message = Message()
 
-            clock.tick(60)
+        if state == PlayerState.SELECT_PLAYER:
+            if message.get_msg_type() == MessageType.SEND_PLAYERS:
+                # Update player picker
+                pass
+            elif message.get_msg_type() == MessageType.YOUR_TURN:
+                state = PlayerState.MY_TURN
+                queue.put(state)
+                pass
+            elif message.get_msg_type() == MessageType.START_GAME:
+                # Start game
+                state = PlayerState.WAIT_FOR_TURN
+                queue.put(state)=
+        elif state == PlayerState.WAIT_FOR_TURN:
+            if message.get_msg_type() == MessageType.SUGGESTION_REQUEST:
+                state = PlayerState.ANSWER_SUGGESTION
+                queue.put(state)
+            elif message.get_msg_type() == MessageType.UPDATE_BOARD:
+                # TODO update Board
+                pass
+        elif state == PlayerState.ANSWER_SUGGESTION:
+            # TODO get input from UI and change state to wait_for_turn
+            pass
+        elif state == PlayerState.MY_TURN:
+            # Get command to change state from UI
+            pass
+        elif state == PlayerState.POST_SUGGESTION:
+            if message.get_msg_type() == MessageType.SUGGESTION_RESPONSE:
+                state = PlayerState.POST_SUGGESTION_ANSWER
+                queue.put(state)
+            elif message.get_msg_type() == MessageType.UPDATE_BOARD:
+                # TODO update Board
+                pass
+        elif state == PlayerState.POST_SUGGESTION_ANSWER:
+            # get command to change state from UI, change to wait_for_turn
+            pass
+        elif state == PlayerState.POST_MOVE:
+            # get command from GUI and change state accordingly
+            pass
+
+
+
+
+
+
+t = Thread(target=state_machine, args=(queue,))
+t.daemon = True
+t.start()
 
 game = GameApp()
 game.start()
