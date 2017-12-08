@@ -34,6 +34,6 @@ class Dialog(View):
         return self._success
 
     def set_is_visible(self, is_visible):
-        super(Dialog, self).set_is_visible()
+        super(Dialog, self).set_is_visible(is_visible)
         if (is_visible):
             self._success = False

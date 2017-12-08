@@ -4,8 +4,8 @@ from src.dialog import Dialog
 from src.picker import Picker
 from src.card import Card
 from src.cardtype import CardType
-from src.message import Message
-from src.message import MessageType
+from src.network.message import Message
+from src.network.message import MessageType
 
 import pygame
 import os
