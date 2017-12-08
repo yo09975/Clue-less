@@ -2,6 +2,8 @@
 from src.player import Player
 from src.playerstatus import PlayerStatus
 from src.network.singleton import Singleton
+from src.card import Card
+import json
 
 class PlayerList(metaclass=Singleton):
     """Represents all Players in the game.
@@ -78,3 +80,24 @@ class PlayerList(metaclass=Singleton):
 
     def __len__(self):
         return len(self._player_list)
+
+    def serialize(self):
+        """ Convert a Move to JSON """
+        playerlist={}
+        for player in self._player_list:
+            playerlist[player.get_card_id()] = {}
+            playerlist[player.get_card_id()]['uuid'] = player.get_uuid()
+            playerlist[player.get_card_id()]['card'] = player.get_character().serialize()
+        return json.dumps(playerlist)
+
+    def deserialize(payload):
+        """ Convert a JSON string to a Player List """
+        pl = PlayerList()
+        pl.clear()
+
+        playerlist = json.loads(payload)
+        for key in playerlist:
+            newplayer = Player(Card.deserialize(playerlist[key]['card']))
+            newplayer.set_uuid(playerlist[key]['uuid'])
+            pl.add_player(newplayer)
+        return pl
