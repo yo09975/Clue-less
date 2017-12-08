@@ -1,5 +1,5 @@
 from enum import Enum
-
+import json
 
 class MessageType(Enum):
 
@@ -78,9 +78,21 @@ class Message:
         return self._payload
 
     """ Stringifys and returns a byte representation of a Message """
-    def encode(self):
-        return str(self).encode()
+    def serialize(self):
+        msg = {}
+        msg['uuid'] = self._uuid
+        msg['msg_type'] = self._msg_type.value
+        msg['payload'] = self._payload
+        print("msg: ", msg)
+        return json.dumps(msg)
 
     """ Stringifys the Message """
     def __str__(self):
         return f'{self.get_uuid()},{self.get_msg_type().value},{self.get_payload()}'
+
+    def deserialize(message):
+        if not isinstance(message, str):
+            raise ValueError('Method expects string type parameter \'message_string\'')
+        print("Deser:", message)
+        msg_dict = json.loads(message)
+        return Message(msg_dict['uuid'], MessageType(msg_dict['msg_type']), msg_dict['payload'])
