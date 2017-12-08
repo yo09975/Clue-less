@@ -28,6 +28,12 @@ class Card(object):
         card_string += str(self._card_id)
         return card_string
 
+    def __eq__(self, other):
+        """ Overridden equality check """
+        if isinstance(self, other.__class__):
+                return self.__dict__ == other.__dict__
+        return False
+
     def get_name(self) -> str:
         """Returns a String with the name of the Card"""
         # print('get_name method in Card class')

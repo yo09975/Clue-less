@@ -1,9 +1,11 @@
 #!/usr/bin/env python3.6
 
-import src.network.common 
+from queue import Queue, Empty
+import src.network.common
 from src.network.message import Message, MessageType
 from src.network.singleton import Singleton
 from socket import *
+from threading import Thread
 
 class ClientNetworkInterface(metaclass=Singleton):
 
@@ -19,7 +21,10 @@ class ClientNetworkInterface(metaclass=Singleton):
     def __init__(self):
         # Socket representing connection to a ServerNetworkInterface
         self._client_socket = None
+        # UUID to be set on connect
         self._uuid = None
+        # Queue that holds Messages from the Server
+        self._msg_queue = Queue()
 
     """ Getter for uuid """
     def get_uuid(self):
@@ -52,7 +57,23 @@ class ClientNetworkInterface(metaclass=Singleton):
             print(f'Error: Failed to receive UUID message from server before timeout')
             return False
 
+        t = Thread(target=self.listen, args=(self._msg_queue,), daemon=True)
+        t.start()
         return True
+
+    """ read thread's target function  """
+    def listen(self, queue):
+        while True:
+            # Blocking read from server
+            message = self._read_message()
+            queue.put_nowait(message)
+
+    """ Returns top Message on Queue, or None if queue was empty """
+    def get_message(self):
+        try:
+            return self._msg_queue.get_nowait()
+        except Empty:
+            return None
 
     """ Returns whether we have a valid connection to the server """
     def is_connected(self):
@@ -83,7 +104,7 @@ class ClientNetworkInterface(metaclass=Singleton):
         return True
 
     """ Read message from a GameSocket """
-    def read_message(self):
+    def _read_message(self):
         if not self.is_connected():
             raise ConnectionError('Not connected to a server')
         try:

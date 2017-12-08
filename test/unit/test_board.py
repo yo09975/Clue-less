@@ -11,6 +11,10 @@ import json
 import os
 
 
+pl = PlayerList()
+pl.clear()
+gs = GameState()
+
 def test_init_fetch_by_name():
     """Fetch by name.
 
@@ -54,15 +58,11 @@ def test_init_fetch_by_coordinates():
         loc = b.get_location(l['key'])
         assert loc._name == l['name']
 
-
-gs = GameState()
-pl = PlayerList()
-
-
 def test_serialize_locations():
     b = Board()
     payload = b.serialize()
     assert type(payload) is str
+
     # Ensure that Col. Mustard's starting location is serialized
     assert payload.find('"Colonel Mustard": "6x2"') != -1
 
