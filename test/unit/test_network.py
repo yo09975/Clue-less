@@ -26,20 +26,6 @@ def test_send_message_to_server():
     mess = Message(cni.get_uuid(), test_msg_type, test_msg_payload)
     assert cni.send_message(mess)
 
-def test_sni_parse_message_string():
-    mess = Message(cni.get_uuid(), test_msg_type, test_msg_payload)
-    message_parsed = sni.parse_message_string(str(mess))
-    assert message_parsed.get_uuid() == mess.get_uuid()
-    assert message_parsed.get_msg_type() == mess.get_msg_type()
-    assert message_parsed.get_payload() == mess.get_payload()
-
-def test_cni_parse_message_string():
-    mess = Message(sni.get_uuid(), test_msg_type, test_msg_payload)
-    message_parsed = cni.parse_message_string(str(mess))
-    assert message_parsed.get_uuid() == mess.get_uuid()
-    assert message_parsed.get_msg_type() == mess.get_msg_type()
-    assert message_parsed.get_payload() == mess.get_payload()
-
 
 def test_read_message_from_client():
     client_uuid = sni.client_socket_list[0][0]
