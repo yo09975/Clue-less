@@ -83,7 +83,6 @@ class Message:
         msg['uuid'] = self._uuid
         msg['msg_type'] = self._msg_type.value
         msg['payload'] = self._payload
-        print("msg: ", msg)
         return json.dumps(msg)
 
     """ Stringifys the Message """
@@ -93,6 +92,5 @@ class Message:
     def deserialize(message):
         if not isinstance(message, str):
             raise ValueError('Method expects string type parameter \'message_string\'')
-        print("Deser:", message)
         msg_dict = json.loads(message)
         return Message(msg_dict['uuid'], MessageType(msg_dict['msg_type']), msg_dict['payload'])
