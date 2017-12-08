@@ -40,6 +40,8 @@ class MessageType(Enum):
     PLAYER_HAND = 18
     """Contains a player's Hand serialized so that can know the cards they
        were dealt"""
+    YOUR_TURN = 19
+    """Tells next player to start turn"""
 
 
 class Message:
