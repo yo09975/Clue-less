@@ -67,8 +67,9 @@ class CharacterPickerDialog(Dialog):
         super(CharacterPickerDialog, self).set_is_visible(is_visible)
 
     def set_unavailable_players(self, players):
+        print("here")
         for p in players:
             for i, c in enumerate(self._characters):
-                if p.get_id() == c.get_id():
+                if p.get_card_id() == c.get_id():
                     self._character_picker.disable_button(i)
                 next

@@ -87,7 +87,7 @@ class GameController(object):
                         selected_player.set_status(PlayerStatus.ACTIVE)
                     update_message = Message(sni.get_uuid(
                         ), MessageType.SEND_PLAYERS, pl.serialize())
-                    sni.send_all(leave_message)
+                    sni.send_all(update_message)
 
                 if msg_type == MessageType.START_GAME:
                     total_players = 0

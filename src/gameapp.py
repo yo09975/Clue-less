@@ -166,7 +166,7 @@ class GameApp:
             # message = Message("tes", MessageType.NOTIFY, "yes")
             message = cni.get_message()
             if message is not None:
-                print('\n', message.get_msg_type(), message.get_payload())
+                print('\nReceived msg:', message.get_msg_type())
             else:
                 print('.', end='', flush=True)
 
@@ -186,10 +186,10 @@ class GameApp:
                 if message is not None:
                     if message.get_msg_type() == MessageType.SEND_PLAYERS:
                         # Deserialize player list, find taken tokens, and hide
-                        pl = PlayerList.deserialize(message.get_payload)
+                        pl = PlayerList.deserialize(message.get_payload())
                         player_list = pl.get_players()
                         unavailable = []
-                        for p in player_list():
+                        for p in player_list:
                             if p.get_uuid() is not None and p.get_uuid() != cni.get_uuid():
                                 unavailable.append(p)
 

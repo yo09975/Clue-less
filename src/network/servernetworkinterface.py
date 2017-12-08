@@ -14,7 +14,7 @@ class ServerNetworkInterface(metaclass=Singleton):
     """
 
     # Class scoped variable for number of expected player connections
-    MIN_PLAYERS = 6
+    MIN_PLAYERS = 2
     BUFSIZE = 4096
     PORT = 1337
 
@@ -60,6 +60,7 @@ class ServerNetworkInterface(metaclass=Singleton):
         print('All players have connected successfully!')
     """ Getter for socket object associated with a specific uuid """
     def _get_sock_by_uuid(self, uuid):
+        print(self.client_socket_list)
         for conn in self.client_socket_list:
             if conn[0] == uuid:
                 return conn[1]
