@@ -1,5 +1,6 @@
 import multiprocessing
 import threading
+import time
 from src.network.clientnetworkinterface import ClientNetworkInterface
 from src.network.servernetworkinterface import ServerNetworkInterface
 from src.network.message import Message, MessageType
@@ -15,7 +16,7 @@ def test_start_server():
     newThread.daemon = True
     newThread.start()
     assert True
-   
+
 def test_connect_to_server():
     assert cni.connect('0.0.0.0') == True
     assert cni.is_connected() == True
@@ -57,7 +58,13 @@ def test_send_message_to_client():
 def test_read_message_from_server():
     server_uuid = sni.get_uuid()
     client_uuid = cni.get_uuid()
-    mess = cni.read_message()
+    """ Logic to wait 5 seconds for message to come through """
+    for i in range(1,6):
+        mess = cni.get_message()
+        if not mess:
+            time.sleep(1)
+        else:
+            break
     assert mess is not None
     assert mess.get_uuid() == server_uuid
     assert mess.get_msg_type() == test_msg_type
@@ -71,11 +78,21 @@ def test_send_all():
     p.join()
     assert sni.get_connection_count() == 2
     assert sni.send_all(mess) == True
-    recvd_msg = cni.read_message()
+    #client_uuid = cni.get_uuid()
+    #assert sni.send_message(client_uuid, mess) == True
+
+    """ Logic to wait 5 seconds for message to come through """
+    for i in range(1,6):
+        recvd_msg = cni.get_message()
+        if not recvd_msg:
+            time.sleep(1)
+        else:
+            break
+
+    assert recvd_msg is not None
     assert recvd_msg.get_uuid() == sni.get_uuid()
     assert recvd_msg.get_msg_type() == test_msg_type
     assert recvd_msg.get_payload() == test_msg_payload
-    
 
 def second_connection():
     cni2 = ClientNetworkInterface()
