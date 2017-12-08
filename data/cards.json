@@ -1,114 +1,93 @@
 {
     "cards": [
         {
-            "name": "Hall",
-            "key": "Hall",
+            "card_id": "Hall",
             "type": "room"
         },
         {
-            "name": "Lounge",
-            "key": "Lounge",
+            "card_id": "Lounge",
             "type": "room"
         },
         {
-            "name": "Dining Room",
-            "key": "Dining Room",
+            "card_id": "Dining Room",
             "type": "room"
         },
         {
-            "name": "Kitchen",
-            "key": "Kitchen",
+            "card_id": "Kitchen",
             "type": "room"
         },
         {
-            "name": "Ballroom",
-            "key": "Ballroom",
+            "card_id": "Ballroom",
             "type": "room"
         },
         {
-            "name": "Conservatory",
-            "key": "Conservatory",
+            "card_id": "Conservatory",
             "type": "room"
         },
         {
-            "name": "Billiard Room",
-            "key": "Billiard Room",
+            "card_id": "Billiard Room",
             "type": "room"
         },
         {
-            "name": "Library",
-            "key": "Library",
+            "card_id": "Library",
             "type": "room"
         },
         {
-            "name": "Study",
-            "key": "Study",
+            "card_id": "Study",
             "type": "room"
         },
         {
-            "name": "Miss Scarlet",
-            "key": "Miss Scarlet",
+            "card_id": "Miss Scarlet",
             "type": "suspect",
             "start": "4x0"
         },
         {
-            "name": "Colonel Mustard",
-            "key": "Colonel Mustard",
+            "card_id": "Colonel Mustard",
             "type": "suspect",
             "start": "6x2"
         },
         {
-            "name": "Mrs. White",
-            "key": "Mrs. White",
+            "card_id": "Mrs. White",
             "type": "suspect",
             "start": "4x6"
         },
         {
-            "name": "Mr. Green",
-            "key": "Mr. Green",
+            "card_id": "Mr. Green",
             "type": "suspect",
             "start": "2x6"
         },
         {
-            "name": "Mrs. Peacock",
-            "key": "Mrs. Peacock",
+            "card_id": "Mrs. Peacock",
             "type": "suspect",
             "start": "0x4"
         },
         {
-            "name": "Professor Plum",
-            "key": "Professor Plum",
+            "card_id": "Professor Plum",
             "type": "suspect",
             "start": "0x2"
         },
         {
-            "name": "Knife",
-            "key": "Knife",
+            "card_id": "Knife",
             "type": "weapon"
         },
         {
-            "name": "Candlestick",
-            "key": "Candlestick",
+            "card_id": "Candlestick",
             "type": "weapon"
         },
         {
-            "name": "Revolver",
-            "key": "Revolver",
+            "card_id": "Revolver",
             "type": "weapon"
         },
         {
-            "name": "Rope",
-            "key": "Rope",
+            "card_id": "Rope",
             "type": "weapon"
         },
         {
-            "name": "Lead Pipe",
-            "key": "Lead Pipe",
+            "card_id": "Lead Pipe",
             "type": "weapon"
         },
         {
-            "name": "Wrench",
-            "key": "Wrench",
+            "card_id": "Wrench",
             "type": "weapon"
         }
     ]

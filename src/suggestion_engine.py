@@ -45,7 +45,7 @@ class SuggestionEngine:
         them asking that they select a card with which to refute the suggestion. If a player cannot refute we let
         all users know they were unable to refute."""
         suggestion_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                 suggesting_player.get_character().get_name() + suggestion.serialize())
+                                 suggesting_player.get_character().get_id() + suggestion.serialize())
         ServerNetworkInterface.send_all(suggestion_msg)
 
         while responder != suggesting_player:
@@ -56,12 +56,12 @@ class SuggestionEngine:
                                        suggestion.serialize())
                 ServerNetworkInterface.send_message(responder.get_uuid(), response_msg)
                 response_notification = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                                responder.get_character().get_name() + "disproved the suggestion.")
+                                                responder.get_character().get_id() + "disproved the suggestion.")
                 ServerNetworkInterface.send_all(response_notification)
                 return True
             else:
                 could_not_respond_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                                responder.get_character().get_name() + " could not disprove.")
+                                                responder.get_character().get_id() + " could not disprove.")
                 ServerNetworkInterface.send_all(could_not_respond_msg)
                 responder = PlayerList.get_next_player(responder)
 
@@ -87,7 +87,7 @@ class SuggestionEngine:
                                      suggestion.serialize())
             ServerNetworkInterface.send_all(correct_accusation_msg)
             correct_notification_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.NOTIFY,
-                                       accuser.get_character().get_name() + " made a correct accusation.")
+                                       accuser.get_character().get_id() + " made a correct accusation.")
             ServerNetworkInterface.send_all(correct_notification_msg)
             return True
         else:
@@ -96,7 +96,7 @@ class SuggestionEngine:
                                      suggestion.serialize())
             ServerNetworkInterface.send_all(accusation_msg)
             notification_msg = Message(ServerNetworkInterface.get_uuid(), MessageType.NOTIFY,
-                                       accuser.get_character().get_name() + " made an incorrect accusation.")
+                                       accuser.get_character().get_id() + " made an incorrect accusation.")
             ServerNetworkInterface.send_all(notification_msg)
             return False
 

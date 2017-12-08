@@ -39,8 +39,13 @@ class Player(object):
 
     def __str__(self) -> str:
         player_str = 'Player is playing as: '
-        return player_str + self.get_character().get_name()
+        return player_str + self.get_character().get_id()
 
+    def __eq__(self, other):
+        """ Overridden equality check """
+        if isinstance(self, other.__class__):
+            return self.__dict__ == other.__dict__
+        return False
     def set_hand(self, hand: Hand):
         """Creates the Player's initial Hand of Cards"""
         self._player_hand = hand

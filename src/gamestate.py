@@ -51,7 +51,7 @@ class GameState(object):
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
-                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                card = Card(c['card_id'], CardType.SUSPECT)
                 self.suspect_deck.add_card(card)
                 player = Player(card)
                 player.set_location(c['start'])
@@ -61,10 +61,10 @@ class GameState(object):
                     # PlayerList was already initialized
                     pass
             elif c['type'] == 'weapon':
-                card = Card(c['name'], CardType.WEAPON, c['key'])
+                card = Card(c['card_id'], CardType.WEAPON)
                 self.weapon_deck.add_card(card)
             else:
-                card = Card(c['name'], CardType.ROOM, c['key'])
+                card = Card(c['card_id'], CardType.ROOM)
                 self.room_deck.add_card(card)
 
     def start(self):
