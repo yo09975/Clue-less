@@ -75,13 +75,16 @@ class GameApp:
 
         # Set up board
         dir = os.path.dirname(__file__)
-        filename = os.path.join(dir, '../data/locations.json')
+        location_file = os.path.join(dir, '../data/locations.json')
 
-        with open(filename) as data_file:
+        with open(location_file) as data_file:
             locs = json.load(data_file)
 
         self._disp_board = {}
-        ref_board = {}
+        self._ref_board = {}
+
+        # cross reference from card_id to avatar png
+        self._avatars = {}
 
         for l in locs['locations']:
             def location_hover(args):
@@ -99,10 +102,29 @@ class GameApp:
             location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state})
             # location.set_on_hover_action(location_hover, {'b': location})
 
-            ref_board[l['key']] = location
-            self._disp_board[l['key']] = location
+            self._ref_board[l['key']] = location
+            self._disp_board[l['key']]['button'] = location
+            self._disp_board[l['key']]['x'] = l['dims']['x']
+            self._disp_board[l['key']]['y'] = l['dims']['y']
+
             if l['type'] == "room":
-                ref_board[l['name']] = location
+                self._ref_board[l['name']] = location
+
+        # Set up avatars
+        card_file = os.path.join(dir, '../data/cards.json')
+
+        with open(card_file) as data_file:
+            cards = json.load(data_file)
+
+        # cross reference from card_id to avatar png
+        self._avatars = {}
+
+        for c in cards['cards']:
+            if c['type'] == 'suspect':
+                avatar = pygame.image.load('resources/' + c['avatar'])
+                self._avatars[c['card_id']]['png'] = avatar
+
+        self.determine_avatar_locations()
 
         # Set up note card
         self._note_card = NoteCardView(1231, 121)
@@ -197,7 +219,8 @@ class GameApp:
             self._leave_game_button.draw(pygame.mouse, self._gameDisplay)
 
             # Always draw game pieces on the game board
-            # TODO render game pieces
+            for a in self._avatars:
+                self._gameDisplay.blit(self._avatars[a]['png'], (self._avatars[a]['x'], self._avatars[a]['y']))
 
             # Always render message log
             for i, text_message in enumerate(self._message_log):
@@ -248,7 +271,7 @@ class GameApp:
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
                         self._board = Board.deserialize(message.get_payload())
-
+                        self.determine_avatar_locations()
                     elif message.get_msg_type() == MessageType.YOUR_TURN:
                         # Make it your turn
                         self._state = PlayerState.MY_TURN
@@ -288,7 +311,7 @@ class GameApp:
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
                         self._board = Board.deserialize(message.get_payload())
-
+                        self.determine_avatar_locations()
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
                 # Wait for button actions to change state
@@ -328,6 +351,24 @@ class GameApp:
 
             clock.tick(60)
 
+
+    def determine_avatar_locations():
+        room_occupants = {}
+
+        # Cycle through player list and build reference of occupants per rooms
+        pl = PlayerList()
+        for p in pl.get_players():
+            loc = p.get_current_location()
+            if loc not in room_occupants:
+                room_occupants[loc] = []
+            room_occupants[loc].append[p.get_card_id()]
+
+        # Calculate avatar location
+        for loc in room_occupants:
+            for i, card_id in enumerate(room_occupants[loc]):
+                coords = (self._disp_board[card_id]['x'], self._disp_board[card_id]['x'])
+                self._avatars[card_id]['x'] = coords[0] + i % 3 * 300
+                self._avatars[card_id]['x'] = coords[0] + int(i/3) * 300
 
 
 cni = CNI()
