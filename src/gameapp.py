@@ -62,7 +62,7 @@ class GameApp:
         # Set up Accusation Dialog
         self._acc_dialog = SD(60, 60)
         self._acc_dialog.set_is_visible(False)
-        self._sugg_dialog.get_top_button().set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.ACCUSATION})
+        self._acc_dialog.get_top_button().set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.ACCUSATION})
 
 
         # Set up Suggestion Response Dialog
