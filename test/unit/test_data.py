@@ -28,7 +28,7 @@ def test_verify_card_room_keys():
             # If room card, check for corresponding location
             found_key = False
             for l in location_data['locations']:
-                found_key = found_key or c['key'] == l['name']
+                found_key = found_key or c['card_id'] == l['name']
             assert found_key
 
 
@@ -40,7 +40,7 @@ def test_verify_room_names():
             # If room, check for corresponding card
             found_key = False
             for c in card_data['cards']:
-                found_key = found_key or l['name'] == c['key']
+                found_key = found_key or l['name'] == c['card_id']
             assert found_key
 
 
@@ -63,6 +63,6 @@ def test_verify_start_locations():
                     assert l.get('init', False)
 
             if not found_loc:
-                print(c['key'], found_loc)
+                print(c['card_id'], found_loc)
 
             assert found_loc

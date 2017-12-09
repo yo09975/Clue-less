@@ -22,7 +22,7 @@ class Hand(object):
         """Overridden toString method"""
         string = ''
         for card in self._cards:
-            string += str(card.get_name()) + ', '
+            string += str(card.get_id()) + ', '
         return string[:-2]
 
     def __eq__(self, other):

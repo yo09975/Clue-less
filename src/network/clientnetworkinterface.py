@@ -48,7 +48,8 @@ class ClientNetworkInterface(metaclass=Singleton):
         # Attempt to read the server's UUID assignment
         try:
             uuid_msg_string = self._client_socket.recv(self.BUFSIZE).decode()
-            uuid_msg = self.parse_message_string(uuid_msg_string)
+            print(uuid_msg_string)
+            uuid_msg = Message.deserialize(uuid_msg_string)
             if uuid_msg.get_msg_type() != MessageType.GIVE_UUID:
                 raise ValueError('Error: Expected GIVE_UUID message, got {uuid_msg.get_msg_type()}')
             self._uuid = uuid_msg.get_payload()
@@ -97,7 +98,7 @@ class ClientNetworkInterface(metaclass=Singleton):
             print('DEBUG: Outgoing UUID has to be corrected!')
 
         try:
-            self._client_socket.sendall(message.encode())
+            self._client_socket.sendall(message.serialize().encode())
         except socket.timeout as e:
             print(f'Error: send_message timed out')
             return False
@@ -112,17 +113,13 @@ class ClientNetworkInterface(metaclass=Singleton):
         except socket.timeout as e:
             print(f'Error: read_message timed out')
             return None
-        return self.parse_message_string(message_string)
+        return Message.deserialize(message_string)
 
     """ Parse messages of the form:
         SenderUUID, MessageType, Payload
         back into a Message object
     """
-    def parse_message_string(self, message_string):
-        if not isinstance(message_string, str):
-            raise ValueError('Method expects string type parameter \'message_string\'')
-        msg_uuid, msg_type, msg_payload = message_string.split(',')
-        return Message(msg_uuid, MessageType(int(msg_type)), msg_payload)
+
 
 if __name__ == '__main__':
     try:

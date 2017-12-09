@@ -4,9 +4,9 @@ from src.suggestion import Suggestion
 from src.cardtype import CardType
 from src.card import Card
 
-room = Card('room', CardType.ROOM, 'room')
-weapon = Card('weapon', CardType.WEAPON, 'weapon')
-susp = Card('susp', CardType.SUSPECT, 'susp')
+room = Card('Kitchen', CardType.ROOM)
+weapon = Card('Knife', CardType.WEAPON)
+susp = Card('Miss Scarlet', CardType.SUSPECT)
 
 def test_create_valid_suggestion():
     suggestion_valid = Suggestion(room, weapon, susp)
@@ -30,4 +30,4 @@ def test_serialization():
 
 def test_to_string():
     suggestion_valid = Suggestion(room, weapon, susp)
-    assert str(suggestion_valid) == 'susp, with the weapon, in the room'
+    assert str(suggestion_valid) == 'Miss Scarlet, with the Knife, in the Kitchen'
