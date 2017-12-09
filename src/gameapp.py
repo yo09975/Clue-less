@@ -367,8 +367,8 @@ class GameApp:
         for loc in room_occupants:
             for i, card_id in enumerate(room_occupants[loc]):
                 coords = (self._disp_board[card_id]['x'], self._disp_board[card_id]['x'])
-                self._avatars[card_id]['x'] = coords[0] + i % 3 * 300
-                self._avatars[card_id]['x'] = coords[0] + int(i/3) * 300
+                self._avatars[card_id]['x'] = coords[0] + i % 3 * 52
+                self._avatars[card_id]['x'] = coords[0] + int(i/3) * 52
 
 
 cni = CNI()
