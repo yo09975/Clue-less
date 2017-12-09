@@ -36,10 +36,11 @@ class SuggestionEngine:
         """Makes a suggestion. Also offers to move the suggested character to the suggested room."""
         """These are some acrobatics to initialize the suggesting player and responding player."""
         sni = SNI()
+        pl = PlayerList()
         current = self.game_state.get_current_player()
-        players = PlayerList.get_players()
+        players = pl.get_players()
         suggesting_player = players[current]
-        responder = PlayerList.get_next_player(suggesting_player)
+        responder = pl.get_next_player(suggesting_player)
 
         """Iterating through each player in PlayerList. If they are able to refute, we send a SUGGESTION_REQUEST to
         them asking that they select a card with which to refute the suggestion. If a player cannot refute we let
@@ -63,7 +64,7 @@ class SuggestionEngine:
                 could_not_respond_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY,
                                                 responder.get_character().get_id() + " could not disprove.")
                 sni.send_all(could_not_respond_msg)
-                responder = PlayerList.get_next_player(responder)
+                responder = pl.get_next_player(responder)
 
         no_response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY,
                                   "The suggestion could not be refuted.")
@@ -73,8 +74,9 @@ class SuggestionEngine:
     def answer_suggestion(self, response: Card):
         """Allows a player to answer a suggestion."""
         sni = SNI()
+        pl = PlayerList()
         current = self.game_state.get_current_player()
-        players = PlayerList.get_players()
+        players = pl.get_players()
         suggesting_player = players[current]
         response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY, response.serialize())
         sni.send_message(suggesting_player.get_uuid(), response_msg)
