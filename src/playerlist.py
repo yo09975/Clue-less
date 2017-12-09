@@ -2,7 +2,8 @@
 from src.player import Player
 from src.playerstatus import PlayerStatus
 from src.network.singleton import Singleton
-from src.card import Card
+from src.card import Card, CardType
+import os
 import json
 
 class PlayerList(metaclass=Singleton):
@@ -77,6 +78,26 @@ class PlayerList(metaclass=Singleton):
 
     def clear(self):
         self._player_list = []
+
+    def setup(self):
+            # Read cards datafile and initialize Deck
+            dir = os.path.dirname(__file__)
+            filename = os.path.join(dir, '../data/cards.json')
+
+            with open(filename) as data_file:
+                card_data = json.load(data_file)
+
+            for c in card_data['cards']:
+                if c['type'] == 'suspect':
+                    card = Card(c['card_id'], CardType.SUSPECT)
+                    player = Player(card)
+                    player.set_location(c['start'])
+                    try:
+                        self.add_player(player)
+                    except IndexError:
+                        # PlayerList was already initialized
+                        pass
+
 
     def __len__(self):
         return len(self._player_list)
