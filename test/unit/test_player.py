@@ -1,4 +1,5 @@
 """test_player.py"""
+import pytest
 from src.player import Player
 from src.card import Card
 from src.cardtype import CardType
@@ -20,6 +21,8 @@ test_player = Player(test_card1)
 def test_init():
     assert type(test_player) is Player
     assert test_player.get_card_id() == 'Miss Scarlet'
+    with pytest.raises(ValueError):
+        bad_card_player = Player(test_card3)
 
 
 def test_str():
