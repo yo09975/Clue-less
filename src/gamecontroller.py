@@ -195,6 +195,7 @@ class GameController(object):
         msg_uuid: str, msg_type: MessageType, msg_payload: str,
             suggesting_player: Player):
         pl = PlayerList()
+        sni = ServerNetworkInterface()
         suggestion = Suggestion.deserialize(msg_payload)
         if self._suggest_engine.is_valid_suggestion(
                 suggesting_player, suggestion):
@@ -216,6 +217,7 @@ class GameController(object):
 
     def do_accusation(self, msg_uuid: str, msg_type: MessageType, msg_payload: str):
         pl = PlayerList()
+        sni = ServerNetworkInterface()
         accusation = Suggestion.deserialize(msg_payload)
         players = pl.get_players()
         accuser = players[self._current_game.get_current_player()]
@@ -236,6 +238,7 @@ class GameController(object):
     def do_end_turn(self):
         # Changes GameState's _current_player
         pl = PlayerList()
+        sni = ServerNetworkInterface()
         self._current_game.next_turn()
         next_player = pl.get_player_by_index(self._current_game.get_current_player())
 
