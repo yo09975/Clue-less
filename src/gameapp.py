@@ -24,6 +24,7 @@ from src.move import Move
 from src.hand import Hand
 from src.cardtype import CardType
 from src.card import Card
+from src.suggestion import Suggestion
 import time
 
 
@@ -161,9 +162,9 @@ class GameApp:
             cni = CNI()
             message = Message(cni.get_uuid(), MessageType.END_TURN, "")
             cni.send_message(message)
-            args['s'] = PlayerState.WAIT_FOR_TURN
+            args['s']._state = PlayerState.WAIT_FOR_TURN
 
-        self._end_turn_button.set_on_click(end_turn, {'s': self._state})
+        self._end_turn_button.set_on_click(end_turn, {'s': self})
 
         # Set up leave game button
         self._leave_game_button = Button(1236, 831, 170, 65)

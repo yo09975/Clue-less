@@ -105,3 +105,5 @@ class Board:
                 continue
             pl.get_player(p).set_location(board[p])
             self._locations[board[p]].add_occupant()
+
+        return self
