@@ -130,6 +130,7 @@ class GameController(object):
 
                         if msg_type == MessageType.MOVEMENT:
                             move = Move.deserialize(msg_payload)
+                            print(self._move_engine.is_valid_move(move))
                             if self._move_engine.is_valid_move(move):
                                 self._move_engine.do_move(move)
                                 moving_player = self.get_player_from_uuid(msg_uuid)
