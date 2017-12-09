@@ -6,12 +6,12 @@ from src.card import Card
 from src.cardtype import CardType
 from src.playerstatus import PlayerStatus
 
-test_card1 = Card('Test Card 1 Name', CardType.SUSPECT, 'TEST111ID')
-test_card2 = Card('Test Card 2 Name', CardType.SUSPECT, 'TEST222ID')
-test_card3 = Card('Test Card 3 Name', CardType.WEAPON, 'TEST333ID')
-test_card4 = Card('Test Card 4 Name', CardType.ROOM, 'TEST444ID')
-test_card5 = Card('Test Card 5 Name', CardType.ROOM, 'TEST555ID')
-test_card6 = Card('Test Card 6 Name', CardType.ROOM, 'TEST666ID')
+test_card1 = Card('Colonel Mustard', CardType.SUSPECT)
+test_card2 = Card('Miss Scarlet', CardType.SUSPECT)
+test_card3 = Card('Professor Plum', CardType.SUSPECT)
+test_card4 = Card('Mrs. White', CardType.SUSPECT)
+test_card5 = Card('Mr. Green', CardType.SUSPECT)
+test_card6 = Card('Mrs. Peacock', CardType.SUSPECT)
 test_player1 = Player(test_card1)
 test_player1.set_status(PlayerStatus.ACTIVE)
 test_player2 = Player(test_card2)
@@ -103,7 +103,6 @@ def test_get_next_player():
     else:
         assert False
 
-
 def test_get_players():
 
     assert test_plist1.get_players() == [test_player1, test_player2,
@@ -113,9 +112,16 @@ def test_get_players():
 
 
 def test_get_player():
-    if test_plist1.get_player('BAD ID') is None:
-        assert True
-    else:
-        assert False
-    assert test_plist1.get_player("TEST333ID") == test_player3
-    assert type(test_plist1.get_player('TEST333ID')) is Player
+    assert test_plist1.get_player('BAD ID') is None
+    assert test_plist1.get_player('Professor Plum') == test_player3
+    assert type(test_plist1.get_player('Professor Plum')) is Player
+
+def test_setup():
+    test_plist1.clear()
+    test_plist1.setup()
+    assert test_plist1.get_player_by_index(0).get_current_location() == "4x0"
+    assert test_plist1.get_player_by_index(1).get_current_location() == "6x2"
+    assert test_plist1.get_player_by_index(2).get_current_location() == "4x6"
+    assert test_plist1.get_player_by_index(3).get_current_location() == "2x6"
+    assert test_plist1.get_player_by_index(4).get_current_location() == "0x4"
+    assert test_plist1.get_player_by_index(5).get_current_location() == "0x2"

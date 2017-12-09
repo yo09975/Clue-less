@@ -19,8 +19,8 @@ from src.gamestate import GameState
 # Create two cards from the data in the data file
 player_list = PlayerList()
 gs = GameState()
-scarlet_card = Card('Miss Scarlet', CardType.SUSPECT, 'Miss Scarlet')
-mustard_card = Card('Colonel Mustard', CardType.SUSPECT, 'Colonel Mustard')
+scarlet_card = Card('Miss Scarlet', CardType.SUSPECT)
+mustard_card = Card('Colonel Mustard', CardType.SUSPECT)
 scarlet_player = player_list.get_player(scarlet_card.get_id())
 scarlet_player.set_status(PlayerStatus.ACTIVE)
 mustard_player = player_list.get_player(mustard_card.get_id())

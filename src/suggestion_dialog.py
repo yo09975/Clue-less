@@ -25,13 +25,13 @@ class SuggestionDialog(Dialog):
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
-                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                card = Card(c['card_id'], CardType.SUSPECT)
                 characters.append(card)
             elif c['type'] == 'weapon':
-                card = Card(c['name'], CardType.WEAPON, c['key'])
+                card = Card(c['card_id'], CardType.WEAPON)
                 weapons.append(card)
             else:
-                card = Card(c['name'], CardType.ROOM, c['key'])
+                card = Card(c['card_id'], CardType.ROOM)
                 rooms.append(card)
 
         # Build pickers
@@ -43,26 +43,12 @@ class SuggestionDialog(Dialog):
         self.add_view(self._room_picker)
         self.add_view(self._weapon_picker)
 
-        # Set up button logic
-        def confirm(args):
-            room = args['r'].get_selected()
-            character = args['c'].get_selected()
-            weapon = args['w'].get_selected()
-            sugg_dialog = args['d']
 
-            if room and character and weapon:
-                print(room, character, weapon)
-                sugg_dialog.set_is_visible(False)
-                # TODO Send off suggestion message
         def cancel(args):
             sugg_dialog = args['d']
             sugg_dialog.set_is_visible(False)
 
-        self._top_button.set_on_click(confirm, {'r': self._room_picker, \
-            'c': self._character_picker, \
-            'w': self._weapon_picker, \
-            'd': self })
-
+        # self._top_button.set_on_click(confirm, {'d': self })
 
         self._bottom_button.set_on_click(cancel, {'d': self })
 
@@ -83,3 +69,13 @@ class SuggestionDialog(Dialog):
             self._room_picker.deselect_all_except(-1)
             self._weapon_picker.deselect_all_except(-1)
         super(SuggestionDialog, self).set_is_visible(is_visible)
+
+    def get_suggestion(self):
+        room = self._room_picker.get_selected()
+        weapon = self._weapon_picker.get_selected()
+        character = self._character_picker.get_selected()
+
+        if room and character and weapon:
+            return Suggestion(room, weapon, character)
+        else:
+            return None

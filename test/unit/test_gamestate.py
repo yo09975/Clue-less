@@ -9,12 +9,12 @@ from src.suggestion import Suggestion
 from src.gamestatus import GameStatus
 
 
-test_card1 = Card('Test Card 1 Name', CardType.SUSPECT, 'TEST111ID')
-test_card2 = Card('Test Card 2 Name', CardType.SUSPECT, 'TEST222ID')
-test_card3 = Card('Test Card 3 Name', CardType.WEAPON, 'TEST333ID')
-test_card4 = Card('Test Card 4 Name', CardType.ROOM, 'TEST444ID')
-test_card5 = Card('Test Card 5 Name', CardType.ROOM, 'TEST555ID')
-test_card6 = Card('Test Card 6 Name', CardType.ROOM, 'TEST666ID')
+test_card1 = Card('Miss Scarlet', CardType.SUSPECT)
+test_card2 = Card('Colonel Mustard', CardType.SUSPECT)
+test_card3 = Card('Knife', CardType.WEAPON)
+test_card4 = Card('Dining Room', CardType.ROOM)
+test_card5 = Card('Kitchen', CardType.ROOM)
+test_card6 = Card('Library', CardType.ROOM)
 
 test_gamestate = GameState()
 player_list = PlayerList()

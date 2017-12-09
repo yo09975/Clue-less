@@ -1,9 +1,11 @@
 #!/usr/bin/env python3.6
 
-import src.network.common 
+from queue import Queue, Empty
+import src.network.common
 from src.network.message import Message, MessageType
 from src.network.singleton import Singleton
 from socket import *
+from threading import Thread
 
 class ClientNetworkInterface(metaclass=Singleton):
 
@@ -11,15 +13,18 @@ class ClientNetworkInterface(metaclass=Singleton):
     # Maximum amount of bytes to read per message
     BUFSIZE = 4096
     # ServerNetworkInterface port
-    PORT = 1337
+    PORT = 8080
     # Arbitrary socket timeout
-    TIMEOUT = 15
+    TIMEOUT = 60
 
     """ Constructor """
     def __init__(self):
         # Socket representing connection to a ServerNetworkInterface
         self._client_socket = None
+        # UUID to be set on connect
         self._uuid = None
+        # Queue that holds Messages from the Server
+        self._msg_queue = Queue()
 
     """ Getter for uuid """
     def get_uuid(self):
@@ -43,7 +48,8 @@ class ClientNetworkInterface(metaclass=Singleton):
         # Attempt to read the server's UUID assignment
         try:
             uuid_msg_string = self._client_socket.recv(self.BUFSIZE).decode()
-            uuid_msg = self.parse_message_string(uuid_msg_string)
+            print(uuid_msg_string)
+            uuid_msg = Message.deserialize(uuid_msg_string)
             if uuid_msg.get_msg_type() != MessageType.GIVE_UUID:
                 raise ValueError('Error: Expected GIVE_UUID message, got {uuid_msg.get_msg_type()}')
             self._uuid = uuid_msg.get_payload()
@@ -52,7 +58,22 @@ class ClientNetworkInterface(metaclass=Singleton):
             print(f'Error: Failed to receive UUID message from server before timeout')
             return False
 
+        t = Thread(target=self.listen, args=(self._msg_queue,), daemon=True)
+        t.start()
         return True
+
+    """ read thread's target function  """
+    def listen(self, queue):
+        while True:
+            # Blocking read from server
+            message_list = self._read_message()
+
+    """ Returns top Message on Queue, or None if queue was empty """
+    def get_message(self):
+        try:
+            return self._msg_queue.get_nowait()
+        except Empty:
+            return None
 
     """ Returns whether we have a valid connection to the server """
     def is_connected(self):
@@ -76,14 +97,14 @@ class ClientNetworkInterface(metaclass=Singleton):
             print('DEBUG: Outgoing UUID has to be corrected!')
 
         try:
-            self._client_socket.sendall(message.encode())
+            self._client_socket.sendall(f"{message.serialize()}\n".encode())
         except socket.timeout as e:
             print(f'Error: send_message timed out')
             return False
         return True
 
     """ Read message from a GameSocket """
-    def read_message(self):
+    def _read_message(self):
         if not self.is_connected():
             raise ConnectionError('Not connected to a server')
         try:
@@ -91,22 +112,16 @@ class ClientNetworkInterface(metaclass=Singleton):
         except socket.timeout as e:
             print(f'Error: read_message timed out')
             return None
-        return self.parse_message_string(message_string)
-
-    """ Parse messages of the form:
-        SenderUUID, MessageType, Payload
-        back into a Message object
-    """
-    def parse_message_string(self, message_string):
-        if not isinstance(message_string, str):
-            raise ValueError('Method expects string type parameter \'message_string\'')
-        msg_uuid, msg_type, msg_payload = message_string.split(',')
-        return Message(msg_uuid, MessageType(int(msg_type)), msg_payload)
+        msg_list = message_string.split('\n')
+        for msg in msg_list:
+            if msg != '':
+                self._msg_queue.put_nowait(Message.deserialize(msg))
+        return msg_list
 
 if __name__ == '__main__':
     try:
         c = ClientNetworkInterface()
-        c.connect('localhost')
+        c.connect('104.236.203.126')
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)

@@ -1,4 +1,5 @@
 """test_player.py"""
+import pytest
 from src.player import Player
 from src.card import Card
 from src.cardtype import CardType
@@ -7,10 +8,10 @@ from src.location import Location
 from src.playerstatus import PlayerStatus
 
 
-test_card1 = Card('Test Card 1 Name', CardType.SUSPECT, 'TEST111ID')
-test_card2 = Card('Test Card 2 Name', CardType.SUSPECT, 'TEST222ID')
-test_card3 = Card('Test Card 3 Name', CardType.WEAPON, 'TEST333ID')
-test_card4 = Card('Test Card 4 Name', CardType.ROOM, 'TEST444ID')
+test_card1 = Card('Miss Scarlet', CardType.SUSPECT)
+test_card2 = Card('Colonel Mustard', CardType.SUSPECT)
+test_card3 = Card('Knife', CardType.WEAPON)
+test_card4 = Card('Hall', CardType.ROOM)
 test_location1 = Location('Test Location 1', "1x1")
 test_location2 = Location('Test Location 2', "1x2")
 test_hand = Hand([test_card1, test_card2, test_card3, test_card4])
@@ -19,11 +20,13 @@ test_player = Player(test_card1)
 
 def test_init():
     assert type(test_player) is Player
-    assert test_player.get_card_id() == 'TEST111ID'
+    assert test_player.get_card_id() == 'Miss Scarlet'
+    with pytest.raises(ValueError):
+        bad_card_player = Player(test_card3)
 
 
 def test_str():
-    assert str(test_player) == 'Player is playing as: Test Card 1 Name'
+    assert str(test_player) == 'Player is playing as: Miss Scarlet'
 
 
 def test_set_and_get_hand():
@@ -38,7 +41,7 @@ def test_set_and_get_character():
     test_player.set_character(test_card2)
     assert test_player.get_character() == test_card2
     assert type(test_player.get_character()) == Card
-    assert str(test_player) == 'Player is playing as: Test Card 2 Name'
+    assert str(test_player) == 'Player is playing as: Colonel Mustard'
 
 
 def test_set_and_get_status():
@@ -62,10 +65,10 @@ def test_set_and_get_locations():
 
 
 def test_set_and_get_card_id():
-    assert test_player.get_card_id() == 'TEST111ID'
+    assert test_player.get_card_id() == 'Miss Scarlet'
     assert type(test_player.get_card_id()) is str
-    test_player.set_card_id('NEW CARD ID')
-    assert test_player.get_card_id() == 'NEW CARD ID'
+    test_player.set_card_id('Mrs. White')
+    assert test_player.get_card_id() == 'Mrs. White'
 
 
 def test_set_and_get_uuid():

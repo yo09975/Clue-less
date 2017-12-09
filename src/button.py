@@ -14,7 +14,8 @@ class Button(View):
 
         def disabled_default(args):
             args['b'].set_alpha(0)
-
+        self.fill(pygame.Color(255,0, 0))
+        self.set_alpha(100)
         self.set_disabled_action(disabled_default, {'b': self})
 
         # Use to debounce button

@@ -4,6 +4,9 @@ from src.dialog import Dialog
 from src.card import Card
 from src.cardtype import CardType
 from src.character_picker import CharacterPicker
+from src.network.message import Message
+from src.network.message import MessageType
+from src.network.clientnetworkinterface import ClientNetworkInterface as CNI
 import pygame
 import os
 import json
@@ -23,7 +26,7 @@ class CharacterPickerDialog(Dialog):
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
-                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                card = Card(c['card_id'], CardType.SUSPECT)
                 self._characters.append(card)
 
         # Build pickers
@@ -39,7 +42,9 @@ class CharacterPickerDialog(Dialog):
             if character:
                 print(character)
                 char_dialog.set_is_visible(False)
-                # TODO Send off suggestion message
+                cni = CNI()
+                msg = Message(cni.get_uuid(), MessageType.START_GAME, '')
+                cni.send_message(msg)
 
 
         self._top_button.set_is_visible(False)
@@ -64,6 +69,6 @@ class CharacterPickerDialog(Dialog):
     def set_unavailable_players(self, players):
         for p in players:
             for i, c in enumerate(self._characters):
-                if p.get_id() == c.get_id():
+                if p.get_card_id() == c.get_id():
                     self._character_picker.disable_button(i)
                 next
