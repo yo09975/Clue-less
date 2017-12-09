@@ -84,7 +84,6 @@ class GameApp:
         self._ref_board = {}
 
         # cross reference from card_id to avatar png
-        self._avatars = {}
 
         for l in locs['locations']:
             def location_hover(args):
@@ -101,10 +100,14 @@ class GameApp:
             location = Button(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
             location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state})
             # location.set_on_hover_action(location_hover, {'b': location})
-
             self._ref_board[l['key']] = location
+            self._disp_board[l['key']] = {}
             self._disp_board[l['key']]['button'] = location
+            print("x")
+
             self._disp_board[l['key']]['x'] = l['dims']['x']
+            print("y")
+
             self._disp_board[l['key']]['y'] = l['dims']['y']
 
             if l['type'] == "room":
@@ -118,12 +121,13 @@ class GameApp:
 
         # cross reference from card_id to avatar png
         self._avatars = {}
-
+        # init board to set up PlayerList
+        Board()
         for c in cards['cards']:
             if c['type'] == 'suspect':
+                self._avatars[c['card_id']] = {}
                 avatar = pygame.image.load('resources/' + c['avatar'])
                 self._avatars[c['card_id']]['png'] = avatar
-
         self.determine_avatar_locations()
 
         # Set up note card
@@ -352,9 +356,9 @@ class GameApp:
             clock.tick(60)
 
 
-    def determine_avatar_locations():
+    def determine_avatar_locations(self):
         room_occupants = {}
-
+        print("called")
         # Cycle through player list and build reference of occupants per rooms
         pl = PlayerList()
         for p in pl.get_players():
@@ -363,10 +367,16 @@ class GameApp:
                 room_occupants[loc] = []
             room_occupants[loc].append[p.get_card_id()]
 
+        print(room_occupants)
         # Calculate avatar location
         for loc in room_occupants:
+            print("x")
+
             for i, card_id in enumerate(room_occupants[loc]):
+                print("x")
+
                 coords = (self._disp_board[card_id]['x'], self._disp_board[card_id]['x'])
+                print("x")
                 self._avatars[card_id]['x'] = coords[0] + i % 3 * 52
                 self._avatars[card_id]['x'] = coords[0] + int(i/3) * 52
 
