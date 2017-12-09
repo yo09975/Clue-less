@@ -79,7 +79,7 @@ class GameController(object):
                 """
                 if msg_type == MessageType.LEAVE_GAME:
                     leaving_player = get_player_from_uuid(msg_uuid)
-                    leaving_player_character = leaving_player.get_character(
+                    leaving_player_character = leaving_player.get_card_id(
                         ).get_id()
                     leave_message = Message(sni.get_uuid(
                         ), MessageType.NOTIFY, f'{leaving_player_character} \
@@ -244,7 +244,7 @@ class GameController(object):
 
         # Tell all player's whose turn it is
         notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-            f'Currently taking their turn: {next_player.get_character()}')
+            f'Currently taking their turn: {next_player.get_card_id()}')
         sni.send_all(notify_msg)
 
         # Notify player it's their turn
