@@ -3,6 +3,7 @@ from src.hand import Hand
 from src.card import Card
 from src.location import Location
 from src.playerstatus import PlayerStatus
+from src.cardtype import CardType
 
 
 class Player(object):
@@ -28,14 +29,17 @@ class Player(object):
     def __init__(self, card: Card):
         """Constructor"""
         # print('Constructor in Player class')
-        self._player_hand = Hand([])
-        self._character = card
-        self._status = PlayerStatus.COMP
-        self._card_id = self.get_character().get_id()
-        self._uuid = None
-        self._current_location = None
-        self._previous_location = None
-        self._was_transferred = False
+        if not card.get_type() == CardType.SUSPECT:
+            raise ValueError('Player constructor requires a Suspect Card')
+        else:
+            self._player_hand = Hand([])
+            self._character = card
+            self._status = PlayerStatus.COMP
+            self._card_id = self.get_character().get_id()
+            self._uuid = None
+            self._current_location = None
+            self._previous_location = None
+            self._was_transferred = False
 
     def __str__(self) -> str:
         player_str = 'Player is playing as: '
