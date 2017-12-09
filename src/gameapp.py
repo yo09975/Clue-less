@@ -217,6 +217,17 @@ class GameApp:
                     self._message_log.append(text_message)
                     # Keep last 5 messages
                     self._message_log = self._message_log[-5:]
+                elif message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
+                    sugg = json.loads(message.get_payload())
+
+                    font = pygame.font.SysFont('Comic Sans MS', 16)
+                    msg_string = sugg['suggester'] + " suggests " + str(Suggestion.deserialize(sugg['suggestion']))
+                    text_message = font.render(msg_string, False, (0, 0, 0))
+                    self._message_log.append(text_message)
+                    # Keep last 5 messages
+                    self._message_log = self._message_log[-5:]
+
+
             else:
                 print('.', end='', flush=True)
 
