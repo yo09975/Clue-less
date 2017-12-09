@@ -101,6 +101,7 @@ class ClientNetworkInterface(metaclass=Singleton):
         except socket.timeout as e:
             print(f'Error: send_message timed out')
             return False
+        print("SEND_MSG: ", message)
         return True
 
     """ Read message from a GameSocket """

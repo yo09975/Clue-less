@@ -57,6 +57,8 @@ class GameController(object):
         sni = ServerNetworkInterface()
         sni.start()
 
+        pl = PlayerList()
+
         while(True):
 
             message = sni.get_message()
@@ -71,8 +73,6 @@ class GameController(object):
                 msg_payload = message.get_payload()
                 """Retrieve current game status for comparisons"""
                 state = self._current_game.get_state()
-
-                pl = PlayerList()
 
                 """Short circuits any additional processing if a player leaves the
                    game
@@ -130,6 +130,7 @@ class GameController(object):
 
                         if msg_type == MessageType.MOVEMENT:
                             move = Move.deserialize(msg_payload)
+                            print(self._move_engine.is_valid_move(move))
                             if self._move_engine.is_valid_move(move):
                                 self._move_engine.do_move(move)
                                 moving_player = self.get_player_from_uuid(msg_uuid)
@@ -183,15 +184,17 @@ class GameController(object):
                         elif msg_type == MessageType.END_TURN:
                             self.do_end_turn()
 
-    def get_player_from_uuid(msg_uuid: str) -> Player:
+    def get_player_from_uuid(self, msg_uuid: str) -> Player:
+        pl = PlayerList()
         players = pl.get_players()
         for p in players:
             if msg_uuid == p.get_uuid():
                 return p
 
-    def do_suggestion(
+    def do_suggestion(self,
         msg_uuid: str, msg_type: MessageType, msg_payload: str,
             suggesting_player: Player):
+        pl = PlayerList()
         suggestion = Suggestion.deserialize(msg_payload)
         if self._suggest_engine.is_valid_suggestion(
                 suggesting_player, suggestion):
@@ -211,7 +214,8 @@ class GameController(object):
                 self._move_engine._board.serialize())
             sni.send_all(update_board_message)
 
-    def do_accusation(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+    def do_accusation(self, msg_uuid: str, msg_type: MessageType, msg_payload: str):
+        pl = PlayerList()
         accusation = Suggestion.deserialize(msg_payload)
         players = pl.get_players()
         accuser = players[self._current_game.get_current_player()]
@@ -229,8 +233,9 @@ class GameController(object):
             else:
                 self.do_end_turn()
 
-    def do_end_turn(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+    def do_end_turn(self):
         # Changes GameState's _current_player
+        pl = PlayerList()
         self._current_game.next_turn()
         next_player = pl.get_player_by_index(self._current_game.get_current_player())
 
