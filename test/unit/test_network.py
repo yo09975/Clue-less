@@ -27,9 +27,14 @@ def test_send_message_to_server():
     assert cni.send_message(mess)
 
 
-def test_read_message_from_client():
+def test_get_message_from_client():
     client_uuid = sni.client_socket_list[0][0]
-    message = sni.read_message(client_uuid)
+    for i in range(1,6):
+        message = sni.get_message()
+        if not message:
+            time.sleep(1)
+        else:
+            break
     assert message is not None
     assert message.get_uuid() == client_uuid
     assert message.get_msg_type() == test_msg_type
@@ -41,7 +46,7 @@ def test_send_message_to_client():
     mess = Message(server_uuid, test_msg_type, test_msg_payload)
     assert sni.send_message(client_uuid, mess) == True
 
-def test_read_message_from_server():
+def test_get_message_from_server():
     server_uuid = sni.get_uuid()
     client_uuid = cni.get_uuid()
     """ Logic to wait 5 seconds for message to come through """
