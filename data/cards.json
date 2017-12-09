@@ -39,32 +39,38 @@
         {
             "card_id": "Miss Scarlet",
             "type": "suspect",
-            "start": "4x0"
+            "start": "4x0",
+            "avatar": "scarletpiece.png"
         },
         {
             "card_id": "Colonel Mustard",
             "type": "suspect",
-            "start": "6x2"
+            "start": "6x2",
+            "avatar": "mustardpiece.png"
         },
         {
             "card_id": "Mrs. White",
             "type": "suspect",
-            "start": "4x6"
+            "start": "4x6",
+            "avatar": "whitepiece.png"
         },
         {
             "card_id": "Mr. Green",
             "type": "suspect",
-            "start": "2x6"
+            "start": "2x6",
+            "avatar": "greenpiece.png"
         },
         {
             "card_id": "Mrs. Peacock",
             "type": "suspect",
-            "start": "0x4"
+            "start": "0x4",
+            "avatar": "peacockpiece.png"
         },
         {
             "card_id": "Professor Plum",
             "type": "suspect",
-            "start": "0x2"
+            "start": "0x2",
+            "avatar": "plumpiece.png"
         },
         {
             "card_id": "Knife",
