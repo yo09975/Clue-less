@@ -312,6 +312,6 @@ class GameApp:
 
 
 cni = CNI()
-cni.connect('localhost')
+cni.connect('104.236.203.126')
 game = GameApp()
 game.start()
