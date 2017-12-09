@@ -74,4 +74,4 @@ class CharacterPickerDialog(Dialog):
                 next
 
     def get_character(self):
-        return self._character_picker.get_selected()
+        return self._character_picker.get_selected().get_id()

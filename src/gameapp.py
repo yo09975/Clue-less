@@ -93,13 +93,13 @@ class GameApp:
 
             def location_click(args):
                 cni = CNI()
-                move = Move(args['c'].get_id(), args['loc_id'])
+                move = Move( args['p'].get_character(), args['loc_id'])
                 message = Message(cni.get_uuid(), MessageType.MOVEMENT, move.serialize())
                 cni.send_message(message)
                 args['s'] = PlayerState.POST_MOVE
 
             location = Button(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
-            location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state, 'c': self._my_character})
+            location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state, 'p': self._char_picker_dialog})
             # location.set_on_hover_action(location_hover, {'b': location})
             self._ref_board[l['key']] = location
             self._disp_board[l['key']] = {}
