@@ -45,8 +45,14 @@ class SuggestionEngine:
         """Iterating through each player in PlayerList. If they are able to refute, we send a SUGGESTION_REQUEST to
         them asking that they select a card with which to refute the suggestion. If a player cannot refute we let
         all users know they were unable to refute."""
+
+        # Put this into a dict because it doesn't deserialize into just a Suggestion
+        sugg_msg = {}
+        sugg_msg['suggester'] = suggesting_player.get_character().get_id()
+        sugg_msg['suggestion'] = suggestion.serialize()
+
         suggestion_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY,
-                                 suggesting_player.get_character().get_id() + suggestion.serialize())
+                                 json.dumps(sugg_msg))
         sni.send_all(suggestion_msg)
 
         while responder != suggesting_player:
