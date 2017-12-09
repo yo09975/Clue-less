@@ -120,6 +120,8 @@ class GameApp:
         with open(card_file) as data_file:
             cards = json.load(data_file)
 
+        self._board = Board()
+
         # cross reference from card_id to avatar png
         self._avatars = {}
         # init board to set up PlayerList
@@ -278,7 +280,8 @@ class GameApp:
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
-                        self._board = Board.deserialize(message.get_payload())
+                        print("Update board: ", message, message.get_payload())
+                        self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
                     elif message.get_msg_type() == MessageType.YOUR_TURN:
                         # Make it your turn
@@ -318,7 +321,7 @@ class GameApp:
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
-                        self._board = Board.deserialize(message.get_payload())
+                        self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
