@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.6
+
 """gamecontroller.py."""
 from src.gamestate import GameState
 from src.suggestion_engine import SuggestionEngine
@@ -49,126 +51,137 @@ class GameController(object):
         """Returns MovementEngine reference"""
         return self._move_engine
 
-    def read_message(self, message: Message):
+    def start(self):
         """Accepts a Message to process"""
-        """Tear apart message"""
-        msg_uuid = message.get_uuid()
-        msg_type = message.get_msg_type()
-        msg_payload = message.get_payload()
-        """Retrieve current game status for comparisons"""
-        state = self._current_game.get_state()
 
         sni = ServerNetworkInterface()
-        pl = PlayerList()
+        sni.start()
 
-        """Short circuits any additional processing if a player leaves the
-           game
-        """
-        if msg_type == MessageType.LEAVE_GAME:
-            leaving_player = get_player_from_uuid(msg_uuid)
-            leaving_player_character = leaving_player.get_character(
-                ).get_id()
-            leave_message = Message(sni.get_uuid(
-                ), MessageType.NOTIFY, f'{leaving_player_character} \
-                has left the game.')
-            sni.send_all(leave_message)
-            self._current_game.set_state(GameStatus.LOBBY)
+        while(sni.read_message()):
 
-        else:
+            # Iterate through PlayerList to receive
+            for c in sni.client_socket_list:
+                usr = c[0]
+                message = sni.read_message(usr)
 
-            # Initial game setup where players are choosing their characters
-            if state == GameStatus.LOBBY:
+                if message is not None:
+                    """Tear apart message"""
+                    msg_uuid = message.get_uuid()
+                    msg_type = message.get_msg_type()
+                    msg_payload = message.get_payload()
+                    """Retrieve current game status for comparisons"""
+                    state = self._current_game.get_state()
 
-                if msg_type == MessageType.SELECT_PIECE:
-                    card_id = msg_payload
-                    selected_player = pl.get_player(card_id)
-                    if selected_player.get_uuid() is None:
-                        selected_player.set_uuid(msg_uuid)
-                        selected_player.set_status(PlayerStatus.ACTIVE)
-                    update_message = Message(sni.get_uuid(
-                        ), MessageType.SEND_PLAYERS, pl.serialize())
-                    sni.send_all(update_message)
+                    pl = PlayerList()
 
-                if msg_type == MessageType.START_GAME:
-                    total_players = 0
-                    for p in pl.get_players():
-                        if p.get_status() == PlayerStatus.ACTIVE:
-                            total_players += 1
-                    if total_players > 2:
-                        self._current_game.start()
-                        # Get first player
-                        first_player = pl.get_player_by_index(self._current_game.get_current_player())
+                    """Short circuits any additional processing if a player leaves the
+                       game
+                    """
+                    if msg_type == MessageType.LEAVE_GAME:
+                        leaving_player = get_player_from_uuid(msg_uuid)
+                        leaving_player_character = leaving_player.get_character(
+                            ).get_id()
+                        leave_message = Message(sni.get_uuid(
+                            ), MessageType.NOTIFY, f'{leaving_player_character} \
+                            has left the game.')
+                        sni.send_all(leave_message)
+                        self._current_game.set_state(GameStatus.LOBBY)
 
-                        # Tell all player's whose turn it is
-                        notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-                            f'Currently taking their turn: {first_player.get_character()}')
-                        sni.send_all(notify_msg)
+                    else:
 
-                        # Notify player it's their turn
-                        your_turn_payload = json.dumps({ 'was_transferred': first_player.get_was_transferred() })
-                        your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
-                        sni.send_message(first_player.get_uuid(), your_turn_msg)
+                        # Initial game setup where players are choosing their characters
+                        if state == GameStatus.LOBBY:
 
-                        # Change GameStatus
-                        self._current_game.set_state(GameStatus.START_TURN)
+                            if msg_type == MessageType.SELECT_PIECE:
+                                card_id = msg_payload
+                                selected_player = pl.get_player(card_id)
+                                if selected_player.get_uuid() is None:
+                                    selected_player.set_uuid(msg_uuid)
+                                    selected_player.set_status(PlayerStatus.ACTIVE)
+                                update_message = Message(sni.get_uuid(
+                                    ), MessageType.SEND_PLAYERS, pl.serialize())
+                                sni.send_all(update_message)
 
-            # Start of a turn, player can Move, Suggestion, Accuse, or End Turn
-            elif state == GameStatus.START_TURN:
+                            if msg_type == MessageType.START_GAME:
+                                total_players = 0
+                                for p in pl.get_players():
+                                    if p.get_status() == PlayerStatus.ACTIVE:
+                                        total_players += 1
+                                if total_players > 2:
+                                    self._current_game.start()
+                                    # Get first player
+                                    first_player = pl.get_player_by_index(self._current_game.get_current_player())
 
-                if msg_type == MessageType.MOVEMENT:
-                    move = Move.deserialize(msg_payload)
-                    if self._move_engine.is_valid_move(move):
-                        self._move_engine.do_move(move)
-                        moving_player = self.get_player_from_uuid(msg_uuid)
-                        moving_player.set_was_transferred(False)
-                        self._current_game.set_state(GameStatus.POST_MOVE)
-                        update_board_message = Message(
-                            sni.get_uuid(), MessageType.UPDATE_BOARD,
-                            self._move_engine._board.serialize())
-                        sni.send_all(update_board_message)
+                                    # Tell all player's whose turn it is
+                                    notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
+                                        f'Currently taking their turn: {first_player.get_character()}')
+                                    sni.send_all(notify_msg)
 
-                elif msg_type == MessageType.SUGGESTION_MAKE:
-                    suggesting_player = self.get_player_from_uuid(msg_uuid)
-                    if suggesting_player.get_was_transferred():
-                        self.do_suggestion(
-                            msg_uuid, msg_type, msg_payload, suggesting_player)
+                                    # Notify player it's their turn
+                                    your_turn_payload = json.dumps({ 'was_transferred': first_player.get_was_transferred() })
+                                    your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
+                                    sni.send_message(first_player.get_uuid(), your_turn_msg)
 
-                elif msg_type == MessageType.ACCUSATION:
-                    self.do_accusation(msg_uuid, msg_type, msg_payload)
+                                    # Change GameStatus
+                                    self._current_game.set_state(GameStatus.START_TURN)
 
-                elif msg_type == MessageType.END_TURN:
-                    self.do_end_turn()
+                        # Start of a turn, player can Move, Suggestion, Accuse, or End Turn
+                        elif state == GameStatus.START_TURN:
 
-            # After a move, player can Suggestion, Accuse, or End Turn
-            elif state == GameStatus.POST_MOVE:
+                            if msg_type == MessageType.MOVEMENT:
+                                move = Move.deserialize(msg_payload)
+                                if self._move_engine.is_valid_move(move):
+                                    self._move_engine.do_move(move)
+                                    moving_player = self.get_player_from_uuid(msg_uuid)
+                                    moving_player.set_was_transferred(False)
+                                    self._current_game.set_state(GameStatus.POST_MOVE)
+                                    update_board_message = Message(
+                                        sni.get_uuid(), MessageType.UPDATE_BOARD,
+                                        self._move_engine._board.serialize())
+                                    sni.send_all(update_board_message)
 
-                if msg_type == MessageType.SUGGESTION_MAKE:
-                    suggesting_player = self.get_player_from_uuid(msg_uuid)
-                    self.do_suggestion(
-                        msg_uuid, msg_type, msg_payload, suggesting_player)
+                            elif msg_type == MessageType.SUGGESTION_MAKE:
+                                suggesting_player = self.get_player_from_uuid(msg_uuid)
+                                if suggesting_player.get_was_transferred():
+                                    self.do_suggestion(
+                                        msg_uuid, msg_type, msg_payload, suggesting_player)
 
-                elif msg_type == MessageType.ACCUSATION:
-                    self.do_accusation(msg_uuid, msg_type, msg_payload)
+                            elif msg_type == MessageType.ACCUSATION:
+                                self.do_accusation(msg_uuid, msg_type, msg_payload)
 
-                elif msg_type == MessageType.END_TURN:
-                    self.do_end_turn()
+                            elif msg_type == MessageType.END_TURN:
+                                self.do_end_turn()
 
-            # After suggestion is made, waiting for suggestion response
-            elif state == GameStatus.WAIT_SUGG:
+                        # After a move, player can Suggestion, Accuse, or End Turn
+                        elif state == GameStatus.POST_MOVE:
 
-                if msg_type == MessageType.SUGGESTION_RESPONSE:
-                    card = Card.deserialize(payload)
-                    self._suggest_engine.answer_suggestion(card)
-                    self._current_game.set_state(GameStatus.POST_SUGG)
+                            if msg_type == MessageType.SUGGESTION_MAKE:
+                                suggesting_player = self.get_player_from_uuid(msg_uuid)
+                                self.do_suggestion(
+                                    msg_uuid, msg_type, msg_payload, suggesting_player)
 
-            # After a suggestion is answered, player can Accuse, or End Turn
-            elif state == GameStatus.POST_SUGG:
+                            elif msg_type == MessageType.ACCUSATION:
+                                self.do_accusation(msg_uuid, msg_type, msg_payload)
 
-                if msg_type == MessageType.ACCUSATION:
-                    self.do_accusation(msg_uuid, msg_type, msg_payload)
+                            elif msg_type == MessageType.END_TURN:
+                                self.do_end_turn()
 
-                elif msg_type == MessageType.END_TURN:
-                    self.do_end_turn()
+                        # After suggestion is made, waiting for suggestion response
+                        elif state == GameStatus.WAIT_SUGG:
+
+                            if msg_type == MessageType.SUGGESTION_RESPONSE:
+                                card = Card.deserialize(payload)
+                                self._suggest_engine.answer_suggestion(card)
+                                self._current_game.set_state(GameStatus.POST_SUGG)
+
+                        # After a suggestion is answered, player can Accuse, or End Turn
+                        elif state == GameStatus.POST_SUGG:
+
+                            if msg_type == MessageType.ACCUSATION:
+                                self.do_accusation(msg_uuid, msg_type, msg_payload)
+
+                            elif msg_type == MessageType.END_TURN:
+                                self.do_end_turn()
 
     def get_player_from_uuid(msg_uuid: str) -> Player:
         players = pl.get_players()
@@ -233,3 +246,12 @@ class GameController(object):
 
         # Change GameStatus
         self._current_game.set_state(GameStatus.START_TURN)
+
+if __name__ == '__main__':
+    try:
+        gc = GameController()
+        gc.start()
+    except KeyboardInterrupt:
+        print('Interrupted')
+        exit(0)
+
