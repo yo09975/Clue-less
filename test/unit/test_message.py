@@ -28,3 +28,9 @@ def test_get_payload():
 	assert test_message_suggestion.get_payload() == test_payload
 	assert test_message_suggestion_response.get_payload() == test_payload
 	assert test_message_accusation.get_payload() == test_payload
+
+def test_serialize():
+	message_parsed = Message.deserialize(test_message_movement.serialize())
+    assert message_parsed.get_uuid() == test_message_movement.get_uuid()
+    assert message_parsed.get_msg_type() == test_message_movement.get_msg_type()
+    assert message_parsed.get_payload() == test_message_movement.get_payload()
