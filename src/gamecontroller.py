@@ -107,7 +107,7 @@ class GameController(object):
                             for p in pl.get_players():
                                 if p.get_status() == PlayerStatus.ACTIVE:
                                     total_players += 1
-                            if total_players > 2:
+                            if total_players >= 2:
                                 self._current_game.start()
                                 # Get first player
                                 first_player = pl.get_player_by_index(self._current_game.get_current_player())
