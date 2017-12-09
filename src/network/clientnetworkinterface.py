@@ -14,8 +14,6 @@ class ClientNetworkInterface(metaclass=Singleton):
     BUFSIZE = 4096
     # ServerNetworkInterface port
     PORT = 8080
-    # Arbitrary socket timeout
-    TIMEOUT = 60
 
     """ Constructor """
     def __init__(self):
@@ -39,7 +37,6 @@ class ClientNetworkInterface(metaclass=Singleton):
         # Create a TCP socket connection to server
         try:
             self._client_socket = create_connection((ip, self.PORT), 5)
-            self._client_socket.settimeout(self.TIMEOUT)
         except ConnectionError as e:
             print(f'Error: Failed to connect to ({ip},{self.PORT}).')
             print(f'Exception is {e}.')
