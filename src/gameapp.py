@@ -301,7 +301,7 @@ class GameApp:
                 self._end_turn_button.draw(pygame.mouse, self._gameDisplay)
 
                 for l in self._disp_board:
-                    self._disp_board[l].draw(pygame.mouse, self._gameDisplay)
+                    self._disp_board[l]['button'].draw(pygame.mouse, self._gameDisplay)
 
                 # Dialogs
                 self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
