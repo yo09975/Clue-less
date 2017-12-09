@@ -122,7 +122,8 @@ class GameApp:
         # cross reference from card_id to avatar png
         self._avatars = {}
         # init board to set up PlayerList
-        Board()
+        pl = PlayerList()
+        pl.setup()
         for c in cards['cards']:
             if c['type'] == 'suspect':
                 self._avatars[c['card_id']] = {}
@@ -358,28 +359,24 @@ class GameApp:
 
     def determine_avatar_locations(self):
         room_occupants = {}
-        print("called")
+
         # Cycle through player list and build reference of occupants per rooms
         pl = PlayerList()
         for p in pl.get_players():
             loc = p.get_current_location()
             if loc not in room_occupants:
                 room_occupants[loc] = []
-            room_occupants[loc].append[p.get_card_id()]
 
-        print(room_occupants)
+            room_occupants[loc].append(p.get_card_id())
+
         # Calculate avatar location
         for loc in room_occupants:
-            print("x")
-
+            coords = (self._disp_board[loc]['x'], self._disp_board[loc]['y'])
             for i, card_id in enumerate(room_occupants[loc]):
-                print("x")
+                self._avatars[card_id]['x'] = coords[0] + i % 3 * 52 + 10
+                self._avatars[card_id]['y'] = coords[1] + int(i/3) * 52
 
-                coords = (self._disp_board[card_id]['x'], self._disp_board[card_id]['x'])
-                print("x")
-                self._avatars[card_id]['x'] = coords[0] + i % 3 * 52
-                self._avatars[card_id]['x'] = coords[0] + int(i/3) * 52
-
+        print(self._avatars)
 
 cni = CNI()
 cni.connect('104.236.203.126')
