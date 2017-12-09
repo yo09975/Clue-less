@@ -52,7 +52,7 @@ class Message:
     """ Constructor """
     def __init__(self, uuid, msg_type, payload):
         """ Unique identifier for the originator of the Message """
-        self._uuid = uuid
+        self._uuid = str(uuid)
         """ msg_type must be in the MessageType enum """
         if isinstance(msg_type, MessageType):
             self._msg_type = msg_type
