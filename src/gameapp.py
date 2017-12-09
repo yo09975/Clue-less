@@ -200,7 +200,7 @@ class GameApp:
                         pl = PlayerList.deserialize(message.get_payload())
                         player_list = pl.get_players()
                         unavailable = []
-                        for p in player_list():
+                        for p in player_list:
                             if p.get_uuid() is not None and p.get_uuid() != cni.get_uuid():
                                 unavailable.append(p)
 
@@ -208,7 +208,7 @@ class GameApp:
 
                         player_count = 0
 
-                        for p in player_list():
+                        for p in player_list:
                             if p.get_uuid() is not None:
                                 player_count += 1
 
