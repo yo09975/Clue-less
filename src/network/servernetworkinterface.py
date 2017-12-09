@@ -16,7 +16,7 @@ class ServerNetworkInterface(metaclass=Singleton):
     """
 
     # Class scoped variable for number of expected player connections
-    MIN_PLAYERS = 6
+    MIN_PLAYERS = 2
     BUFSIZE = 4096
     PORT = 8080
 
