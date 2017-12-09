@@ -71,7 +71,6 @@ class GameApp:
         self._char_picker_dialog.set_is_visible(True)
 
 
-
         # Set up board
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, '../data/locations.json')
@@ -223,7 +222,7 @@ class GameApp:
                 self._char_picker_dialog.draw(pygame.mouse, self._gameDisplay)
 
             elif self._state == PlayerState.WAIT_FOR_TURN:
-                # Display suggestion, accusation, board, and next turn butotns
+                # Display suggestion, accusation, board, and next turn buttons
                 if message is not None:
                     if message.get_msg_type() == MessageType.SUGGESTION_REQUEST:
                         self._state = PlayerState.ANSWER_SUGGESTION

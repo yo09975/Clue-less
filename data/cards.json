@@ -1,42 +1,6 @@
 {
     "cards": [
         {
-            "card_id": "Hall",
-            "type": "room"
-        },
-        {
-            "card_id": "Lounge",
-            "type": "room"
-        },
-        {
-            "card_id": "Dining Room",
-            "type": "room"
-        },
-        {
-            "card_id": "Kitchen",
-            "type": "room"
-        },
-        {
-            "card_id": "Ballroom",
-            "type": "room"
-        },
-        {
-            "card_id": "Conservatory",
-            "type": "room"
-        },
-        {
-            "card_id": "Billiard Room",
-            "type": "room"
-        },
-        {
-            "card_id": "Library",
-            "type": "room"
-        },
-        {
-            "card_id": "Study",
-            "type": "room"
-        },
-        {
             "card_id": "Miss Scarlet",
             "type": "suspect",
             "start": "4x0"
@@ -89,6 +53,42 @@
         {
             "card_id": "Wrench",
             "type": "weapon"
+        },
+        {
+            "card_id": "Hall",
+            "type": "room"
+        },
+        {
+            "card_id": "Lounge",
+            "type": "room"
+        },
+        {
+            "card_id": "Dining Room",
+            "type": "room"
+        },
+        {
+            "card_id": "Kitchen",
+            "type": "room"
+        },
+        {
+            "card_id": "Ballroom",
+            "type": "room"
+        },
+        {
+            "card_id": "Conservatory",
+            "type": "room"
+        },
+        {
+            "card_id": "Billiard Room",
+            "type": "room"
+        },
+        {
+            "card_id": "Library",
+            "type": "room"
+        },
+        {
+            "card_id": "Study",
+            "type": "room"
         }
     ]
 }

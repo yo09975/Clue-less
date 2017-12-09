@@ -103,6 +103,9 @@ class GameState(object):
                 sni.send_message(to_uuid, Message(
                     sni.get_uuid(), MessageType.PLAYER_HAND, msg_payload))
 
+        # Marking note card with dealt hand
+
+
         # Reset self._current_player
         self._current_player = len(pl) - 1
         first_player = self.next_turn()
