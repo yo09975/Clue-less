@@ -92,11 +92,12 @@ class GameApp:
                 args['b'].set_alpha(100)
 
             def location_click(args):
+
+                args['s'] = PlayerState.POST_MOVE
                 cni = CNI()
-                move = Move( args['p'].get_character(), args['loc_id'])
+                move = Move(args['p'].get_character(), args['loc_id'])
                 message = Message(cni.get_uuid(), MessageType.MOVEMENT, move.serialize())
                 cni.send_message(message)
-                args['s'] = PlayerState.POST_MOVE
 
             location = Button(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
             location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state, 'p': self._char_picker_dialog})
@@ -295,6 +296,12 @@ class GameApp:
                     self._state = PlayerState.WAIT_FOR_TURN
 
             elif self._state == PlayerState.MY_TURN:
+                if message is not None:
+                    if message.get_msg_type() == MessageType.UPDATE_BOARD:
+                        # Update board
+                        self._board = self._board.deserialize(message.get_payload())
+                        self.determine_avatar_locations()
+
                 # Wait for button action to change game state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
@@ -339,11 +346,19 @@ class GameApp:
 
 
             elif self._state == PlayerState.POST_MOVE:
+                if message is not None:
+                    if message.get_msg_type() == MessageType.UPDATE_BOARD:
+                        # Update board
+                        self._board = self._board.deserialize(message.get_payload())
+                        self.determine_avatar_locations()
+
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
                 elif self._sugg_dialog.get_success():
                     self._state = PlayerState.POST_SUGGESTION
+
+
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
