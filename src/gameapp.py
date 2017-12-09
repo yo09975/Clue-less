@@ -301,6 +301,7 @@ class GameApp:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                        self._state = PlayerState.POST_MOVE
 
                 # Wait for button action to change game state
                 if self._acc_dialog.get_success():
