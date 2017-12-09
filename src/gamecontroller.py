@@ -130,6 +130,7 @@ class GameController(object):
 
                         if msg_type == MessageType.MOVEMENT:
                             move = Move.deserialize(msg_payload)
+                            print(self._move_engine.is_valid_move(move))
                             if self._move_engine.is_valid_move(move):
                                 self._move_engine.do_move(move)
                                 moving_player = self.get_player_from_uuid(msg_uuid)
@@ -229,7 +230,11 @@ class GameController(object):
             else:
                 self.do_end_turn()
 
+<<<<<<< HEAD
     def do_end_turn():
+=======
+    def do_end_turn(self):
+>>>>>>> 065e19bd26be474522671f70647135555bee7288
         # Changes GameState's _current_player
         self._current_game.next_turn()
         next_player = pl.get_player_by_index(self._current_game.get_current_player())

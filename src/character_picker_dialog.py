@@ -72,3 +72,6 @@ class CharacterPickerDialog(Dialog):
                 if p.get_card_id() == c.get_id():
                     self._character_picker.disable_button(i)
                 next
+
+    def get_character(self):
+        return self._character_picker.get_selected()

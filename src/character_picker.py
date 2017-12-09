@@ -38,7 +38,6 @@ class CharacterPicker(View):
                     cni.send_message(msg)
                     print("send msg: ", msg)
                     # Prevent user from picking other players
-                    picker.disable_all_except(index)
                     try:
                         picker._on_change_function(picker._on_change_args)
                     except AttributeError:

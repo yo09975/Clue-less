@@ -22,6 +22,8 @@ from src.playerlist import PlayerList
 from src.board import Board
 from src.move import Move
 from src.hand import Hand
+from src.cardtype import CardType
+from src.card import Card
 import time
 
 
@@ -72,7 +74,6 @@ class GameApp:
         self._char_picker_dialog.set_is_visible(True)
 
 
-
         # Set up board
         dir = os.path.dirname(__file__)
         location_file = os.path.join(dir, '../data/locations.json')
@@ -82,7 +83,7 @@ class GameApp:
 
         self._disp_board = {}
         self._ref_board = {}
-
+        self._my_character = Card("placeholder", CardType.SUSPECT)
         # cross reference from card_id to avatar png
 
         for l in locs['locations']:
@@ -92,13 +93,13 @@ class GameApp:
 
             def location_click(args):
                 cni = CNI()
-                move = Move(cni.get_uuid(), args['loc_id'])
+                move = Move(args['c'].get_id(), args['loc_id'])
                 message = Message(cni.get_uuid(), MessageType.MOVEMENT, move.serialize())
                 cni.send_message(message)
                 args['s'] = PlayerState.POST_MOVE
 
             location = Button(l['dims']['x'], l['dims']['y'], l['dims']['width'], l['dims']['height'])
-            location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state})
+            location.set_on_click(location_click, {'loc_id': l['key'], 's': self._state, 'c': self._my_character})
             # location.set_on_hover_action(location_hover, {'b': location})
             self._ref_board[l['key']] = location
             self._disp_board[l['key']] = {}
@@ -257,6 +258,8 @@ class GameApp:
                         # Start game
                         self._state = PlayerState.WAIT_FOR_TURN
                         self._hand = Hand.deserialize(message.get_payload())
+                        print("get char", self._char_picker_dialog.get_character())
+                        self._my_character = self._char_picker_dialog.get_character()
 
                 # Display player picker
                 self._char_picker_dialog.draw(pygame.mouse, self._gameDisplay)
