@@ -13,7 +13,7 @@ class ClientNetworkInterface(metaclass=Singleton):
     # Maximum amount of bytes to read per message
     BUFSIZE = 4096
     # ServerNetworkInterface port
-    PORT = 80
+    PORT = 8080
     # Arbitrary socket timeout
     TIMEOUT = 60
 
@@ -66,8 +66,7 @@ class ClientNetworkInterface(metaclass=Singleton):
     def listen(self, queue):
         while True:
             # Blocking read from server
-            message = self._read_message()
-            queue.put_nowait(message)
+            message_list = self._read_message()
 
     """ Returns top Message on Queue, or None if queue was empty """
     def get_message(self):
@@ -98,7 +97,7 @@ class ClientNetworkInterface(metaclass=Singleton):
             print('DEBUG: Outgoing UUID has to be corrected!')
 
         try:
-            self._client_socket.sendall(message.serialize().encode())
+            self._client_socket.sendall(f"{message.serialize()}\n".encode())
         except socket.timeout as e:
             print(f'Error: send_message timed out')
             return False
@@ -113,13 +112,11 @@ class ClientNetworkInterface(metaclass=Singleton):
         except socket.timeout as e:
             print(f'Error: read_message timed out')
             return None
-        return Message.deserialize(message_string)
-
-    """ Parse messages of the form:
-        SenderUUID, MessageType, Payload
-        back into a Message object
-    """
-
+        msg_list = message_string.split('\n')
+        for msg in msg_list:
+            if msg != '':
+                self._msg_queue.put_nowait(Message.deserialize(msg))
+        return msg_list
 
 if __name__ == '__main__':
     try:
