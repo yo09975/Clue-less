@@ -1,5 +1,9 @@
 from src.toggle import Toggle
 from src.view import View
+from src.network.message import Message
+from src.network.message import MessageType
+from src.network.clientnetworkinterface import ClientNetworkInterface as CNI
+
 import pygame
 
 class CharacterPicker(View):
@@ -24,9 +28,17 @@ class CharacterPicker(View):
                 toggle = args['t']
                 picker = args['p']
                 index = args['i']
+
                 if toggle.get_selected():
                     picker.deselect_all_except(index)
                     # Call the on_changed function
+                    # Send select piece message
+                    cni = CNI()
+                    msg = Message(cni.get_uuid(), MessageType.SELECT_PIECE, args['c'])
+                    cni.send_message(msg)
+                    print("send msg: ", msg)
+                    # Prevent user from picking other players
+                    picker.disable_all_except(index)
                     try:
                         picker._on_change_function(picker._on_change_args)
                     except AttributeError:
@@ -45,7 +57,7 @@ class CharacterPicker(View):
                 args['b'].set_alpha(255)
                 args['b'].fill(pygame.Color(121, 121, 121))
 
-            toggle.set_on_click(click_action, {'t': toggle, 'p': self, 'i': i})
+            toggle.set_on_click(click_action, {'t': toggle, 'p': self, 'i': i, 'c': c.get_id()})
             toggle.set_default_action(default_action, {'t': toggle})
             toggle.set_disabled_action(disabled_action, {'b': toggle})
             self._toggles.append(toggle)

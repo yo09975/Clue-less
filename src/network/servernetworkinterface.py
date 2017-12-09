@@ -98,18 +98,9 @@ class ServerNetworkInterface(metaclass=Singleton):
         except socket.timeout as e:
             print(f'Error: read_message timed out')
             return None
-        return self.parse_message_string(message_string)
-
-    """ Parse messages of the form:
-        SenderUUID,MessageType,Payload
-        back into a Message object
-    """
-    def parse_message_string(self, message_string):
-        if not isinstance(message_string, str):
-            raise ValueError('Method expects string type parameter \'message_string\'')
         return Message.deserialize(message_string)
 
-    """ Send message to all GameSocket """
+        """ Send message to all GameSocket """
     def send_all(self, message):
         status = True
         for conn in self.client_socket_list:
