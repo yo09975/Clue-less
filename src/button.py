@@ -62,11 +62,11 @@ class Button(View):
             pass
 
     def click(self):
-        # try:
-        self._click_action(self._click_args)
-        # except AttributeError:
-        #     # If click isn't defined, hover
-        #     self.hover()
+        try:
+            self._click_action(self._click_args)
+        except AttributeError:
+            # If click isn't defined, hover
+            self.hover()
 
     def hover(self):
         try:

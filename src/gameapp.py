@@ -24,6 +24,7 @@ from src.move import Move
 from src.hand import Hand
 from src.cardtype import CardType
 from src.card import Card
+from src.suggestion import Suggestion
 import time
 
 
@@ -52,7 +53,7 @@ class GameApp:
                 sugg_dialog.set_success(True)
                 cni = CNI()
                 message = Message(cni.get_uuid(), args['mt'], sugg.serialize())
-                cni.send(message)
+                cni.send_message(message)
 
         self._sugg_dialog = SD(60, 60)
         self._sugg_dialog.set_is_visible(False)
@@ -61,7 +62,7 @@ class GameApp:
         # Set up Accusation Dialog
         self._acc_dialog = SD(60, 60)
         self._acc_dialog.set_is_visible(False)
-        self._sugg_dialog.get_top_button().set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.ACCUSATION})
+        self._acc_dialog.get_top_button().set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.ACCUSATION})
 
 
         # Set up Suggestion Response Dialog
@@ -161,9 +162,9 @@ class GameApp:
             cni = CNI()
             message = Message(cni.get_uuid(), MessageType.END_TURN, "")
             cni.send_message(message)
-            args['s'] = PlayerState.WAIT_FOR_TURN
+            args['s']._state = PlayerState.WAIT_FOR_TURN
 
-        self._end_turn_button.set_on_click(end_turn, {'s': self._state})
+        self._end_turn_button.set_on_click(end_turn, {'s': self})
 
         # Set up leave game button
         self._leave_game_button = Button(1236, 831, 170, 65)
@@ -216,6 +217,17 @@ class GameApp:
                     self._message_log.append(text_message)
                     # Keep last 5 messages
                     self._message_log = self._message_log[-5:]
+                elif message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
+                    sugg = json.loads(message.get_payload())
+
+                    font = pygame.font.SysFont('Comic Sans MS', 16)
+                    msg_string = sugg['suggester'] + " suggests " + str(Suggestion.deserialize(sugg['suggestion']))
+                    text_message = font.render(msg_string, False, (0, 0, 0))
+                    self._message_log.append(text_message)
+                    # Keep last 5 messages
+                    self._message_log = self._message_log[-5:]
+
+
             else:
                 print('.', end='', flush=True)
 
@@ -301,6 +313,7 @@ class GameApp:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                        self._state = PlayerState.POST_MOVE
 
                 # Wait for button action to change game state
                 if self._acc_dialog.get_success():

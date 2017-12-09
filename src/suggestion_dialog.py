@@ -4,6 +4,7 @@ from src.dialog import Dialog
 from src.picker import Picker
 from src.card import Card
 from src.cardtype import CardType
+from src.suggestion import Suggestion
 import pygame
 import os
 import json

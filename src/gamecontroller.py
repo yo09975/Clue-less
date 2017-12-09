@@ -79,7 +79,7 @@ class GameController(object):
                 """
                 if msg_type == MessageType.LEAVE_GAME:
                     leaving_player = get_player_from_uuid(msg_uuid)
-                    leaving_player_character = leaving_player.get_character(
+                    leaving_player_character = leaving_player.get_card_id(
                         ).get_id()
                     leave_message = Message(sni.get_uuid(
                         ), MessageType.NOTIFY, f'{leaving_player_character} \
@@ -195,6 +195,7 @@ class GameController(object):
         msg_uuid: str, msg_type: MessageType, msg_payload: str,
             suggesting_player: Player):
         pl = PlayerList()
+        sni = ServerNetworkInterface()
         suggestion = Suggestion.deserialize(msg_payload)
         if self._suggest_engine.is_valid_suggestion(
                 suggesting_player, suggestion):
@@ -216,6 +217,7 @@ class GameController(object):
 
     def do_accusation(self, msg_uuid: str, msg_type: MessageType, msg_payload: str):
         pl = PlayerList()
+        sni = ServerNetworkInterface()
         accusation = Suggestion.deserialize(msg_payload)
         players = pl.get_players()
         accuser = players[self._current_game.get_current_player()]
@@ -223,7 +225,7 @@ class GameController(object):
             self._current_game.set_state(GameStatus.LOBBY)
         else:
             accuser.set_status(PlayerStatus.LOST)
-            next_player = self._current_game.next_turn()
+            # next_player = self._current_game.next_turn()
             # Check to see if everyone has lost
             if next_player is None:
                 all_lost_message = Message(
@@ -236,12 +238,13 @@ class GameController(object):
     def do_end_turn(self):
         # Changes GameState's _current_player
         pl = PlayerList()
+        sni = ServerNetworkInterface()
         self._current_game.next_turn()
         next_player = pl.get_player_by_index(self._current_game.get_current_player())
 
         # Tell all player's whose turn it is
         notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-            f'Currently taking their turn: {next_player.get_character()}')
+            f'Currently taking their turn: {next_player.get_card_id()}')
         sni.send_all(notify_msg)
 
         # Notify player it's their turn
