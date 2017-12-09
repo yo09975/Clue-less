@@ -206,6 +206,14 @@ class GameApp:
 
                         self._char_picker_dialog.set_unavailable_players(unavailable)
 
+                        player_count = 0
+
+                        for p in player_list():
+                            if p.get_uuid() is not None:
+                                player_count += 1
+
+                        self._char_picker_dialog.get_bottom_button().set_enabled(player_count >= 2)
+
                     elif message.get_msg_type() == MessageType.PLAYER_HAND:
                         # Start game
                         self._state = PlayerState.WAIT_FOR_TURN
