@@ -35,6 +35,7 @@ class GameApp:
         self._gameDisplay = pygame.display.set_mode((1410, 900))
         self._crashed = False
 
+        self._message_log = []
 
         self._background = pygame.image.load('resources/gameplaygui.jpg')
 
@@ -168,6 +169,10 @@ class GameApp:
             message = cni.get_message()
             if message is not None:
                 print('\nReceived msg:', message.get_msg_type())
+                if message.get_msg_type() == MessageType.NOTIFY
+                    self._message_log.append(message.get_payload())
+                    # Keep last 6 messages
+                    self._message_log = self._message_log[-5:]
             else:
                 print('.', end='', flush=True)
 
@@ -181,6 +186,12 @@ class GameApp:
 
             # Always draw game pieces on the game board
             # TODO render game pieces
+
+            # Always render message log
+            for i, msg in enumerate(self._message_log):
+                self._font = pygame.font.SysFont('Comic Sans MS', 16)
+                msgs = self._font.render(msg, False, (0, 0, 0))
+                self._gameDisplay.blit(msgs, (20, 775 + 20 * i))
 
             # Display views based on state
             if self._state == PlayerState.SELECT_PLAYER:
