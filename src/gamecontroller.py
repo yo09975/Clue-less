@@ -225,7 +225,7 @@ class GameController(object):
             self._current_game.set_state(GameStatus.LOBBY)
         else:
             accuser.set_status(PlayerStatus.LOST)
-            next_player = self._current_game.next_turn()
+            # next_player = self._current_game.next_turn()
             # Check to see if everyone has lost
             if next_player is None:
                 all_lost_message = Message(
