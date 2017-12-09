@@ -26,7 +26,7 @@ class CharacterPickerDialog(Dialog):
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
-                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                card = Card(c['card_id'], CardType.SUSPECT)
                 self._characters.append(card)
 
         # Build pickers

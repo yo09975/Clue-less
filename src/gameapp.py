@@ -168,7 +168,7 @@ class GameApp:
             message = cni.get_message()
             if message is not None:
                 print('\n', message.get_msg_type(), message.get_payload())
-                if message.get_msg_type() == MessageType.NOTIFY
+                if message.get_msg_type() == MessageType.NOTIFY:
                     font = pygame.font.SysFont('Comic Sans MS', 16)
                     text_message = font.render(message.get_payload(), False, (0, 0, 0))
                     self._message_log.append(text_message)

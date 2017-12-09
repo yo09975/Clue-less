@@ -28,13 +28,13 @@ class AnswerSuggestionDialog(Dialog):
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
-                card = Card(c['name'], CardType.SUSPECT, c['key'])
+                card = Card(c['card_id'], CardType.SUSPECT)
                 self._characters.append(card)
             elif c['type'] == 'weapon':
-                card = Card(c['name'], CardType.WEAPON, c['key'])
+                card = Card(c['card_id'], CardType.WEAPON)
                 self._weapons.append(card)
             else:
-                card = Card(c['name'], CardType.ROOM, c['key'])
+                card = Card(c['card_id'], CardType.ROOM)
                 self._rooms.append(card)
 
         def clear_other_pickers(args):
