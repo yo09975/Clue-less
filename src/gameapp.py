@@ -173,7 +173,17 @@ class GameApp:
                     font = pygame.font.SysFont('Comic Sans MS', 16)
                     text_message = font.render(message.get_payload(), False, (0, 0, 0))
                     self._message_log.append(text_message)
-                    # Keep last 6 messages
+                    # Keep last 5 messages
+                    self._message_log = self._message_log[-5:]
+                elif message.get_msg_type() == MessageType.PLAYER_HAND:
+                    font = pygame.font.SysFont('Comic Sans MS', 16)
+                    hand = Hand.deserialize(message.get_payload())
+                    msg_string = "Your cards are "
+                    for c in hand.get_cards():
+                        msg_string += " ," + c.get_id()
+                    text_message = font.render(msg_string, False, (0, 0, 0))
+                    self._message_log.append(text_message)
+                    # Keep last 5 messages
                     self._message_log = self._message_log[-5:]
             else:
                 print('.', end='', flush=True)
