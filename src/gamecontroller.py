@@ -57,6 +57,8 @@ class GameController(object):
         sni = ServerNetworkInterface()
         sni.start()
 
+        pl = PlayerList()
+
         while(True):
 
             message = sni.get_message()
