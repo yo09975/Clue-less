@@ -115,3 +115,13 @@ def test_get_player():
     assert test_plist1.get_player('BAD ID') is None
     assert test_plist1.get_player('Professor Plum') == test_player3
     assert type(test_plist1.get_player('Professor Plum')) is Player
+
+def test_setup():
+    test_plist1.clear()
+    test_plist1.setup()
+    assert test_plist1.get_player_by_index(0).get_current_location() == "4x0"
+    assert test_plist1.get_player_by_index(1).get_current_location() == "6x2"
+    assert test_plist1.get_player_by_index(2).get_current_location() == "4x6"
+    assert test_plist1.get_player_by_index(3).get_current_location() == "2x6"
+    assert test_plist1.get_player_by_index(4).get_current_location() == "0x4"
+    assert test_plist1.get_player_by_index(5).get_current_location() == "0x2"
