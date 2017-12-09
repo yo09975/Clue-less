@@ -53,7 +53,7 @@ class GameApp:
                 sugg_dialog.set_success(True)
                 cni = CNI()
                 message = Message(cni.get_uuid(), args['mt'], sugg.serialize())
-                cni.send(message)
+                cni.send_message(message)
 
         self._sugg_dialog = SD(60, 60)
         self._sugg_dialog.set_is_visible(False)
