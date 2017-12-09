@@ -114,7 +114,7 @@ class GameController(object):
 
                                 # Tell all player's whose turn it is
                                 notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-                                    f'Currently taking their turn: {first_player.get_character()}')
+                                    f'Currently taking their turn: {first_player.get_card_id()}')
                                 sni.send_all(notify_msg)
 
                                 # Notify player it's their turn
