@@ -197,7 +197,7 @@ class GameApp:
                 if message is not None:
                     if message.get_msg_type() == MessageType.SEND_PLAYERS:
                         # Deserialize player list, find taken tokens, and hide
-                        pl = PlayerList.deserialize(message.get_payload)
+                        pl = PlayerList.deserialize(message.get_payload())
                         player_list = pl.get_players()
                         unavailable = []
                         for p in player_list():
