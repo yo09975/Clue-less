@@ -16,7 +16,7 @@ class ServerNetworkInterface(metaclass=Singleton):
     # Class scoped variable for number of expected player connections
     MIN_PLAYERS = 6
     BUFSIZE = 4096
-    PORT = 1337
+    PORT = 80
 
     def __init__(self):
         # '' is a symbolic representation for all interfaces

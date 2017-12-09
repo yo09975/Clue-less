@@ -13,9 +13,9 @@ class ClientNetworkInterface(metaclass=Singleton):
     # Maximum amount of bytes to read per message
     BUFSIZE = 4096
     # ServerNetworkInterface port
-    PORT = 1337
+    PORT = 80
     # Arbitrary socket timeout
-    TIMEOUT = 15
+    TIMEOUT = 60
 
     """ Constructor """
     def __init__(self):
@@ -124,7 +124,7 @@ class ClientNetworkInterface(metaclass=Singleton):
 if __name__ == '__main__':
     try:
         c = ClientNetworkInterface()
-        c.connect('localhost')
+        c.connect('104.236.203.126')
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)
