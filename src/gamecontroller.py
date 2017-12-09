@@ -67,7 +67,7 @@ class GameController(object):
         if msg_type == MessageType.LEAVE_GAME:
             leaving_player = get_player_from_uuid(msg_uuid)
             leaving_player_character = leaving_player.get_character(
-                ).get_name()
+                ).get_id()
             leave_message = Message(sni.get_uuid(
                 ), MessageType.NOTIFY, f'{leaving_player_character} \
                 has left the game.')

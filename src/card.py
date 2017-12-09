@@ -8,24 +8,21 @@ class Card(object):
     Card class in the Game Management Subsystem. Each object is a
     representation of a suspect, room, or weapon in the game.
 
-    _name - String that is the name of the Card
-    _card_type - Enum representing the type of Card (Suspect, Room, or Weapon)
     _card_id - String representing an unique Card ID
+    _card_type - Enum representing the type of Card (Suspect, Room, or Weapon)
 
     """
 
-    def __init__(self, name: str, card_type: CardType, card_id: str):
+    def __init__(self, card_id: str, card_type: CardType):
         """Constructor"""
         # print('Constructor in Card class')
-        self._name = name
         self._card_type = card_type
         self._card_id = card_id
 
     def __str__(self) -> str:
         """Overridden toString method"""
-        card_string = str(self._name) + ' '
-        card_string += str(self._card_type) + ' '
-        card_string += str(self._card_id)
+        card_string = str(self._card_id) + ' '
+        card_string += str(self._card_type)
         return card_string
 
     def __eq__(self, other):
@@ -33,11 +30,6 @@ class Card(object):
         if isinstance(self, other.__class__):
                 return self.__dict__ == other.__dict__
         return False
-
-    def get_name(self) -> str:
-        """Returns a String with the name of the Card"""
-        # print('get_name method in Card class')
-        return self._name
 
     def get_id(self) -> str:
         """Returns a String with the ID of the Card"""
@@ -51,11 +43,10 @@ class Card(object):
 
     def serialize(self):
         card = {}
-        card['name'] = self._name
-        card['card_type'] = self._card_type.value
         card['card_id'] = self._card_id
+        card['card_type'] = self._card_type.value
         return json.dumps(card)
 
     def deserialize(payload):
         card = json.loads(payload)
-        return Card(card['name'], CardType(card['card_type']), card['card_id'])
+        return Card(card['card_id'], CardType(card['card_type']))

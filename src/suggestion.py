@@ -58,5 +58,5 @@ class Suggestion:
         return Suggestion(room, weapon, character)
 
     def __str__(self):
-        return self.get_character().get_name() + ", with the " + \
-        self.get_weapon().get_name() + ", in the " + self.get_room().get_name()
+        return self.get_character().get_id() + ", with the " + \
+        self.get_weapon().get_id() + ", in the " + self.get_room().get_id()

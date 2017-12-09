@@ -4,10 +4,10 @@ from src.cardtype import CardType
 from src.hand import Hand
 
 
-test_card1 = Card('Test Card 1 Name', CardType.SUSPECT, 'TEST111ID')
-test_card2 = Card('Test Card 2 Name', CardType.SUSPECT, 'TEST222ID')
-test_card3 = Card('Test Card 3 Name', CardType.SUSPECT, 'TEST333ID')
-test_card4 = Card('Test Card 4 Name', CardType.SUSPECT, 'TEST444ID')
+test_card1 = Card('Miss Scarlet', CardType.SUSPECT)
+test_card2 = Card('Colonel Mustard', CardType.SUSPECT)
+test_card3 = Card('Mrs. White', CardType.SUSPECT)
+test_card4 = Card('Mr. Green', CardType.SUSPECT)
 test_hand = Hand([test_card1, test_card2])
 
 def test_init():
@@ -15,7 +15,7 @@ def test_init():
 
 def test_serialize():
     hand_serial = test_hand.serialize()
-    assert hand_serial.find(f'"TEST111ID": "{test_card1.serialize()}", "TEST222ID": "{test_card2.serialize()}"')
+    assert hand_serial.find(f'"Miss Scarlet": "{test_card1.serialize()}", "Colonel Mustard": "{test_card2.serialize()}"')
 def test_deserialize():
     hand_serial = test_hand.serialize()
     hand_deserial = Hand.deserialize(hand_serial)
@@ -23,14 +23,14 @@ def test_deserialize():
     assert hand_deserial == test_hand
 
 def test_str():
-    assert str(test_hand) == 'Test Card 1 Name, Test Card 2 Name'
+    assert str(test_hand) == 'Miss Scarlet, Colonel Mustard'
 
 def test_add_card():
     assert len(test_hand.get_cards()) == 2
     test_hand.add_card(test_card3)
     assert len(test_hand.get_cards()) == 3
     assert str(test_hand) == (
-        'Test Card 1 Name, Test Card 2 Name, Test Card 3 Name')
+        'Miss Scarlet, Colonel Mustard, Mrs. White')
 
 def test_contains_card():
     assert test_hand.contains_card(test_card2)

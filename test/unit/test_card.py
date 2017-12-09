@@ -3,7 +3,7 @@ from src.card import Card
 from src.cardtype import CardType
 
 
-test_card = Card('Test Card Name', CardType.SUSPECT, 'TEST123ID')
+test_card = Card('Miss Scarlet', CardType.SUSPECT)
 
 
 def test_init():
@@ -11,15 +11,10 @@ def test_init():
 
 
 def test_str():
-    assert str(test_card) == 'Test Card Name CardType.SUSPECT TEST123ID'
-
-
-def test_get_name():
-    assert str(test_card.get_name()) == 'Test Card Name'
-
+    assert str(test_card) == 'Miss Scarlet CardType.SUSPECT'
 
 def test_get_id():
-    assert str(test_card.get_id()) == 'TEST123ID'
+    assert str(test_card.get_id()) == 'Miss Scarlet'
 
 
 def test_get_type():
