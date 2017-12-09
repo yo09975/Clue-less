@@ -212,7 +212,7 @@ class GameApp:
                             if p.get_uuid() is not None:
                                 player_count += 1
 
-                        self._char_picker_dialog.get_bottom_button().set_enabled(player_count > 2)
+                        self._char_picker_dialog.get_bottom_button().set_enabled(player_count >= 2)
 
                     elif message.get_msg_type() == MessageType.PLAYER_HAND:
                         # Start game
