@@ -229,7 +229,7 @@ class GameController(object):
             else:
                 self.do_end_turn()
 
-    def do_end_turn(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+    def do_end_turn():
         # Changes GameState's _current_player
         self._current_game.next_turn()
         next_player = pl.get_player_by_index(self._current_game.get_current_player())
