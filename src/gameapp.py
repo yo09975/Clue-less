@@ -21,6 +21,7 @@ from src.network.clientnetworkinterface import ClientNetworkInterface as CNI
 from src.playerlist import PlayerList
 from src.board import Board
 from src.move import Move
+from src.hand import Hand
 import time
 
 
