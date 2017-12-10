@@ -231,6 +231,10 @@ class GameController(object):
             self._current_game.set_state(GameStatus.LOBBY)
         else:
             accuser.set_status(PlayerStatus.LOST)
+
+            # Move incorrect Accuser to the Billiard Room
+            self.do_move_incorrect_accuser(accuser)
+
             # next_player = self._current_game.next_turn()
             # Check to see if everyone has lost
             if next_player is None:
@@ -261,6 +265,12 @@ class GameController(object):
         # Change GameStatus
         self._current_game.set_state(GameStatus.START_TURN)
 
+    def do_move_incorrect_accuser(self, accuser: Player):
+        self._move_engine.do_move(Move(
+                accuser.get_card_id(), 'Billiard Room'))
+        update_board_message = Message(sni.get_uuid(), MessageType.UPDATE_BOARD, self._move_engine._board.serialize())
+        sni.send_all(update_board_message)
+
 if __name__ == '__main__':
     try:
         gc = GameController()
@@ -268,4 +278,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)
-
