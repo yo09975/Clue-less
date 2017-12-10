@@ -91,7 +91,7 @@ class GameApp:
         # cross reference from card_id to avatar png
         self._player_hand_string = ""
         self._room_lookup_table = {}
-        
+
         for l in locs['locations']:
             def location_hover(args):
                 args['b'].fill(pygame.Color(255, 0, 0))
@@ -375,7 +375,7 @@ class GameApp:
                         print(f'DEBUG: POST_SUGG SUGG_RESPONSE')
                         response = message.get_payload()
                         card = Card.deserialize(response)
-                        msg_string = f'Your opponent disproved with {str(card)}'
+                        msg_string = f'Your opponent disproved with {str(card.get_id())}'
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
                         # Keep last 5 messages
