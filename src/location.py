@@ -70,5 +70,8 @@ class Location(object):
 
     def get_key(self) -> str:
         """ Return the Location's coordinates in a string, formatted "XxY"."""
-
         return self._key
+
+    def get_name(self) -> str:
+        """ Return the Location's name """
+        return self._name
