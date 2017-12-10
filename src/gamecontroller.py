@@ -266,6 +266,7 @@ class GameController(object):
         self._current_game.set_state(GameStatus.START_TURN)
 
     def do_move_incorrect_accuser(self, accuser: Player):
+        sni = ServerNetworkInterface()
         self._move_engine.do_move(Move(
                 accuser.get_card_id(), 'Billiard Room'))
         update_board_message = Message(sni.get_uuid(), MessageType.UPDATE_BOARD, self._move_engine._board.serialize())
