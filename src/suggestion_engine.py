@@ -63,17 +63,20 @@ class SuggestionEngine:
                 response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_REQUEST,
                                        suggestion.serialize())
                 sni.send_message(responder.get_uuid(), response_msg)
-                response_notification = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+                # Send a NOTIFY to everyone when suggestion is disproved
+                response_notification = Message(sni.get_uuid(), MessageType.NOTIFY,
                                                 responder.get_character().get_id() + "disproved the suggestion.")
                 sni.send_all(response_notification)
                 return True
             else:
-                could_not_respond_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+                # Send a NOTIFY message to everyone when a suggestion cannot be disproved
+                could_not_respond_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
                                                 responder.get_character().get_id() + " could not disprove.")
                 sni.send_all(could_not_respond_msg)
                 responder = pl.get_next_player(responder)
 
-        no_response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY,
+        # Send a NOTIFY if none of the players can disprove the suggestion
+        no_response_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
                                   "The suggestion could not be refuted.")
         sni.send_all(no_response_msg)
         return False
