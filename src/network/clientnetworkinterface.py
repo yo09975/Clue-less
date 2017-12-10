@@ -37,6 +37,7 @@ class ClientNetworkInterface(metaclass=Singleton):
         # Create a TCP socket connection to server
         try:
             self._client_socket = create_connection((ip, self.PORT), 5)
+            self._client_socket.setblocking(True)
         except ConnectionError as e:
             print(f'Error: Failed to connect to ({ip},{self.PORT}).')
             print(f'Exception is {e}.')
@@ -95,8 +96,8 @@ class ClientNetworkInterface(metaclass=Singleton):
 
         try:
             self._client_socket.sendall(f"{message.serialize()}\n".encode())
-        except socket.timeout as e:
-            print(f'Error: send_message timed out')
+        except OSError as e:
+            print(f'Error sending message to server: {e}')
             return False
         print("SEND_MSG: ", message)
         return True
@@ -107,8 +108,8 @@ class ClientNetworkInterface(metaclass=Singleton):
             raise ConnectionError('Not connected to a server')
         try:
             message_string = self._client_socket.recv(self.BUFSIZE).decode()
-        except socket.timeout as e:
-            print(f'Error: read_message timed out')
+        except OSError as e:
+            print(f'Error: error reading message from server: {e}')
             return None
         msg_list = message_string.split('\n')
         for msg in msg_list:
