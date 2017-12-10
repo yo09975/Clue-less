@@ -141,6 +141,15 @@ class ServerNetworkInterface(metaclass=Singleton):
                 status = False
         return status
 
+    def disconnect_player(self, uuid):
+        """ Disconnect individual player """
+        client_sock = self._get_sock_by_uuid(uuid)
+        client_sock.close()
+        for i in range(0, len(self.client_socket_list)):
+            if conn[0] == uuid:
+                del self.client_socket_list[i]
+
+
     """ Terminate all player connections """
     def close_all(self):
         # TODO: send all clients message that server is shutting down
