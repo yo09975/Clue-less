@@ -3,45 +3,66 @@ import json
 
 class MessageType(Enum):
 
-    MOVEMENT = 1
     """Contains player's requested move"""
-    SUGGESTION_MAKE = 2
+    MOVEMENT = 1
+
     """Contains player's suggestion"""
-    SUGGESTION_REQUEST = 3
+    SUGGESTION_MAKE = 2
+
     """Contains cards for requesting an opponent to disprove"""
-    SUGGESTION_RESPONSE = 4
+    SUGGESTION_REQUEST = 3
+
     """Contains one card to disprove suggestion"""
+    SUGGESTION_RESPONSE = 4
+
+    """Notifies every player of the suggestion issued """
     SUGGESTION_NOTIFY = 5
-    """Notifies every player whether suggestion was disproved or not"""
-    ACCUSATION = 6
+
+    """ Used to notify every player if a suggestion could be disproved"""
+    SUGGESTION_OUTCOME = 6
+
     """Contain's player's accusation"""
-    ACCUSATION_NOTIFY = 7
+    ACCUSATION = 7
+
     """Notify's all player's if accusation was correct of not"""
-    ACK = 8
+    ACCUSATION_NOTIFY = 8
+
     """Acknowledgement message for networking services"""
-    NACK = 9
+    ACK = 9
+
     """Negative acknowledgement message for networking services"""
-    NOTIFY = 10
-    """Contains a message for all players"""
-    GIVE_UUID = 11
+    NACK = 10
+
+    """Contains a message for all players not used for state transitions"""
+    NOTIFY = 11
+
     """Contains player's UUID to set connect"""
-    SELECT_PIECE = 12
+    GIVE_UUID = 12
+
     """Contains a character the player wishes to play as in game"""
-    UPDATE_BOARD = 13
+    SELECT_PIECE = 13
+
     """Contains serialized Board to update all players' board GUIs"""
-    END_TURN = 14
+    UPDATE_BOARD = 14
+
     """Player wishes to end their turn"""
-    LEAVE_GAME = 15
+    END_TURN = 15
+
     """Player wishes to leave the game"""
-    START_GAME = 16
+    LEAVE_GAME = 16
+
     """A player wants the game to start"""
-    SEND_PLAYERS = 17
+    START_GAME = 17
+
     """Syncs PlayerList both server and client"""
-    PLAYER_HAND = 18
+    SEND_PLAYERS = 18
+
     """Contains a player's Hand serialized so that can know the cards they
        were dealt"""
-    YOUR_TURN = 19
+    PLAYER_HAND = 19
+
     """Tells next player to start turn"""
+    YOUR_TURN = 20
 
 
 class Message:
