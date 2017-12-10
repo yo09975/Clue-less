@@ -319,7 +319,7 @@ class GameApp:
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
                         # Keep last 5 messages
-                        self._message_log = self._message_log[-5:]
+                        self._message_log = self._message_log[-4:]
 
             elif self._state == PlayerState.ANSWER_SUGGESTION:
                 self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
@@ -379,7 +379,7 @@ class GameApp:
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
                         # Keep last 5 messages
-                        self._message_log = self._message_log[-5:]
+                        self._message_log = self._message_log[-4:]
                         # got the answer, move on!
                         self._state = PlayerState.POST_SUGGESTION_ANSWER
 
@@ -390,7 +390,7 @@ class GameApp:
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
                         # Keep last 5 messages
-                        self._message_log = self._message_log[-5:]
+                        self._message_log = self._message_log[-4:]
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
