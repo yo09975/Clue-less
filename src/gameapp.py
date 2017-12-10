@@ -89,9 +89,9 @@ class GameApp:
         self._ref_board = {}
         self._my_character = Card("placeholder", CardType.SUSPECT)
         # cross reference from card_id to avatar png
-
         self._player_hand_string = ""
-
+        self._room_lookup_table = {}
+        
         for l in locs['locations']:
             def location_hover(args):
                 args['b'].fill(pygame.Color(255, 0, 0))
@@ -111,12 +111,10 @@ class GameApp:
             self._ref_board[l['key']] = location
             self._disp_board[l['key']] = {}
             self._disp_board[l['key']]['button'] = location
-            print("x")
-
             self._disp_board[l['key']]['x'] = l['dims']['x']
-            print("y")
-
             self._disp_board[l['key']]['y'] = l['dims']['y']
+
+            self._room_lookup_table[l['key']] = l['name']
 
             if l['type'] == "room":
                 self._ref_board[l['name']] = location
@@ -149,8 +147,9 @@ class GameApp:
 
         def make_suggestion(args):
             args['d'].set_is_visible(True)
+            args['d'].set_room_id(args['s']._current_room_name)
 
-        self._make_sugg_button.set_on_click(make_suggestion, {'d': self._sugg_dialog})
+        self._make_sugg_button.set_on_click(make_suggestion, {'d': self._sugg_dialog, 's': self})
 
         # Set up make accusation button
         self._make_acc_button = Button(1236, 756, 170, 65)
@@ -307,6 +306,9 @@ class GameApp:
                         print("Update board: ", message, message.get_payload())
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                        pl = PlayerList()
+                        room_key = pl.get_player(self._my_character).get_current_location()
+                        self._current_room_name = self._room_lookup_table[room_key]
                     elif message.get_msg_type() == MessageType.YOUR_TURN:
                         # Make it your turn
                         self._state = PlayerState.MY_TURN
@@ -329,6 +331,9 @@ class GameApp:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                        pl = PlayerList()
+                        room_key = pl.get_player(self._my_character).get_current_location()
+                        self._current_room_name = self._room_lookup_table[room_key]
 
 
                 # Wait for button action to change game state
@@ -343,6 +348,9 @@ class GameApp:
                         self.determine_avatar_locations()
                         self._state = PlayerState.POST_MOVE
 
+                        pl = PlayerList()
+                        room_key = pl.get_player(self._my_character).get_current_location()
+                        self._current_room_name = self._room_lookup_table[room_key]
                 # Wait for button action to change game state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
@@ -388,6 +396,9 @@ class GameApp:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                        pl = PlayerList()
+                        room_key = pl.get_player(self._my_character).get_current_location()
+                        self._current_room_name = self._room_lookup_table[room_key]
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
                 if message is not None:
@@ -396,7 +407,9 @@ class GameApp:
                         print(f'DEBUG: POST_SUGG_ANS UPDATE BOARD')
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
-
+                        pl = PlayerList()
+                        room_key = pl.get_player(self._my_character).get_current_location()
+                        self._current_room_name = self._room_lookup_table[room_key]
 
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
@@ -416,6 +429,9 @@ class GameApp:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                        pl = PlayerList()
+                        room_key = pl.get_player(self._my_character).get_current_location()
+                        self._current_room_name = self._room_lookup_table[room_key]
                     else:
                         print(f'DEBUG: NOT EXPECTED MSG TYPE: {message.get_msg_type()}')
 

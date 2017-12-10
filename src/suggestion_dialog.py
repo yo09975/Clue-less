@@ -20,25 +20,25 @@ class SuggestionDialog(Dialog):
             card_data = json.load(data_file)
 
         # Build separate card decks
-        characters = []
-        weapons = []
-        rooms = []
+        self._characters = []
+        self._weapons = []
+        self._rooms = []
 
         for c in card_data['cards']:
             if c['type'] == 'suspect':
                 card = Card(c['card_id'], CardType.SUSPECT)
-                characters.append(card)
+                self._characters.append(card)
             elif c['type'] == 'weapon':
                 card = Card(c['card_id'], CardType.WEAPON)
-                weapons.append(card)
+                self._weapons.append(card)
             else:
                 card = Card(c['card_id'], CardType.ROOM)
-                rooms.append(card)
+                self._rooms.append(card)
 
         # Build pickers
-        self._character_picker = Picker(characters, 110 + self._coords[0], 45 + self._coords[1])
-        self._room_picker = Picker(rooms, 350 + self._coords[0], 45 + self._coords[1])
-        self._weapon_picker = Picker(weapons, 590 + self._coords[0], 45 + self._coords[1])
+        self._character_picker = Picker(self._characters, 110 + self._coords[0], 45 + self._coords[1])
+        self._room_picker = Picker(self._rooms, 350 + self._coords[0], 45 + self._coords[1])
+        self._weapon_picker = Picker(self._weapons, 590 + self._coords[0], 45 + self._coords[1])
         # Add pickers to view
         self.add_view(self._character_picker)
         self.add_view(self._room_picker)
@@ -80,3 +80,11 @@ class SuggestionDialog(Dialog):
             return Suggestion(room, weapon, character)
         else:
             return None
+
+    def set_room_id(self, room_card_id):
+        # if room_card.get_type() is not CardType.ROOM:
+        #     raise ValueError()
+        print("making suggestion from room: " + room_card_id)
+        for i, c in enumerate(self._rooms):
+            if c.get_id() != room_card_id:
+                self._room_picker.disable_button(i)
