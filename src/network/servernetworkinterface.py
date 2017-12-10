@@ -145,10 +145,9 @@ class ServerNetworkInterface(metaclass=Singleton):
         """ Disconnect individual player """
         client_sock = self._get_sock_by_uuid(uuid)
         client_sock.close()
-        for i in range(0, len(self.client_socket_list)):
-            if conn[0] == uuid:
+        for i in range(0, len(self.client_socket_list)-1):
+            if self.client_socket_list[i][0] == uuid:
                 del self.client_socket_list[i]
-
 
     """ Terminate all player connections """
     def close_all(self):
