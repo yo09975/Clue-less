@@ -173,7 +173,7 @@ class GameController(object):
                     elif state == GameStatus.WAIT_SUGG:
 
                         if msg_type == MessageType.SUGGESTION_RESPONSE:
-                            card = Card.deserialize(payload)
+                            card = Card.deserialize(msg_payload)
                             self._suggest_engine.answer_suggestion(card)
                             self._current_game.set_state(GameStatus.POST_SUGG)
 
@@ -211,7 +211,7 @@ class GameController(object):
                 self._current_game.set_state(GameStatus.POST_SUGG)
             suggested_player = pl.get_player(
                 suggestion.get_character().get_id())
-            suggested_location = suggestion.get_room().get_id()
+            suggested_location = player_location.get_key()
             self._move_engine.do_move(Move(
                 suggested_player.get_card_id(), suggested_location))
             suggested_player.set_was_transferred(True)

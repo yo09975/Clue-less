@@ -299,10 +299,28 @@ class GameApp:
                     elif message.get_msg_type() == MessageType.YOUR_TURN:
                         # Make it your turn
                         self._state = PlayerState.MY_TURN
-
+                    elif message.get_msg_type() == MessageType.SUGGESTION_OUTCOME:
+                        print(f'DEBUG: WAIT_FOR_TURN SUGGESTION_OUTCOME')
+                        outcome = message.get_payload()
+                        font = pygame.font.SysFont('Comic Sans MS', 16)
+                        msg_string = outcome
+                        text_message = font.render(msg_string, False, (0, 0, 0))
+                        self._message_log.append(text_message)
+                        # Keep last 5 messages
+                        self._message_log = self._message_log[-5:]
 
             elif self._state == PlayerState.ANSWER_SUGGESTION:
                 self._ans_sugg_dialog.draw(pygame.mouse, self._gameDisplay)
+
+                if message is not None:
+
+                    if message.get_msg_type() == MessageType.UPDATE_BOARD:
+                        print(f'DEBUG: ANSWER_SUGGESTION UPDATE_BOARD')
+                        # Update board
+                        self._board = self._board.deserialize(message.get_payload())
+                        self.determine_avatar_locations()
+
+
                 # Wait for button action to change game state
                 if self._ans_sugg_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
@@ -335,9 +353,28 @@ class GameApp:
 
             elif self._state == PlayerState.POST_SUGGESTION:
                 if message is not None:
-                    if message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
-                        # TODO Write suggestion notification to msg center
+                    if message.get_msg_type() == MessageType.SUGGESTION_RESPONSE:
+                        print(f'DEBUG: POST_SUGG SUGG_RESPONSE')
+                        response = message.get_payload()
+                        card = Card.deserialize(response)
+                        font = pygame.font.SysFont('Comic Sans MS', 16)
+                        msg_string = f'Your opponent disproved with {str(card)}'
+                        text_message = font.render(msg_string, False, (0, 0, 0))
+                        self._message_log.append(text_message)
+                        # Keep last 5 messages
+                        self._message_log = self._message_log[-5:]
+                        # got the answer, move on!
                         self._state = PlayerState.POST_SUGGESTION_ANSWER
+
+                    elif message.get_msg_type() == MessageType.SUGGESTION_OUTCOME:
+                        print(f'DEBUG: POST SUGG SUGGESTION_OUTCOME')
+                        outcome = message.get_payload()
+                        font = pygame.font.SysFont('Comic Sans MS', 16)
+                        msg_string = outcome
+                        text_message = font.render(msg_string, False, (0, 0, 0))
+                        self._message_log.append(text_message)
+                        # Keep last 5 messages
+                        self._message_log = self._message_log[-5:]
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
@@ -345,6 +382,14 @@ class GameApp:
                         self.determine_avatar_locations()
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
+                if message is not None:
+                    if message.get_msg_type() == MessageType.UPDATE_BOARD:
+                        # After Suggester gets answer, board not updated?
+                        print(f'DEBUG: POST_SUGG_ANS UPDATE BOARD')
+                        self._board = self._board.deserialize(message.get_payload())
+                        self.determine_avatar_locations()
+
+
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
@@ -357,13 +402,14 @@ class GameApp:
                 self._sugg_dialog.draw(pygame.mouse, self._gameDisplay)
                 self._acc_dialog.draw(pygame.mouse, self._gameDisplay)
 
-
             elif self._state == PlayerState.POST_MOVE:
                 if message is not None:
                     if message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
+                    else:
+                        print(f'DEBUG: NOT EXPECTED MSG TYPE: {message.get_msg_type()}')
 
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
