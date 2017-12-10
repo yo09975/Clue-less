@@ -90,6 +90,8 @@ class GameApp:
         self._my_character = Card("placeholder", CardType.SUSPECT)
         # cross reference from card_id to avatar png
 
+        self._player_hand_string = ""
+
         for l in locs['locations']:
             def location_hover(args):
                 args['b'].fill(pygame.Color(255, 0, 0))
@@ -214,17 +216,14 @@ class GameApp:
                     text_message = font.render(message.get_payload(), False, (0, 0, 0))
                     self._message_log.append(text_message)
                     # Keep last 5 messages
-                    self._message_log = self._message_log[-5:]
+                    self._message_log = self._message_log[-4:]
                 elif message.get_msg_type() == MessageType.PLAYER_HAND:
                     font = pygame.font.SysFont('Comic Sans MS', 16)
                     hand = Hand.deserialize(message.get_payload())
                     msg_string = "Your cards are "
                     for c in hand.get_cards():
                         msg_string +=  c.get_id() + ", "
-                    text_message = font.render(msg_string[:-2], False, (0, 0, 0))
-                    self._message_log.append(text_message)
-                    # Keep last 5 messages
-                    self._message_log = self._message_log[-5:]
+                    self._player_hand_string = msg_string[:-2]
                 elif message.get_msg_type() == MessageType.SUGGESTION_NOTIFY:
                     sugg = json.loads(message.get_payload())
 
@@ -233,7 +232,7 @@ class GameApp:
                     text_message = font.render(msg_string, False, (0, 0, 0))
                     self._message_log.append(text_message)
                     # Keep last 5 messages
-                    self._message_log = self._message_log[-5:]
+                    self._message_log = self._message_log[-4:]
 
 
             else:
@@ -253,7 +252,11 @@ class GameApp:
 
             # Always render message log
             for i, text_message in enumerate(self._message_log):
-                self._gameDisplay.blit(text_message, (20, 775 + 20 * i))
+                self._gameDisplay.blit(text_message, (20, 795 + 20 * i))
+
+            # Always render hand
+            disp_hand = font.render(self._player_hand_string, False, (0, 0, 0))
+            self._gameDisplay.blit(text_message, (20, 775))
 
             # Display views based on state
             if self._state == PlayerState.SELECT_PLAYER:
