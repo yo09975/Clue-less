@@ -345,6 +345,7 @@ class GameApp:
                 # Wait for button action to change game state
                 if self._ans_sugg_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._ans_sugg_dialog.set_success(False)
 
             elif self._state == PlayerState.MY_TURN:
                 if message is not None:
@@ -360,8 +361,10 @@ class GameApp:
                 # Wait for button action to change game state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._acc_dialog.set_success(False)
                 elif self._sugg_dialog.get_success():
                     self._state = PlayerState.POST_SUGGESTION
+                    self._sugg_dialog.set_success(False)
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -420,6 +423,8 @@ class GameApp:
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._sugg_dialog.set_success(False)
+
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -444,8 +449,10 @@ class GameApp:
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._acc_dialog.set_success(False)
                 elif self._sugg_dialog.get_success():
                     self._state = PlayerState.POST_SUGGESTION
+                    self._sugg_dialog.set_success(False)
 
 
 
