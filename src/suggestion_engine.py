@@ -88,7 +88,7 @@ class SuggestionEngine:
         current = self.game_state.get_current_player()
         players = pl.get_players()
         suggesting_player = players[current]
-        response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_NOTIFY, response.serialize())
+        response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_RESPONSE, response.serialize())
         sni.send_message(suggesting_player.get_uuid(), response_msg)
 
     def make_accusation(self, suggestion: Suggestion, accuser: Player):
