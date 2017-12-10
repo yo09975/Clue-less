@@ -462,6 +462,8 @@ class GameApp:
         print(self._avatars)
 
 cni = CNI()
-cni.connect('104.236.203.126')
-game = GameApp()
-game.start()
+if (cni.connect('104.236.203.126')):
+    game = GameApp()
+    game.start()
+else:
+    print('Client was unable to connect to server.')
