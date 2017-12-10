@@ -49,6 +49,7 @@ def test_send_message_to_client():
 def test_get_message_from_server():
     server_uuid = sni.get_uuid()
     client_uuid = cni.get_uuid()
+
     """ Logic to wait 5 seconds for message to come through """
     for i in range(1,6):
         mess = cni.get_message()
@@ -56,10 +57,22 @@ def test_get_message_from_server():
             time.sleep(1)
         else:
             break
+
     assert mess is not None
+    assert mess.get_msg_type() == MessageType.GIVE_UUID
     assert mess.get_uuid() == server_uuid
+
+    # now get the actual message
+    for i in range(1,6):
+        mess = cni.get_message()
+        if not mess:
+            time.sleep(1)
+        else:
+            break
+    assert mess is not None
     assert mess.get_msg_type() == test_msg_type
     assert mess.get_payload() == test_msg_payload
+    assert mess.get_uuid() == server_uuid
 
 def test_send_all():
     mess = Message(sni.get_uuid(), test_msg_type, test_msg_payload)
