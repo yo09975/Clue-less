@@ -15,6 +15,7 @@ from src.player import Player
 from src.playerstatus import PlayerStatus
 from src.board import Board
 from src.location import Location
+from src.card import Card
 import json
 
 
