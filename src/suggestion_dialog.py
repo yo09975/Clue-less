@@ -82,9 +82,6 @@ class SuggestionDialog(Dialog):
             return None
 
     def set_room_id(self, room_card_id):
-        # if room_card.get_type() is not CardType.ROOM:
-        #     raise ValueError()
-        print("making suggestion from room: " + room_card_id)
         for i, c in enumerate(self._rooms):
             if c.get_id() != room_card_id:
                 self._room_picker.disable_button(i)
