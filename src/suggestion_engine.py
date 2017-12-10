@@ -111,4 +111,4 @@ class SuggestionEngine:
 
     def is_valid_suggestion(self, suggesting_player: Player, suggestion: Suggestion) -> bool:
         """Makes sure the suggesting player is in the room suggested"""
-        return suggesting_player.get_current_location() == suggestion.get_room().get_id()
+        return suggesting_player.get_current_location().get_name() == suggestion.get_room().get_id()
