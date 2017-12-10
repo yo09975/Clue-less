@@ -173,7 +173,7 @@ class GameController(object):
                     elif state == GameStatus.WAIT_SUGG:
 
                         if msg_type == MessageType.SUGGESTION_RESPONSE:
-                            card = Card.deserialize(payload)
+                            card = Card.deserialize(msg_payload)
                             self._suggest_engine.answer_suggestion(card)
                             self._current_game.set_state(GameStatus.POST_SUGG)
 
