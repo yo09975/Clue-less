@@ -65,7 +65,7 @@ class SuggestionEngine:
                 sni.send_message(responder.get_uuid(), response_msg)
                 # Send a NOTIFY to everyone when suggestion is disproved
                 response_notification = Message(sni.get_uuid(), MessageType.NOTIFY,
-                                                responder.get_character().get_id() + "disproved the suggestion.")
+                                                responder.get_character().get_id() + " disproved the suggestion.")
                 sni.send_all(response_notification)
                 return True
             else:
