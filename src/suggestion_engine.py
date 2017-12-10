@@ -83,7 +83,7 @@ class SuggestionEngine:
 
         # Send a SUGGESTION_NO_REFUTE to suggester if no one can disprove.
         no_response_to_suggester = Message(sni.get_uuid(), MessageType.SUGGESTION_NO_REFUTE, "")
-        sni.send_message(suggesting_player, no_response_to_suggester)
+        sni.send_message(suggesting_player.get_uuid(), no_response_to_suggester)
 
         # Send a SUGGESTION_OUTCOME if none of the players can disprove the suggestion
         no_response_msg = Message(sni.get_uuid(),
