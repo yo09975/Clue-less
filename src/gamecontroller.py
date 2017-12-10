@@ -14,6 +14,7 @@ from src.network.servernetworkinterface import ServerNetworkInterface
 from src.player import Player
 from src.playerstatus import PlayerStatus
 from src.board import Board
+from src.location import Location
 import json
 
 
@@ -197,8 +198,12 @@ class GameController(object):
         pl = PlayerList()
         sni = ServerNetworkInterface()
         suggestion = Suggestion.deserialize(msg_payload)
+
+        # Grab a Location for the suggester
+        player_location = self._move_engine.get_player_location(suggesting_player)
+
         if self._suggest_engine.is_valid_suggestion(
-                suggesting_player, suggestion):
+                player_location, suggestion):
             if self._suggest_engine.make_suggestion(suggestion):
                 self._current_game.set_state(GameStatus.WAIT_SUGG)
             else:
