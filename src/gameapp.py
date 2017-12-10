@@ -167,6 +167,12 @@ class GameApp:
             cni.send_message(message)
             args['s']._state = PlayerState.WAIT_FOR_TURN
 
+        def leave_game(args):
+            cni = CNI()
+            message = Message(cni.get_uuid(), MessageType.LEAVE_GAME, "")
+            cni.send_message(message)
+            self._crashed = True
+
         self._end_turn_button.set_on_click(end_turn, {'s': self})
 
         # Set up leave game button
@@ -178,7 +184,7 @@ class GameApp:
             cni.send_message(message)
             args['s'] = PlayerState.SELECT_PIECE
 
-        self._leave_game_button.set_on_click(end_turn, {'s': self._state})
+        self._leave_game_button.set_on_click(leave_game, {'s': self._state})
 
         self._state_change_button = Button(0, 0, 20, 20)
 
@@ -197,13 +203,12 @@ class GameApp:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    crashed = True
+                    self._crashed = True
 
             # Get latest message, if any
-            # message = Message("tes", MessageType.NOTIFY, "yes")
             message = cni.get_message()
             if message is not None:
-                print('\n', message.get_msg_type(), message.get_payload())
+                print(f'INCOMING: {message}')
                 if message.get_msg_type() == MessageType.NOTIFY:
                     font = pygame.font.SysFont('Comic Sans MS', 16)
                     text_message = font.render(message.get_payload(), False, (0, 0, 0))
