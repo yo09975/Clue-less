@@ -35,7 +35,10 @@ class GameApp:
 
         self._state = PlayerState.SELECT_PLAYER
 
-        self._gameDisplay = pygame.display.set_mode((1410, 900))
+        self._gameDisplay = pygame.display.set_mode((1410, 900), pygame.RESIZABLE)
+        icon = pygame.image.load('resources/bblogo.jpg')
+        pygame.display.set_caption('Clue-Less by Blue Barracudas')
+        pygame.display.set_icon(icon)
         self._crashed = False
 
         self._message_log = []
