@@ -212,8 +212,8 @@ class GameApp:
                     hand = Hand.deserialize(message.get_payload())
                     msg_string = "Your cards are "
                     for c in hand.get_cards():
-                        msg_string += " ," + c.get_id()
-                    text_message = font.render(msg_string, False, (0, 0, 0))
+                        msg_string +=  c.get_id() + ", "
+                    text_message = font.render(msg_string[:-2], False, (0, 0, 0))
                     self._message_log.append(text_message)
                     # Keep last 5 messages
                     self._message_log = self._message_log[-5:]
