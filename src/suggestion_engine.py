@@ -81,18 +81,18 @@ class SuggestionEngine:
                 sni.send_all(could_not_respond_msg)
                 responder = pl.get_next_player(responder)
 
+        # Send a SUGGESTION_NO_REFUTE to suggester if no one can disprove.
+        no_response_to_suggester = Message(sni.get_uuid(), MessageType.SUGGESTION_NO_REFUTE, "")
+        sni.send_message(suggesting_player, no_response_to_suggester)
+
         # Send a SUGGESTION_OUTCOME if none of the players can disprove the suggestion
         no_response_msg = Message(sni.get_uuid(),
                           MessageType.SUGGESTION_OUTCOME,
                           "The suggestion could not be disproved.")
         sni.send_all(no_response_msg)
 
-        pl = PlayerList()
-        current = self.game_state.get_current_player()
-        players = pl.get_players()
-        suggesting_player = players[current]
-        no_response_to_suggester = Message(sni.get_uuid(), MessageType.SUGGESTION_NO_REFUTE, "")
-        sni.send_message(suggesting_player, no_response_to_suggester)
+
+
 
 
         return False
