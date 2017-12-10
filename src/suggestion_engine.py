@@ -60,9 +60,22 @@ class SuggestionEngine:
             hand = responder.get_hand()
             if hand.contains_card(suggestion.get_room()) or hand.contains_card(suggestion.get_character()) or \
                     hand.contains_card(suggestion.get_weapon()):
-                response_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_REQUEST,
+                request_msg = Message(sni.get_uuid(), MessageType.SUGGESTION_REQUEST,
                                        suggestion.serialize())
-                sni.send_message(responder.get_uuid(), response_msg)
+                sni.send_message(responder.get_uuid(), request_msg)
+                # Wait for the SUGGESTION_RESPONSE to come in
+                print('DEBUG: WAITING FOR SUGGESTION RESPONSE')
+                while True:
+                    message = sni.get_message()
+                    if message and message.get_msg_type() == MessageType.SUGGESTION_RESPONSE \
+                       and message.get_uuid() == responder.get_uuid():
+                        print('DEBUG: Sending response to suggester')
+                        # Rewrite the sender
+                        message.set_uuid(sni.get_uuid())
+                        # Send it to the suggester
+                        sni.send_message(suggesting_player.get_uuid(), message)
+                        break
+
                 # Send a SUGGESTION_OUTCOME to everyone when suggestion is disproved
                 response_notification = Message(sni.get_uuid(),
                                         MessageType.SUGGESTION_OUTCOME,
