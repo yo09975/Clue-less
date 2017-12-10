@@ -68,7 +68,7 @@ class SuggestionEngine:
                 response_notification = Message(sni.get_uuid(),
                                         MessageType.SUGGESTION_OUTCOME,
                                         responder.get_character().get_id() + \
-                                        " disproved the suggestion.")
+                                        " will disprove the suggestion.")
                 sni.send_all(response_notification)
                 return True
             else:
@@ -77,14 +77,14 @@ class SuggestionEngine:
                 could_not_respond_msg = Message(sni.get_uuid(),
                                         MessageType.SUGGESTION_OUTCOME,
                                         responder.get_character().get_id() + \
-                                        " could not disprove.")
+                                        " could not disprove the suggestion.")
                 sni.send_all(could_not_respond_msg)
                 responder = pl.get_next_player(responder)
 
         # Send a SUGGESTION_OUTCOME if none of the players can disprove the suggestion
         no_response_msg = Message(sni.get_uuid(),
                           MessageType.SUGGESTION_OUTCOME,
-                          "The suggestion could not be refuted.")
+                          "The suggestion could not be disproved.")
         sni.send_all(no_response_msg)
         return False
 
