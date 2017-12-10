@@ -87,6 +87,9 @@ class GameApp:
         self._my_character = Card("placeholder", CardType.SUSPECT)
         # cross reference from card_id to avatar png
 
+        # create lookup table for locations
+        self._room_lookup_table = {}
+
         for l in locs['locations']:
             def location_hover(args):
                 args['b'].fill(pygame.Color(255, 0, 0))
@@ -115,6 +118,8 @@ class GameApp:
 
             if l['type'] == "room":
                 self._ref_board[l['name']] = location
+
+            self._room_lookup_table[l['key']] = l['name']
 
         # Set up avatars
         card_file = os.path.join(dir, '../data/cards.json')
@@ -416,3 +421,4 @@ cni = CNI()
 cni.connect('104.236.203.126')
 game = GameApp()
 game.start()
+

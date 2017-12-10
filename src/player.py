@@ -50,6 +50,7 @@ class Player(object):
         if isinstance(self, other.__class__):
             return self.__dict__ == other.__dict__
         return False
+
     def set_hand(self, hand: Hand):
         """Creates the Player's initial Hand of Cards"""
         self._player_hand = hand
