@@ -62,9 +62,15 @@ class ServerNetworkInterface(metaclass=Singleton):
             print(f'Client from {client_addr} connected')
             print(f'DEBUG: {self.client_socket_list[-1]}')
 
+            # Notify players that someone has connected
+            message_str = f'A player has connected! ({len(self.client_socket_list)}/{ServerNetworkInterface.MIN_PLAYERS})'
+            message = Message(self.get_uuid(), MessageType.NOTIFY, message_str)
+            self.send_all(message)
             # Spin up a thread to listen for messages
             t = Thread(target=self.listen, args=(self._msg_queue, client_uuid), daemon=True)
             t.start()
+        message = Message(self.get_uuid(), MessageType.NOTIFY, f'All players have connected successfully!')
+        self.send_all(message)
         print('All players have connected successfully!')
 
     def listen(self, queue, client_uuid):
@@ -134,6 +140,14 @@ class ServerNetworkInterface(metaclass=Singleton):
             if not self.send_message(conn[0], message):
                 status = False
         return status
+
+    def disconnect_player(self, uuid):
+        """ Disconnect individual player """
+        client_sock = self._get_sock_by_uuid(uuid)
+        client_sock.close()
+        for i in range(0, len(self.client_socket_list)-1):
+            if self.client_socket_list[i][0] == uuid:
+                del self.client_socket_list[i]
 
     """ Terminate all player connections """
     def close_all(self):
