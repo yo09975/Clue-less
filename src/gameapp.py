@@ -216,7 +216,7 @@ class GameApp:
                 if message.get_msg_type() == MessageType.NOTIFY:
                     text_message = self._msg_font.render(message.get_payload(), False, (0, 0, 0))
                     self._message_log.append(text_message)
-                    # Keep last 5 messages
+                    # Keep last 4 messages
                     self._message_log = self._message_log[-4:]
                 elif message.get_msg_type() == MessageType.PLAYER_HAND:
                     hand = Hand.deserialize(message.get_payload())
@@ -230,9 +230,15 @@ class GameApp:
                     msg_string = sugg['suggester'] + " suggests " + str(Suggestion.deserialize(sugg['suggestion']))
                     text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                     self._message_log.append(text_message)
-                    # Keep last 5 messages
+                    # Keep last 4 messages
                     self._message_log = self._message_log[-4:]
-
+                elif message.get_msg_type() == MessageType.ACCUSATION_NOTIFY:
+                    acc = Suggestion.deserialize(message.get_payload())
+                    msg_string = "The accusation is " + str(acc)
+                    text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
+                    self._message_log.append(text_message)
+                    # Keep last 4 messages
+                    self._message_log = self._message_log[-4:]
 
             else:
                 print('.', end='', flush=True)
@@ -318,7 +324,7 @@ class GameApp:
                         msg_string = outcome
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
-                        # Keep last 5 messages
+                        # Keep last 4 messages
                         self._message_log = self._message_log[-4:]
 
             elif self._state == PlayerState.ANSWER_SUGGESTION:
@@ -378,7 +384,7 @@ class GameApp:
                         msg_string = f'Your opponent disproved with {str(card.get_id())}'
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
-                        # Keep last 5 messages
+                        # Keep last 4 messages
                         self._message_log = self._message_log[-4:]
                         # got the answer, move on!
                         self._state = PlayerState.POST_SUGGESTION_ANSWER
@@ -389,7 +395,7 @@ class GameApp:
                         msg_string = outcome
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
-                        # Keep last 5 messages
+                        # Keep last 4 messages
                         self._message_log = self._message_log[-4:]
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
