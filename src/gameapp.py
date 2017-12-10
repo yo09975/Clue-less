@@ -65,7 +65,7 @@ class GameApp:
         # Set up Accusation Dialog
         self._acc_dialog = SD(60, 60)
         self._acc_dialog.set_is_visible(False)
-        self._acc_dialog.get_top_button().set_on_click(send_suggestion, {'d': self._sugg_dialog, 'mt': MessageType.ACCUSATION})
+        self._acc_dialog.get_top_button().set_on_click(send_suggestion, {'d': self._acc_dialog, 'mt': MessageType.ACCUSATION})
 
 
         # Set up Suggestion Response Dialog
@@ -216,7 +216,7 @@ class GameApp:
                 if message.get_msg_type() == MessageType.NOTIFY:
                     text_message = self._msg_font.render(message.get_payload(), False, (0, 0, 0))
                     self._message_log.append(text_message)
-                    # Keep last 5 messages
+                    # Keep last 4 messages
                     self._message_log = self._message_log[-4:]
                 elif message.get_msg_type() == MessageType.PLAYER_HAND:
                     hand = Hand.deserialize(message.get_payload())
@@ -230,9 +230,15 @@ class GameApp:
                     msg_string = sugg['suggester'] + " suggests " + str(Suggestion.deserialize(sugg['suggestion']))
                     text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                     self._message_log.append(text_message)
-                    # Keep last 5 messages
+                    # Keep last 4 messages
                     self._message_log = self._message_log[-4:]
-
+                elif message.get_msg_type() == MessageType.ACCUSATION_NOTIFY:
+                    acc = Suggestion.deserialize(message.get_payload())
+                    msg_string = "The accusation is " + str(acc)
+                    text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
+                    self._message_log.append(text_message)
+                    # Keep last 4 messages
+                    self._message_log = self._message_log[-4:]
 
             else:
                 print('.', end='', flush=True)
@@ -318,7 +324,7 @@ class GameApp:
                         msg_string = outcome
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
-                        # Keep last 5 messages
+                        # Keep last 4 messages
                         self._message_log = self._message_log[-4:]
 
             elif self._state == PlayerState.ANSWER_SUGGESTION:
@@ -339,6 +345,7 @@ class GameApp:
                 # Wait for button action to change game state
                 if self._ans_sugg_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._ans_sugg_dialog.set_success(False)
 
             elif self._state == PlayerState.MY_TURN:
                 if message is not None:
@@ -354,8 +361,10 @@ class GameApp:
                 # Wait for button action to change game state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._acc_dialog.set_success(False)
                 elif self._sugg_dialog.get_success():
                     self._state = PlayerState.POST_SUGGESTION
+                    self._sugg_dialog.set_success(False)
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -378,7 +387,7 @@ class GameApp:
                         msg_string = f'Your opponent disproved with {str(card.get_id())}'
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
-                        # Keep last 5 messages
+                        # Keep last 4 messages
                         self._message_log = self._message_log[-4:]
                         # got the answer, move on!
                         self._state = PlayerState.POST_SUGGESTION_ANSWER
@@ -389,7 +398,7 @@ class GameApp:
                         msg_string = outcome
                         text_message = self._msg_font.render(msg_string, False, (0, 0, 0))
                         self._message_log.append(text_message)
-                        # Keep last 5 messages
+                        # Keep last 4 messages
                         self._message_log = self._message_log[-4:]
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
@@ -399,6 +408,8 @@ class GameApp:
                         pl = PlayerList()
                         room_key = pl.get_player(self._my_character).get_current_location()
                         self._current_room_name = self._room_lookup_table[room_key]
+                    elif message.get_msg_type() == MessageType.SUGGESTION_NO_REFUTE:
+                        self._state = PlayerState.POST_SUGGESTION_ANSWER
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
                 if message is not None:
@@ -414,6 +425,8 @@ class GameApp:
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._sugg_dialog.set_success(False)
+
 
                 # Buttons
                 self._make_acc_button.draw(pygame.mouse, self._gameDisplay)
@@ -438,8 +451,10 @@ class GameApp:
                 # Wait for button actions to change state
                 if self._acc_dialog.get_success():
                     self._state = PlayerState.WAIT_FOR_TURN
+                    self._acc_dialog.set_success(False)
                 elif self._sugg_dialog.get_success():
                     self._state = PlayerState.POST_SUGGESTION
+                    self._sugg_dialog.set_success(False)
 
 
 

@@ -237,37 +237,43 @@ class GameController(object):
 
             # next_player = self._current_game.next_turn()
             # Check to see if everyone has lost
-            if next_player is None:
-                all_lost_message = Message(
-                    sni.get_uuid(), MessageType.NOTIFY, 'All players have made \
-                    an incorrect accusation. No one wins.')
-                self._current_game.set_state(GameStatus.LOBBY)
-            else:
-                self.do_end_turn()
+            #if next_player is None:
+            #    all_lost_message = Message(
+            #        sni.get_uuid(), MessageType.NOTIFY, 'All players have made \
+            #        an incorrect accusation. No one wins.')
+            #    self._current_game.set_state(GameStatus.LOBBY)
+            #else:
+            self.do_end_turn()
 
     def do_end_turn(self):
         # Changes GameState's _current_player
         pl = PlayerList()
         sni = ServerNetworkInterface()
-        self._current_game.next_turn()
-        next_player = pl.get_player_by_index(self._current_game.get_current_player())
+        next_player = self._current_game.next_turn()
+        if next_player is not None:
+            #next_player = pl.get_player_by_index(self._current_game.get_current_player())
 
-        # Tell all player's whose turn it is
-        notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-            f'Currently taking their turn: {next_player.get_card_id()}')
-        sni.send_all(notify_msg)
+            # Tell all player's whose turn it is
+            notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
+                f'Currently taking their turn: {next_player.get_card_id()}')
+            sni.send_all(notify_msg)
 
-        # Notify player it's their turn
-        your_turn_payload = json.dumps({ 'was_transferred': next_player.get_was_transferred() })
-        your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
-        sni.send_message(next_player.get_uuid(), your_turn_msg)
+            # Notify player it's their turn
+            your_turn_payload = json.dumps({ 'was_transferred': next_player.get_was_transferred() })
+            your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
+            sni.send_message(next_player.get_uuid(), your_turn_msg)
 
-        # Change GameStatus
-        self._current_game.set_state(GameStatus.START_TURN)
+            # Change GameStatus
+            self._current_game.set_state(GameStatus.START_TURN)
+        else:
+            all_lost_message = Message(
+                sni.get_uuid(), MessageType.NOTIFY, 'All players have made an incorrect accusation. No one wins.')
+            self._current_game.set_state(GameStatus.LOBBY)
 
     def do_move_incorrect_accuser(self, accuser: Player):
+        sni = ServerNetworkInterface()
         self._move_engine.do_move(Move(
-                accuser.get_card_id(), 'Billiard Room'))
+                accuser.get_card_id(), '3x3'))
         update_board_message = Message(sni.get_uuid(), MessageType.UPDATE_BOARD, self._move_engine._board.serialize())
         sni.send_all(update_board_message)
 

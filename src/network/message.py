@@ -64,6 +64,8 @@ class MessageType(Enum):
     """Tells next player to start turn"""
     YOUR_TURN = 20
 
+    """Tell a suggester that no one could answer his suggestion."""
+    SUGGESTION_NO_REFUTE = 21
 
 class Message:
     """
