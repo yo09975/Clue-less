@@ -467,7 +467,7 @@ class GameApp:
         print(self._avatars)
 
 cni = CNI()
-if (cni.connect('0.0.0.0')):
+if (cni.connect('104.236.203.126')):
     game = GameApp()
     game.start()
 else:
