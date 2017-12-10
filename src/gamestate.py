@@ -94,8 +94,9 @@ class GameState(object):
             if p.get_status() == PlayerStatus.ACTIVE:
                 msg_payload = p.get_hand().serialize()
                 to_uuid = p.get_uuid()
-                sni.send_message(to_uuid, Message(
-                    sni.get_uuid(), MessageType.PLAYER_HAND, msg_payload))
+                if to_uuid != None:
+                    sni.send_message(to_uuid, Message(
+                        sni.get_uuid(), MessageType.PLAYER_HAND, msg_payload))
 
         # Reset self._current_player
         self._current_player = len(pl) - 1
