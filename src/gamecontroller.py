@@ -84,8 +84,7 @@ class GameController(object):
                     leaving_player_character = leaving_player.get_card_id(
                         )
                     leave_message = Message(sni.get_uuid(
-                        ), MessageType.NOTIFY, f'{leaving_player_character} \
-                        has left the game.')
+                        ), MessageType.NOTIFY, f'{leaving_player_character} has left the game.')
                     sni.disconnect_player(msg_uuid)
                     sni.send_all(leave_message)
                     self._current_game.set_state(GameStatus.LOBBY)
