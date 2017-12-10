@@ -408,6 +408,8 @@ class GameApp:
                         pl = PlayerList()
                         room_key = pl.get_player(self._my_character).get_current_location()
                         self._current_room_name = self._room_lookup_table[room_key]
+                    elif message.get_msg_type() == MessageType.SUGGESTION_NO_REFUTE:
+                        self._state = PlayerState.POST_SUGGESTION_ANSWER
 
             elif self._state == PlayerState.POST_SUGGESTION_ANSWER:
                 if message is not None:
