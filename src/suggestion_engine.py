@@ -9,7 +9,8 @@ from src.player import Player
 from src.playerstatus import PlayerStatus
 from src.network.message import Message, MessageType
 from src.network.servernetworkinterface import ServerNetworkInterface as SNI
-
+from src.location import Location
+import json
 
 class SuggestionEngine:
     """Make Suggestion is responsible for taking Player input of character,
@@ -109,6 +110,6 @@ class SuggestionEngine:
             sni.send_all(notification_msg)
             return False
 
-    def is_valid_suggestion(self, suggesting_player: Player, suggestion: Suggestion) -> bool:
+    def is_valid_suggestion(self, player_location: Location, suggestion: Suggestion) -> bool:
         """Makes sure the suggesting player is in the room suggested"""
-        return suggesting_player.get_current_location() == suggestion.get_room().get_id()
+        return player_location.get_name() == suggestion.get_room().get_id()

@@ -9,7 +9,8 @@ for attempting invalid move.
 """
 from src.board import Board
 from src.playerlist import PlayerList
-
+from src.location import Location
+import json
 
 class MovementEngine:
     """Validate and execute moves.
@@ -58,5 +59,8 @@ class MovementEngine:
         # Execute move on board and update player location
         self._board.move(from_location, move.get_destination())
         player.set_location(move.get_destination())
-
         return True
+
+    def get_player_location(self, player):
+        """ Returns an actual Location object given a player's uuid """
+        return self._board.get_location(player.get_current_location())
