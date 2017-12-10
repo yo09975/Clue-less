@@ -319,7 +319,6 @@ class GameApp:
                         # Update board
                         self._board = self._board.deserialize(message.get_payload())
                         self.determine_avatar_locations()
-                        self._state = PlayerState.WAIT_FOR_TURN #???
 
 
                 # Wait for button action to change game state
@@ -367,6 +366,15 @@ class GameApp:
                         # got the answer, move on!
                         self._state = PlayerState.POST_SUGGESTION_ANSWER
 
+                    elif message.get_msg_type() == MessageType.SUGGESTION_OUTCOME:
+                        print(f'DEBUG: POST SUGG SUGGESTION_OUTCOME')
+                        outcome = message.get_payload()
+                        font = pygame.font.SysFont('Comic Sans MS', 16)
+                        msg_string = outcome
+                        text_message = font.render(msg_string, False, (0, 0, 0))
+                        self._message_log.append(text_message)
+                        # Keep last 5 messages
+                        self._message_log = self._message_log[-5:]
 
                     elif message.get_msg_type() == MessageType.UPDATE_BOARD:
                         # Update board
