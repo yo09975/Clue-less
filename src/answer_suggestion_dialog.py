@@ -6,7 +6,7 @@ from src.card import Card
 from src.cardtype import CardType
 from src.network.message import Message
 from src.network.message import MessageType
-
+from src.network.clientnetworkinterface import ClientNetworkInterface as CNI
 import pygame
 import os
 import json

@@ -14,6 +14,8 @@ from src.network.servernetworkinterface import ServerNetworkInterface
 from src.player import Player
 from src.playerstatus import PlayerStatus
 from src.board import Board
+from src.location import Location
+from src.card import Card
 import json
 
 
@@ -57,6 +59,8 @@ class GameController(object):
         sni = ServerNetworkInterface()
         sni.start()
 
+        pl = PlayerList()
+
         while(True):
 
             message = sni.get_message()
@@ -72,18 +76,16 @@ class GameController(object):
                 """Retrieve current game status for comparisons"""
                 state = self._current_game.get_state()
 
-                pl = PlayerList()
-
                 """Short circuits any additional processing if a player leaves the
                    game
                 """
                 if msg_type == MessageType.LEAVE_GAME:
-                    leaving_player = get_player_from_uuid(msg_uuid)
-                    leaving_player_character = leaving_player.get_character(
-                        ).get_id()
+                    leaving_player = self.get_player_from_uuid(msg_uuid)
+                    leaving_player_character = leaving_player.get_card_id(
+                        )
                     leave_message = Message(sni.get_uuid(
-                        ), MessageType.NOTIFY, f'{leaving_player_character} \
-                        has left the game.')
+                        ), MessageType.NOTIFY, f'{leaving_player_character} has left the game.')
+                    sni.disconnect_player(msg_uuid)
                     sni.send_all(leave_message)
                     self._current_game.set_state(GameStatus.LOBBY)
 
@@ -107,14 +109,14 @@ class GameController(object):
                             for p in pl.get_players():
                                 if p.get_status() == PlayerStatus.ACTIVE:
                                     total_players += 1
-                            if total_players > 2:
+                            if total_players >= 2:
                                 self._current_game.start()
                                 # Get first player
                                 first_player = pl.get_player_by_index(self._current_game.get_current_player())
 
                                 # Tell all player's whose turn it is
                                 notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-                                    f'Currently taking their turn: {first_player.get_character()}')
+                                    f'Currently taking their turn: {first_player.get_card_id()}')
                                 sni.send_all(notify_msg)
 
                                 # Notify player it's their turn
@@ -130,6 +132,7 @@ class GameController(object):
 
                         if msg_type == MessageType.MOVEMENT:
                             move = Move.deserialize(msg_payload)
+                            print(self._move_engine.is_valid_move(move))
                             if self._move_engine.is_valid_move(move):
                                 self._move_engine.do_move(move)
                                 moving_player = self.get_player_from_uuid(msg_uuid)
@@ -170,7 +173,7 @@ class GameController(object):
                     elif state == GameStatus.WAIT_SUGG:
 
                         if msg_type == MessageType.SUGGESTION_RESPONSE:
-                            card = Card.deserialize(payload)
+                            card = Card.deserialize(msg_payload)
                             self._suggest_engine.answer_suggestion(card)
                             self._current_game.set_state(GameStatus.POST_SUGG)
 
@@ -183,25 +186,32 @@ class GameController(object):
                         elif msg_type == MessageType.END_TURN:
                             self.do_end_turn()
 
-    def get_player_from_uuid(msg_uuid: str) -> Player:
+    def get_player_from_uuid(self, msg_uuid: str) -> Player:
+        pl = PlayerList()
         players = pl.get_players()
         for p in players:
             if msg_uuid == p.get_uuid():
                 return p
 
-    def do_suggestion(
+    def do_suggestion(self,
         msg_uuid: str, msg_type: MessageType, msg_payload: str,
             suggesting_player: Player):
+        pl = PlayerList()
+        sni = ServerNetworkInterface()
         suggestion = Suggestion.deserialize(msg_payload)
+
+        # Grab a Location for the suggester
+        player_location = self._move_engine.get_player_location(suggesting_player)
+
         if self._suggest_engine.is_valid_suggestion(
-                suggesting_player, suggestion):
+                player_location, suggestion):
             if self._suggest_engine.make_suggestion(suggestion):
                 self._current_game.set_state(GameStatus.WAIT_SUGG)
             else:
                 self._current_game.set_state(GameStatus.POST_SUGG)
             suggested_player = pl.get_player(
                 suggestion.get_character().get_id())
-            suggested_location = suggestion.get_room().get_id()
+            suggested_location = player_location.get_key()
             self._move_engine.do_move(Move(
                 suggested_player.get_card_id(), suggested_location))
             suggested_player.set_was_transferred(True)
@@ -211,7 +221,9 @@ class GameController(object):
                 self._move_engine._board.serialize())
             sni.send_all(update_board_message)
 
-    def do_accusation(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+    def do_accusation(self, msg_uuid: str, msg_type: MessageType, msg_payload: str):
+        pl = PlayerList()
+        sni = ServerNetworkInterface()
         accusation = Suggestion.deserialize(msg_payload)
         players = pl.get_players()
         accuser = players[self._current_game.get_current_player()]
@@ -219,33 +231,51 @@ class GameController(object):
             self._current_game.set_state(GameStatus.LOBBY)
         else:
             accuser.set_status(PlayerStatus.LOST)
-            next_player = self._current_game.next_turn()
+
+            # Move incorrect Accuser to the Billiard Room
+            self.do_move_incorrect_accuser(accuser)
+
+            # next_player = self._current_game.next_turn()
             # Check to see if everyone has lost
-            if next_player is None:
-                all_lost_message = Message(
-                    sni.get_uuid(), MessageType.NOTIFY, 'All players have made \
-                    an incorrect accusation. No one wins.')
-                self._current_game.set_state(GameStatus.LOBBY)
-            else:
-                self.do_end_turn()
+            #if next_player is None:
+            #    all_lost_message = Message(
+            #        sni.get_uuid(), MessageType.NOTIFY, 'All players have made \
+            #        an incorrect accusation. No one wins.')
+            #    self._current_game.set_state(GameStatus.LOBBY)
+            #else:
+            self.do_end_turn()
 
-    def do_end_turn(msg_uuid: str, msg_type: MessageType, msg_payload: str):
+    def do_end_turn(self):
         # Changes GameState's _current_player
-        self._current_game.next_turn()
-        next_player = pl.get_player_by_index(self._current_game.get_current_player())
+        pl = PlayerList()
+        sni = ServerNetworkInterface()
+        next_player = self._current_game.next_turn()
+        if next_player is not None:
+            #next_player = pl.get_player_by_index(self._current_game.get_current_player())
 
-        # Tell all player's whose turn it is
-        notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
-            f'Currently taking their turn: {next_player.get_character()}')
-        sni.send_all(notify_msg)
+            # Tell all player's whose turn it is
+            notify_msg = Message(sni.get_uuid(), MessageType.NOTIFY,
+                f'Currently taking their turn: {next_player.get_card_id()}')
+            sni.send_all(notify_msg)
 
-        # Notify player it's their turn
-        your_turn_payload = json.dumps({ 'was_transferred': next_player.get_was_transferred() })
-        your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
-        sni.send_message(next_player.get_uuid(), your_turn_msg)
+            # Notify player it's their turn
+            your_turn_payload = json.dumps({ 'was_transferred': next_player.get_was_transferred() })
+            your_turn_msg = Message(sni.get_uuid(), MessageType.YOUR_TURN, your_turn_payload)
+            sni.send_message(next_player.get_uuid(), your_turn_msg)
 
-        # Change GameStatus
-        self._current_game.set_state(GameStatus.START_TURN)
+            # Change GameStatus
+            self._current_game.set_state(GameStatus.START_TURN)
+        else:
+            all_lost_message = Message(
+                sni.get_uuid(), MessageType.NOTIFY, 'All players have made an incorrect accusation. No one wins.')
+            self._current_game.set_state(GameStatus.LOBBY)
+
+    def do_move_incorrect_accuser(self, accuser: Player):
+        sni = ServerNetworkInterface()
+        self._move_engine.do_move(Move(
+                accuser.get_card_id(), '3x3'))
+        update_board_message = Message(sni.get_uuid(), MessageType.UPDATE_BOARD, self._move_engine._board.serialize())
+        sni.send_all(update_board_message)
 
 if __name__ == '__main__':
     try:
@@ -254,4 +284,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Interrupted')
         exit(0)
-
