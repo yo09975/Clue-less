@@ -1,5 +1,5 @@
-from src.toggle import Toggle
-from src.view import View
+from src.ui.toggle import Toggle
+from src.ui.view import View
 from src.network.message import Message
 from src.network.message import MessageType
 from src.network.clientnetworkinterface import ClientNetworkInterface as CNI

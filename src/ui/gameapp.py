@@ -1,17 +1,14 @@
 import sys, os
 import pygame
 
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
-from src.view import View
-from src.suggestion_dialog import SuggestionDialog as SD
-from src.answer_suggestion_dialog import AnswerSuggestionDialog as ASD
-from src.character_picker_dialog import CharacterPickerDialog as CPD
-from src.notecard_view import NoteCardView
-from src.button import Button
+from src.ui.view import View
+from src.ui.suggestion_dialog import SuggestionDialog as SD
+from src.ui.answer_suggestion_dialog import AnswerSuggestionDialog as ASD
+from src.ui.character_picker_dialog import CharacterPickerDialog as CPD
+from src.ui.notecard_view import NoteCardView
+from src.ui.button import Button
 from enum import Enum
-from src.playerstate import PlayerState
+from src.ui.playerstate import PlayerState
 import json
 from queue import Queue
 from threading import Thread
@@ -80,7 +77,7 @@ class GameApp:
 
         # Set up board
         dir = os.path.dirname(__file__)
-        location_file = os.path.join(dir, '../data/locations.json')
+        location_file = os.path.join(dir, '../../data/locations.json')
 
         with open(location_file) as data_file:
             locs = json.load(data_file)
@@ -120,7 +117,7 @@ class GameApp:
                 self._ref_board[l['name']] = location
 
         # Set up avatars
-        card_file = os.path.join(dir, '../data/cards.json')
+        card_file = os.path.join(dir, '../../data/cards.json')
 
         with open(card_file) as data_file:
             cards = json.load(data_file)
@@ -498,7 +495,7 @@ class GameApp:
         print(self._avatars)
 
 cni = CNI()
-if (cni.connect('104.236.203.126')):
+if (cni.connect('localhost')):
     game = GameApp()
     game.start()
 else:

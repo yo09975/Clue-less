@@ -1,6 +1,6 @@
 """notecard_view.py."""
-from src.view import View
-from src.button import Button
+from src.ui.view import View
+from src.ui.button import Button
 import pygame
 from src.notecard_controller import NoteCardController
 import time
