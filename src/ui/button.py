@@ -3,7 +3,7 @@
 A view that supports configurable clicks and reactions.
 """
 
-from src.view import View
+from src.ui.view import View
 import pygame
 
 

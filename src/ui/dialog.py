@@ -3,8 +3,8 @@
 Basic dialog with configurable buttons.
 """
 import pygame
-from src.view import View
-from src.button import Button
+from src.ui.view import View
+from src.ui.button import Button
 
 class Dialog(View):
     def __init__(self, x, y):

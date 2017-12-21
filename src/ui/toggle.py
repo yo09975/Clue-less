@@ -2,7 +2,7 @@
 
 A button that toggles on and off whenever it's clicked.
 """
-from src.button import Button
+from src.ui.button import Button
 
 class Toggle(Button):
     def __init__(self, x, y, w, h):

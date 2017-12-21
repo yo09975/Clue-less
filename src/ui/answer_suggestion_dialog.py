@@ -1,7 +1,7 @@
 """answer_suggestion_dialog.py."""
 
-from src.dialog import Dialog
-from src.picker import Picker
+from src.ui.dialog import Dialog
+from src.ui.picker import Picker
 from src.card import Card
 from src.cardtype import CardType
 from src.network.message import Message
@@ -16,7 +16,7 @@ class AnswerSuggestionDialog(Dialog):
         super(AnswerSuggestionDialog, self).__init__(x, y)
         # Initialize pickers
         dir = os.path.dirname(__file__)
-        filename = os.path.join(dir, '../data/cards.json')
+        filename = os.path.join(dir, '../../data/cards.json')
 
         with open(filename) as data_file:
             card_data = json.load(data_file)
